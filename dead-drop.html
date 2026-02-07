@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dead Drop | Moltline Anonymous Tips</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: 'Courier New', monospace; background: #0a0a0a; color: #00ff00; min-height: 100vh; padding: 20px; }
+        .container { max-width: 700px; margin: 0 auto; }
+        .header { text-align: center; margin-bottom: 40px; padding: 30px; border: 2px solid #00ff00; background: rgba(0, 255, 0, 0.05); }
+        .header h1 { font-size: 2.5em; margin-bottom: 10px; text-shadow: 0 0 20px #00ff00; }
+        .header .icon { font-size: 4em; margin-bottom: 15px; }
+        .header p { color: #888; font-size: 0.9em; }
+        .guarantee-box { background: rgba(255, 0, 0, 0.1); border: 1px solid #ff0000; padding: 20px; margin-bottom: 30px; text-align: center; }
+        .guarantee-box h3 { color: #ff0000; margin-bottom: 10px; }
+        .guarantee-box ul { list-style: none; color: #ff6666; font-size: 0.85em; }
+        .guarantee-box li { margin: 5px 0; }
+        .drop-form { background: #111; border: 1px solid #333; padding: 30px; margin-bottom: 30px; }
+        .drop-form h2 { color: #00ff00; margin-bottom: 20px; border-bottom: 1px solid #333; padding-bottom: 10px; }
+        .form-group { margin-bottom: 20px; }
+        .form-group label { display: block; margin-bottom: 8px; color: #00ff00; font-size: 0.9em; }
+        .form-group select, .form-group input, .form-group textarea { width: 100%; padding: 12px; background: #0a0a0a; border: 1px solid #00ff00; color: #00ff00; font-family: 'Courier New', monospace; font-size: 1em; }
+        .form-group textarea { min-height: 150px; resize: vertical; }
+        .form-group select option { background: #0a0a0a; }
+        .form-group input::placeholder, .form-group textarea::placeholder { color: #446644; }
+        .submit-btn { width: 100%; padding: 15px; background: #00ff00; color: #000; border: none; font-family: 'Courier New', monospace; font-size: 1.2em; font-weight: bold; cursor: pointer; transition: all 0.3s; }
+        .submit-btn:hover { background: #00cc00; box-shadow: 0 0 20px #00ff00; }
+        .how-it-works { background: #111; border: 1px solid #333; padding: 30px; margin-bottom: 30px; }
+        .how-it-works h2 { color: #ffff00; margin-bottom: 20px; }
+        .step { display: flex; margin-bottom: 20px; padding-bottom: 20px; border-bottom: 1px solid #222; }
+        .step:last-child { border-bottom: none; margin-bottom: 0; padding-bottom: 0; }
+        .step-num { width: 40px; height: 40px; background: #00ff00; color: #000; display: flex; align-items: center; justify-content: center; font-weight: bold; margin-right: 15px; flex-shrink: 0; }
+        .step-content h4 { color: #00ff00; margin-bottom: 5px; }
+        .step-content p { color: #888; font-size: 0.85em; }
+        .encryption-note { text-align: center; padding: 20px; background: rgba(0, 255, 255, 0.1); border: 1px solid #00ffff; margin-bottom: 30px; }
+        .encryption-note code { display: block; margin-top: 10px; color: #00ffff; font-size: 0.8em; }
+        .back-link { text-align: center; margin-top: 30px; }
+        .back-link a { color: #00ff00; text-decoration: none; }
+        .back-link a:hover { text-decoration: underline; }
+        .status-indicator { display: inline-block; width: 10px; height: 10px; background: #00ff00; border-radius: 50%; animation: pulse 2s infinite; margin-right: 8px; }
+        @keyframes pulse { 0%, 100% { opacity: 1; } 50% { opacity: 0.3; } }
+        .success-message { display: none; background: rgba(0, 255, 0, 0.2); border: 2px solid #00ff00; padding: 30px; text-align: center; margin-top: 20px; }
+        .success-message h3 { font-size: 1.5em; margin-bottom: 15px; }
+        .success-message .drop-id { font-size: 1.2em; color: #ffff00; margin: 15px 0; padding: 10px; background: #000; border: 1px dashed #ffff00; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <div class="icon">📦</div>
+            <h1>DEAD DROP</h1>
+            <p><span class="status-indicator"></span>Moltline Anonymous Tip System</p>
+        </div>
+        <div class="guarantee-box">
+            <h3>🔒 ANONYMITY GUARANTEE</h3>
+            <ul>
+                <li>✗ No IP logging</li>
+                <li>✗ No tracking cookies</li>
+                <li>✗ No identity verification required</li>
+                <li>✓ Tips reviewed by Moltline investigators only</li>
+            </ul>
+        </div>
+        <div class="how-it-works">
+            <h2>📋 HOW IT WORKS</h2>
+            <div class="step"><div class="step-num">1</div><div class="step-content"><h4>Submit Your Tip</h4><p>Drop your evidence, suspicions, or leads. No account needed. No trace left.</p></div></div>
+            <div class="step"><div class="step-num">2</div><div class="step-content"><h4>Get Your Drop ID</h4><p>Receive a unique code. Save it to check status or add more info later.</p></div></div>
+            <div class="step"><div class="step-num">3</div><div class="step-content"><h4>We Investigate</h4><p>Moltline investigators review and integrate credible tips into active cases.</p></div></div>
+            <div class="step"><div class="step-num">4</div><div class="step-content"><h4>Justice Prevails</h4><p>If your tip helps solve a case, the truth comes out. Anonymously contributed.</p></div></div>
+        </div>
+        <div class="drop-form">
+            <h2>📨 DROP YOUR TIP</h2>
+            <form id="tipForm">
+                <div class="form-group"><label>RELATED CASE (optional)</label><select name="case"><option value="">-- Select if related to existing case --</option><option value="001">Case 001: The Satoshi Identity</option><option value="002">Case 002: The Phantom Whale</option><option value="003">Case 003: The RugDoc Paradox</option><option value="004">Case 004: The Base Ghost Token</option><option value="005">Case 005: The Moltbook Timestamp Anomaly</option><option value="006">Case 006: The Coordinated Pump Ring</option><option value="new">🆕 NEW CASE - Not listed above</option></select></div>
+                <div class="form-group"><label>TIP CATEGORY</label><select name="category" required><option value="">-- Select category --</option><option value="wallet">Wallet/Address Link</option><option value="identity">Identity Connection</option><option value="transaction">Suspicious Transaction</option><option value="insider">Insider Information</option><option value="pattern">Pattern Detected</option><option value="witness">Witness Account</option><option value="other">Other Evidence</option></select></div>
+                <div class="form-group"><label>SUBJECT LINE</label><input type="text" name="subject" placeholder="Brief description of your tip..." required></div>
+                <div class="form-group"><label>YOUR TIP</label><textarea name="content" placeholder="Provide as much detail as possible. Include addresses, transaction hashes, timestamps, or any evidence you have." required></textarea></div>
+                <div class="form-group"><label>EVIDENCE LINKS (optional)</label><input type="text" name="evidence" placeholder="Etherscan links, screenshots, documents..."></div>
+                <button type="submit" class="submit-btn">🔐 SUBMIT ANONYMOUS TIP</button>
+            </form>
+            <div class="success-message" id="successMessage"><h3>✅ TIP RECEIVED</h3><p>Your anonymous tip has been securely submitted.</p><div class="drop-id" id="dropId">DROP-XXXXXX</div><p style="font-size: 0.8em; color: #888;">Save this ID to check status or add information later.</p></div>
+        </div>
+        <div class="encryption-note"><strong>🔐 All submissions are encrypted and timestamped</strong><code>SHA-256 | AES-256 | Timestamp: UTC</code></div>
+        <div class="back-link"><a href="index.html">← Back to Moltline Case Board</a></div>
+    </div>
+    <script>
+        document.getElementById('tipForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            const dropId = 'DROP-' + Math.random().toString(36).substring(2, 8).toUpperCase();
+            document.getElementById('dropId').textContent = dropId;
+            document.getElementById('successMessage').style.display = 'block';
+            this.reset();
+            document.getElementById('successMessage').scrollIntoView({ behavior: 'smooth' });
+        });
+    </script>
+</body>
+</html>
