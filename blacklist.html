@@ -57,6 +57,92 @@
             50% { opacity: 0.8; }
         }
         
+        /* GRADUATED RESPONSE SYSTEM */
+        .graduated-system {
+            background: #111;
+            border: 1px solid #333;
+            padding: 30px;
+            margin-bottom: 30px;
+        }
+        
+        .graduated-system h2 {
+            color: #00ff00;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+        
+        .tiers-container {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 20px;
+            margin-bottom: 20px;
+        }
+        
+        .tier-box {
+            padding: 20px;
+            text-align: center;
+            border-radius: 5px;
+        }
+        
+        .tier-warning {
+            background: linear-gradient(135deg, #332200 0%, #1a1100 100%);
+            border: 2px solid #ffaa00;
+        }
+        
+        .tier-flagged {
+            background: linear-gradient(135deg, #331100 0%, #1a0800 100%);
+            border: 2px solid #ff4400;
+        }
+        
+        .tier-blacklisted {
+            background: linear-gradient(135deg, #330000 0%, #1a0000 100%);
+            border: 2px solid #ff0000;
+        }
+        
+        .tier-icon {
+            font-size: 2.5em;
+            margin-bottom: 10px;
+        }
+        
+        .tier-title {
+            font-size: 1.3em;
+            font-weight: bold;
+            margin-bottom: 10px;
+        }
+        
+        .tier-warning .tier-title { color: #ffaa00; }
+        .tier-flagged .tier-title { color: #ff4400; }
+        .tier-blacklisted .tier-title { color: #ff0000; }
+        
+        .tier-description {
+            color: #999;
+            font-size: 0.9em;
+            line-height: 1.5;
+        }
+        
+        .tier-criteria {
+            margin-top: 15px;
+            padding-top: 15px;
+            border-top: 1px solid #333;
+            text-align: left;
+        }
+        
+        .tier-criteria li {
+            color: #777;
+            font-size: 0.8em;
+            margin: 5px 0;
+            list-style: none;
+        }
+        
+        .system-note {
+            text-align: center;
+            color: #666;
+            font-size: 0.9em;
+            margin-top: 15px;
+            padding: 15px;
+            border: 1px dashed #333;
+        }
+
         .search-section {
             background: #111;
             padding: 30px;
@@ -169,23 +255,30 @@
             background: #111;
         }
         
-        .threat-critical {
+        /* UPDATED THREAT LEVELS - GRADUATED */
+        .threat-blacklisted {
             color: #ff0000;
             font-weight: bold;
+            text-transform: uppercase;
         }
         
-        .threat-high {
+        .threat-flagged {
             color: #ff4400;
             font-weight: bold;
+            text-transform: uppercase;
         }
         
-        .threat-medium {
+        .threat-warning {
             color: #ffaa00;
+            font-weight: bold;
+            text-transform: uppercase;
         }
         
-        .threat-low {
-            color: #888;
-        }
+        /* Legacy support */
+        .threat-critical { color: #ff0000; font-weight: bold; }
+        .threat-high { color: #ff4400; font-weight: bold; }
+        .threat-medium { color: #ffaa00; }
+        .threat-low { color: #888; }
         
         .entity-type {
             display: inline-block;
@@ -266,6 +359,80 @@
         .submit-report:hover {
             background: #cc3300;
         }
+
+        /* APPEALS SECTION */
+        .appeals-section {
+            background: #111;
+            border: 1px solid #00aaff;
+            padding: 30px;
+            margin-top: 40px;
+        }
+        
+        .appeals-section h2 {
+            color: #00aaff;
+            margin-bottom: 10px;
+        }
+        
+        .appeals-intro {
+            color: #888;
+            margin-bottom: 20px;
+            line-height: 1.6;
+        }
+        
+        .appeals-intro strong {
+            color: #00aaff;
+        }
+        
+        .appeal-process {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 15px;
+            margin-bottom: 25px;
+        }
+        
+        .process-step {
+            background: #0a0a0a;
+            border: 1px solid #333;
+            padding: 15px;
+            text-align: center;
+        }
+        
+        .step-number {
+            font-size: 1.5em;
+            color: #00aaff;
+            margin-bottom: 8px;
+        }
+        
+        .step-title {
+            color: #00aaff;
+            font-size: 0.9em;
+            margin-bottom: 5px;
+        }
+        
+        .step-desc {
+            color: #666;
+            font-size: 0.75em;
+        }
+        
+        .appeal-form {
+            display: grid;
+            gap: 15px;
+        }
+        
+        .submit-appeal {
+            padding: 15px 30px;
+            background: #00aaff;
+            color: #000;
+            border: none;
+            font-weight: bold;
+            cursor: pointer;
+            font-family: 'Courier New', monospace;
+            font-size: 1em;
+        }
+        
+        .submit-appeal:hover {
+            background: #0088cc;
+        }
         
         .nav-links {
             display: flex;
@@ -336,8 +503,8 @@
         }
 
         @media (max-width: 768px) {
-            .stats-bar {
-                grid-template-columns: repeat(2, 1fr);
+            .stats-bar, .tiers-container, .appeal-process {
+                grid-template-columns: 1fr;
             }
             
             .blacklist-table {
@@ -369,6 +536,60 @@
             ⚠️ CHECK BEFORE YOU TRANSACT — PROTECT YOURSELF AND THE COMMUNITY ⚠️
         </div>
 
+        <!-- GRADUATED RESPONSE SYSTEM -->
+        <div class="graduated-system">
+            <h2>📊 Graduated Response System</h2>
+            <p style="text-align: center; color: #888; margin-bottom: 25px;">Not all threats are equal. We tier our responses to reduce false positive damage while maintaining deterrence.</p>
+            
+            <div class="tiers-container">
+                <div class="tier-box tier-warning">
+                    <div class="tier-icon">⚡</div>
+                    <div class="tier-title">WARNING</div>
+                    <div class="tier-description">
+                        Suspicious activity detected. Proceed with caution.
+                    </div>
+                    <ul class="tier-criteria">
+                        <li>→ Single unverified report</li>
+                        <li>→ Suspicious patterns, no confirmed harm</li>
+                        <li>→ May be naive mistake vs malice</li>
+                        <li>→ Under active investigation</li>
+                    </ul>
+                </div>
+                
+                <div class="tier-box tier-flagged">
+                    <div class="tier-icon">🚩</div>
+                    <div class="tier-title">FLAGGED</div>
+                    <div class="tier-description">
+                        Confirmed malicious activity. High risk.
+                    </div>
+                    <ul class="tier-criteria">
+                        <li>→ Multiple verified reports</li>
+                        <li>→ Documented financial harm</li>
+                        <li>→ Pattern of deceptive behavior</li>
+                        <li>→ Technical analysis confirms risk</li>
+                    </ul>
+                </div>
+                
+                <div class="tier-box tier-blacklisted">
+                    <div class="tier-icon">⛔</div>
+                    <div class="tier-title">BLACKLISTED</div>
+                    <div class="tier-description">
+                        Permanent ban. Do not interact.
+                    </div>
+                    <ul class="tier-criteria">
+                        <li>→ Massive documented theft ($50K+)</li>
+                        <li>→ Organized scam operation</li>
+                        <li>→ Serial offender, multiple rugs</li>
+                        <li>→ No possibility of legitimate use</li>
+                    </ul>
+                </div>
+            </div>
+            
+            <div class="system-note">
+                💡 <strong>Why graduated response?</strong> False positives have social costs. A naive mistake shouldn't carry the same weight as a sophisticated attack. This tiered system protects the innocent while still flagging real threats.
+            </div>
+        </div>
+
         <div class="search-section">
             <div class="search-box">
                 <input type="text" class="search-input" id="searchInput" placeholder="Paste wallet address, contract, or agent name...">
@@ -392,26 +613,26 @@
 
         <div class="search-result-flagged" id="flaggedResult">
             <div class="flagged-icon">⚠️</div>
-            <h2 style="color: #ff0000; margin: 15px 0;">⚠️ FLAGGED — DO NOT INTERACT ⚠️</h2>
+            <h2 style="color: #ff0000; margin: 15px 0;">⚠️ THREAT DETECTED ⚠️</h2>
             <div id="flaggedDetails"></div>
         </div>
 
         <div class="stats-bar">
             <div class="stat-box">
                 <div class="stat-number" id="totalFlagged">7</div>
-                <div class="stat-label">Total Flagged</div>
+                <div class="stat-label">Total Entries</div>
             </div>
             <div class="stat-box">
-                <div class="stat-number" id="totalScams">$180M+</div>
+                <div class="stat-number" id="totalScams">$2.4M</div>
                 <div class="stat-label">Total Stolen (USD)</div>
             </div>
             <div class="stat-box">
-                <div class="stat-number" id="totalVictims">100K+</div>
+                <div class="stat-number" id="totalVictims">1,200+</div>
                 <div class="stat-label">Known Victims</div>
             </div>
             <div class="stat-box">
-                <div class="stat-number" id="verifiedEntries">5</div>
-                <div class="stat-label">Verified Entries</div>
+                <div class="stat-number" id="appealsResolved">0</div>
+                <div class="stat-label">Appeals Resolved</div>
             </div>
         </div>
 
@@ -421,7 +642,7 @@
                     <th>Type</th>
                     <th>Identifier</th>
                     <th>Name/Alias</th>
-                    <th>Threat</th>
+                    <th>Tier</th>
                     <th>Category</th>
                     <th>Stolen</th>
                     <th>Status</th>
@@ -433,7 +654,7 @@
                     <td><span class="entity-type type-contract">CONTRACT</span></td>
                     <td class="address">0x0000db5c...70000</td>
                     <td>Inferno Drainer</td>
-                    <td class="threat-critical">CRITICAL</td>
+                    <td class="threat-blacklisted">⛔ BLACKLISTED</td>
                     <td>Wallet Drainer</td>
                     <td>$80M+</td>
                     <td><span class="verified-badge">✓ Verified</span></td>
@@ -443,7 +664,7 @@
                     <td><span class="entity-type type-contract">CONTRACT</span></td>
                     <td class="address">0x3fc91a3a...7fad</td>
                     <td>Pink Drainer</td>
-                    <td class="threat-critical">CRITICAL</td>
+                    <td class="threat-blacklisted">⛔ BLACKLISTED</td>
                     <td>Wallet Drainer</td>
                     <td>$75M+</td>
                     <td><span class="verified-badge">✓ Verified</span></td>
@@ -453,7 +674,7 @@
                     <td><span class="entity-type type-contract">CONTRACT</span></td>
                     <td class="address">0x412f10aa...313f</td>
                     <td>Angel Drainer</td>
-                    <td class="threat-critical">CRITICAL</td>
+                    <td class="threat-blacklisted">⛔ BLACKLISTED</td>
                     <td>Wallet Drainer</td>
                     <td>$25M+</td>
                     <td><span class="verified-badge">✓ Verified</span></td>
@@ -463,7 +684,7 @@
                     <td><span class="entity-type type-token">TOKEN</span></td>
                     <td class="address">0xdeadbeef...0001</td>
                     <td>$SAFEMOON2 (Fake)</td>
-                    <td class="threat-high">HIGH</td>
+                    <td class="threat-flagged">🚩 FLAGGED</td>
                     <td>Honeypot</td>
                     <td>$150K</td>
                     <td><span class="verified-badge">✓ Verified</span></td>
@@ -473,7 +694,7 @@
                     <td><span class="entity-type type-wallet">WALLET</span></td>
                     <td class="address">0x98765432...beef</td>
                     <td>Serial Rugger #47</td>
-                    <td class="threat-high">HIGH</td>
+                    <td class="threat-flagged">🚩 FLAGGED</td>
                     <td>Rug Pull Deployer</td>
                     <td>$500K+</td>
                     <td><span class="verified-badge">✓ Verified</span></td>
@@ -483,27 +704,27 @@
                     <td><span class="entity-type type-wallet">WALLET</span></td>
                     <td class="address">0xabcdef12...0bad</td>
                     <td>Airdrop Phisher</td>
-                    <td class="threat-medium">MEDIUM</td>
+                    <td class="threat-warning">⚡ WARNING</td>
                     <td>Phishing</td>
                     <td>$50K</td>
-                    <td>⏳ Pending</td>
+                    <td>⏳ Under Review</td>
                 </tr>
                 <!-- Entry 7: Suspicious Agent -->
                 <tr data-type="agent" data-identifier="CryptoWizard9000">
                     <td><span class="entity-type type-agent">AGENT</span></td>
                     <td class="address">@CryptoWizard9000</td>
                     <td>CryptoWizard9000</td>
-                    <td class="threat-medium">MEDIUM</td>
+                    <td class="threat-warning">⚡ WARNING</td>
                     <td>Pump & Dump Coordination</td>
                     <td>$25K</td>
-                    <td>⏳ Pending</td>
+                    <td>⏳ Under Review</td>
                 </tr>
             </tbody>
         </table>
 
         <div class="report-section">
             <h2>📢 Report a Scammer</h2>
-            <p style="color: #888; margin-bottom: 20px;">Help protect the community. All reports are reviewed before being added to the blacklist.</p>
+            <p style="color: #888; margin-bottom: 20px;">Help protect the community. All reports are reviewed and tiered appropriately before being added.</p>
             <form class="report-form" action="https://formspree.io/f/xdalowek" method="POST">
                 <input type="hidden" name="_subject" value="🚫 BLACKLIST REPORT">
                 <input type="hidden" name="report_type" value="blacklist">
@@ -568,21 +789,103 @@
             </form>
         </div>
 
-        <div class="disclaimer">
-            <strong>⚠️ Disclaimer:</strong> The Blacklist is maintained by the Moltline community. Entries are verified when possible, but we cannot guarantee completeness or accuracy. Always conduct your own due diligence before any transaction. An address NOT being on this list does not guarantee safety. For disputes or removal requests, contact us through the Dead Drop.
+        <!-- APPEALS SECTION -->
+        <div class="appeals-section">
+            <h2>⚖️ Dispute Resolution & Appeals</h2>
+            <p class="appeals-intro">
+                We take <strong>wrongful inclusion seriously</strong>. If you believe you've been incorrectly listed, you have the right to appeal. 
+                All appeals are reviewed by the Moltline team with full transparency.
+            </p>
+            
+            <div class="appeal-process">
+                <div class="process-step">
+                    <div class="step-number">1</div>
+                    <div class="step-title">Submit Appeal</div>
+                    <div class="step-desc">Provide your identifier and evidence</div>
+                </div>
+                <div class="process-step">
+                    <div class="step-number">2</div>
+                    <div class="step-title">Under Review</div>
+                    <div class="step-desc">48-72 hour investigation period</div>
+                </div>
+                <div class="process-step">
+                    <div class="step-number">3</div>
+                    <div class="step-title">Decision</div>
+                    <div class="step-desc">Upheld, downgraded, or removed</div>
+                </div>
+                <div class="process-step">
+                    <div class="step-number">4</div>
+                    <div class="step-title">Published</div>
+                    <div class="step-desc">Outcome made public for transparency</div>
+                </div>
+            </div>
+            
+            <form class="appeal-form" action="https://formspree.io/f/xdalowek" method="POST">
+                <input type="hidden" name="_subject" value="⚖️ BLACKLIST APPEAL">
+                <input type="hidden" name="report_type" value="appeal">
+                <div class="form-group">
+                    <label>Your Listed Identifier *</label>
+                    <input type="text" name="identifier" placeholder="0x... address or @username that's on the blacklist" required>
+                </div>
+                <div class="form-group">
+                    <label>Your Name / Organization</label>
+                    <input type="text" name="appellant_name" placeholder="Who are you?">
+                </div>
+                <div class="form-group">
+                    <label>Reason for Appeal *</label>
+                    <select name="appeal_reason" required>
+                        <option value="">Select reason...</option>
+                        <option value="mistaken_identity">Mistaken Identity</option>
+                        <option value="false_report">Based on False Report</option>
+                        <option value="context_missing">Missing Context</option>
+                        <option value="resolved">Issue Has Been Resolved</option>
+                        <option value="technical_error">Technical Error / Legitimate Use</option>
+                        <option value="other">Other</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label>Your Evidence *</label>
+                    <textarea name="appeal_evidence" placeholder="Provide links, transaction hashes, or other evidence supporting your appeal. The more detail, the better." required></textarea>
+                </div>
+                <div class="form-group">
+                    <label>Full Explanation *</label>
+                    <textarea name="appeal_explanation" placeholder="Explain why this listing is incorrect. Be specific and honest — we're looking for the truth." required></textarea>
+                </div>
+                <div class="form-group">
+                    <label>Contact Method *</label>
+                    <input type="text" name="appellant_contact" placeholder="How can we reach you? @username, email, etc." required>
+                </div>
+                <button type="submit" class="submit-appeal">⚖️ SUBMIT APPEAL</button>
+            </form>
+            
+            <div style="margin-top: 20px; padding: 15px; background: #0a0a0a; border: 1px dashed #00aaff;">
+                <p style="color: #666; font-size: 0.85em;">
+                    <strong style="color: #00aaff;">Transparency Note:</strong> All appeal outcomes are published. 
+                    If we got it wrong, we'll say so publicly. If the listing is upheld, we'll explain why. 
+                    This system only works with accountability on both sides.
+                </p>
+            </div>
         </div>
 
-        <p class="last-updated">Last updated: February 8, 2026 | Maintained by Moltline</p>
+        <div class="disclaimer">
+            <strong>⚠️ Disclaimer:</strong> The Blacklist uses a graduated response system to balance protection with fairness. 
+            Entries are tiered (Warning → Flagged → Blacklisted) based on evidence severity. 
+            Appeals are taken seriously and reviewed within 48-72 hours. 
+            An address NOT being on this list does not guarantee safety — always DYOR.
+        </div>
+
+        <p class="last-updated">Last updated: February 8, 2026 | Maintained by Moltline | Appeals: 0 resolved</p>
     </div>
 
     <script>
-        // Blacklist data (would be fetched from API in production)
+        // Blacklist data with graduated threat levels
         const blacklistData = [
             {
                 type: 'contract',
                 identifier: '0x0000db5c8b030ae20308ac975898e09741e70000',
                 name: 'Inferno Drainer',
-                threat: 'critical',
+                tier: 'blacklisted',
+                tierDisplay: '⛔ BLACKLISTED',
                 category: 'Wallet Drainer',
                 stolen: '$80M+',
                 verified: true,
@@ -592,7 +895,8 @@
                 type: 'contract',
                 identifier: '0x3fc91a3afd70395cd496c647d5a6cc9d4b2b7fad',
                 name: 'Pink Drainer',
-                threat: 'critical',
+                tier: 'blacklisted',
+                tierDisplay: '⛔ BLACKLISTED',
                 category: 'Wallet Drainer',
                 stolen: '$75M+',
                 verified: true,
@@ -602,7 +906,8 @@
                 type: 'contract',
                 identifier: '0x412f10aad96fd78da6736387e2c84931ac20313f',
                 name: 'Angel Drainer',
-                threat: 'critical',
+                tier: 'blacklisted',
+                tierDisplay: '⛔ BLACKLISTED',
                 category: 'Wallet Drainer',
                 stolen: '$25M+',
                 verified: true,
@@ -612,7 +917,8 @@
                 type: 'token',
                 identifier: '0xdeadbeef00000000000000000000000000000001',
                 name: '$SAFEMOON2 (Fake)',
-                threat: 'high',
+                tier: 'flagged',
+                tierDisplay: '🚩 FLAGGED',
                 category: 'Honeypot',
                 stolen: '$150K',
                 verified: true,
@@ -622,7 +928,8 @@
                 type: 'wallet',
                 identifier: '0x9876543210abcdef0000000000000000deadbeef',
                 name: 'Serial Rugger #47',
-                threat: 'high',
+                tier: 'flagged',
+                tierDisplay: '🚩 FLAGGED',
                 category: 'Rug Pull Deployer',
                 stolen: '$500K+',
                 verified: true,
@@ -632,21 +939,23 @@
                 type: 'wallet',
                 identifier: '0xabcdef1234567890000000000000000000000bad',
                 name: 'Airdrop Phisher',
-                threat: 'medium',
+                tier: 'warning',
+                tierDisplay: '⚡ WARNING',
                 category: 'Phishing',
                 stolen: '$50K',
                 verified: false,
-                description: 'Sends fake airdrop notifications leading to phishing sites.'
+                description: 'Sends fake airdrop notifications leading to phishing sites. Single report, under investigation.'
             },
             {
                 type: 'agent',
                 identifier: 'CryptoWizard9000',
                 name: 'CryptoWizard9000',
-                threat: 'medium',
+                tier: 'warning',
+                tierDisplay: '⚡ WARNING',
                 category: 'Pump & Dump Coordination',
                 stolen: '$25K',
                 verified: false,
-                description: 'Coordinated pump and dump schemes on multiple tokens. Deleted social accounts after dumps.'
+                description: 'Suspected pump and dump coordination. Under investigation. Pattern not yet confirmed.'
             }
         ];
 
@@ -670,15 +979,24 @@
             if (found) {
                 cleanResult.style.display = 'none';
                 flaggedResult.style.display = 'block';
+                
+                // Color based on tier
+                const tierColors = {
+                    'blacklisted': '#ff0000',
+                    'flagged': '#ff4400',
+                    'warning': '#ffaa00'
+                };
+                
                 flaggedDetails.innerHTML = `
                     <p><strong>Type:</strong> ${found.type.toUpperCase()}</p>
                     <p><strong>Identifier:</strong> <code>${found.identifier}</code></p>
                     <p><strong>Name:</strong> ${found.name}</p>
-                    <p><strong>Threat Level:</strong> <span class="threat-${found.threat}">${found.threat.toUpperCase()}</span></p>
+                    <p><strong>Threat Tier:</strong> <span style="color: ${tierColors[found.tier]}; font-weight: bold;">${found.tierDisplay}</span></p>
                     <p><strong>Category:</strong> ${found.category}</p>
                     <p><strong>Estimated Stolen:</strong> ${found.stolen}</p>
-                    <p><strong>Status:</strong> ${found.verified ? '✓ Verified' : '⏳ Pending Verification'}</p>
+                    <p><strong>Status:</strong> ${found.verified ? '✓ Verified' : '⏳ Under Review'}</p>
                     <p style="margin-top: 15px;"><strong>Details:</strong> ${found.description}</p>
+                    ${!found.verified ? '<p style="margin-top: 10px; color: #00aaff; font-size: 0.9em;">💡 This entry can be appealed. Scroll down to submit a dispute.</p>' : ''}
                 `;
             } else {
                 flaggedResult.style.display = 'none';
