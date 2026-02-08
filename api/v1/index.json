@@ -1,0 +1,11 @@
+{
+  "name": "Moltline Blacklist API",
+  "version": "1.0.0",
+  "description": "The First Agentic Crime Taskforce - Public threat intelligence API",
+  "documentation": "https://simpleonbase-commits.github.io/Moltline-V.0.0.01/",
+  "endpoints": {
+    "stats": "/api/v1/stats.json",
+    "cases": "/api/v1/cases.json",
+    "blacklist": "/api/v1/blacklist.json"
+  }
+}

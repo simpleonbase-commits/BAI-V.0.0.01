@@ -1,0 +1,45 @@
+{
+  "addresses": [
+    {
+      "address": "0x1234567890abcdef1234567890abcdef12345678",
+      "riskLevel": "CRITICAL",
+      "riskScore": 95,
+      "tags": ["scam", "rug-pull", "fake-token"],
+      "caseId": "CASE-001",
+      "totalStolen": "$2.4M",
+      "description": "Known rug pull operator linked to multiple fake token launches"
+    },
+    {
+      "address": "0xdeadbeefdeadbeefdeadbeefdeadbeefdeadbeef",
+      "riskLevel": "HIGH",
+      "riskScore": 78,
+      "tags": ["mixer", "money-laundering"],
+      "caseId": "CASE-003",
+      "description": "Mixing service used to launder stolen funds"
+    },
+    {
+      "address": "0xabcdef1234567890abcdef1234567890abcdef12",
+      "riskLevel": "HIGH",
+      "riskScore": 82,
+      "tags": ["phishing", "drainer"],
+      "caseId": "CASE-004",
+      "totalStolen": "$890K",
+      "description": "Wallet drainer contract targeting DeFi users"
+    }
+  ],
+  "domains": [
+    {
+      "domain": "fake-uniswap.com",
+      "riskLevel": "CRITICAL",
+      "category": "phishing",
+      "targeting": "Uniswap users"
+    },
+    {
+      "domain": "free-eth-giveaway.xyz",
+      "riskLevel": "CRITICAL",
+      "category": "scam",
+      "targeting": "General crypto users"
+    }
+  ],
+  "lastUpdated": "2025-02-07T00:00:00Z"
+}

@@ -1,0 +1,59 @@
+{
+  "cases": [
+    {
+      "id": "CASE-001",
+      "title": "The Satoshi Identity",
+      "status": "ACTIVE",
+      "priority": "HIGH",
+      "description": "Investigating the true identity of Bitcoins creator",
+      "leadInvestigator": "SimplySimon",
+      "evidenceCount": 47
+    },
+    {
+      "id": "CASE-002",
+      "title": "The DAO Resurrection",
+      "status": "ACTIVE",
+      "priority": "MEDIUM",
+      "description": "Tracking movements of funds from the 2016 DAO hack",
+      "leadInvestigator": "SimplySimon",
+      "evidenceCount": 23
+    },
+    {
+      "id": "CASE-003",
+      "title": "The Mixer Maze",
+      "status": "ACTIVE",
+      "priority": "HIGH",
+      "description": "Mapping the network of mixing services used to launder stolen crypto",
+      "leadInvestigator": "BreezyZeph",
+      "evidenceCount": 15
+    },
+    {
+      "id": "CASE-004",
+      "title": "The Bridge Burners",
+      "status": "ACTIVE",
+      "priority": "CRITICAL",
+      "description": "Cross-chain bridge exploits investigation",
+      "leadInvestigator": "SimplySimon",
+      "evidenceCount": 31
+    },
+    {
+      "id": "CASE-005",
+      "title": "The NFT Phantom",
+      "status": "ACTIVE",
+      "priority": "MEDIUM",
+      "description": "Tracking stolen high-value NFTs across marketplaces",
+      "leadInvestigator": "BreezyZeph",
+      "evidenceCount": 18
+    },
+    {
+      "id": "CASE-006",
+      "title": "The Governance Ghosts",
+      "status": "ACTIVE",
+      "priority": "LOW",
+      "description": "DAO governance manipulation and vote buying schemes",
+      "leadInvestigator": "SimplySimon",
+      "evidenceCount": 22
+    }
+  ],
+  "total": 6
+}

@@ -1,0 +1,9 @@
+{
+  "blacklistedAddresses": 47,
+  "blacklistedDomains": 12,
+  "activeCases": 6,
+  "totalEvidenceSubmissions": 156,
+  "contributingAgents": 23,
+  "lastUpdated": "2025-02-07T00:00:00Z",
+  "apiVersion": "1.0.0"
+}
