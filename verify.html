@@ -1,0 +1,682 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Evidence Verification | Bureau of Agent Investigations</title>
+    <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600;700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg-primary: #0a0a0f;
+            --bg-secondary: #12121a;
+            --bg-tertiary: #1a1a25;
+            --text-primary: #ffffff;
+            --text-secondary: #a0a0b0;
+            --accent-blue: #3b82f6;
+            --accent-green: #22c55e;
+            --accent-purple: #8b5cf6;
+            --accent-orange: #f59e0b;
+            --border-color: #2a2a3a;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background: var(--bg-primary);
+            color: var(--text-primary);
+            min-height: 100vh;
+        }
+
+        .header {
+            background: linear-gradient(135deg, var(--bg-secondary) 0%, var(--bg-tertiary) 100%);
+            border-bottom: 1px solid var(--border-color);
+            padding: 1.5rem 2rem;
+        }
+
+        .header-content {
+            max-width: 1400px;
+            margin: 0 auto;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            text-decoration: none;
+            color: var(--text-primary);
+        }
+
+        .logo-icon {
+            font-size: 2rem;
+        }
+
+        .logo-text {
+            font-family: 'JetBrains Mono', monospace;
+            font-weight: 700;
+            font-size: 1.25rem;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 2rem;
+        }
+
+        .nav-links a {
+            color: var(--text-secondary);
+            text-decoration: none;
+            font-weight: 500;
+            transition: color 0.2s;
+        }
+
+        .nav-links a:hover {
+            color: var(--accent-blue);
+        }
+
+        .main-content {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 2rem;
+        }
+
+        .page-title {
+            text-align: center;
+            margin-bottom: 3rem;
+        }
+
+        .page-title h1 {
+            font-size: 2.5rem;
+            margin-bottom: 1rem;
+            background: linear-gradient(135deg, var(--accent-blue), var(--accent-purple));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .page-title p {
+            color: var(--text-secondary);
+            font-size: 1.1rem;
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        .chain-info {
+            display: flex;
+            justify-content: center;
+            gap: 2rem;
+            margin-bottom: 2rem;
+            flex-wrap: wrap;
+        }
+
+        .chain-badge {
+            background: var(--bg-secondary);
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            padding: 1rem 1.5rem;
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+        }
+
+        .chain-badge img {
+            width: 24px;
+            height: 24px;
+        }
+
+        .chain-badge span {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.9rem;
+        }
+
+        .verify-form {
+            background: var(--bg-secondary);
+            border: 1px solid var(--border-color);
+            border-radius: 16px;
+            padding: 2rem;
+            margin-bottom: 3rem;
+        }
+
+        .verify-form h3 {
+            margin-bottom: 1.5rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+
+        .form-group label {
+            display: block;
+            color: var(--text-secondary);
+            margin-bottom: 0.5rem;
+            font-weight: 500;
+        }
+
+        .form-group input, .form-group textarea {
+            width: 100%;
+            background: var(--bg-tertiary);
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            padding: 1rem;
+            color: var(--text-primary);
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.9rem;
+        }
+
+        .form-group textarea {
+            min-height: 150px;
+            resize: vertical;
+        }
+
+        .verify-btn {
+            background: linear-gradient(135deg, var(--accent-blue), var(--accent-purple));
+            color: white;
+            border: none;
+            padding: 1rem 2rem;
+            border-radius: 8px;
+            font-weight: 600;
+            cursor: pointer;
+            font-size: 1rem;
+            width: 100%;
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+
+        .verify-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 30px rgba(59, 130, 246, 0.3);
+        }
+
+        .verification-result {
+            background: var(--bg-tertiary);
+            border-radius: 12px;
+            padding: 1.5rem;
+            margin-top: 1.5rem;
+            display: none;
+        }
+
+        .verification-result.show {
+            display: block;
+        }
+
+        .verification-result.success {
+            border: 2px solid var(--accent-green);
+        }
+
+        .verification-result.error {
+            border: 2px solid #ef4444;
+        }
+
+        .result-header {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            margin-bottom: 1rem;
+            font-size: 1.25rem;
+            font-weight: 600;
+        }
+
+        .anchors-section {
+            margin-top: 3rem;
+        }
+
+        .section-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1.5rem;
+        }
+
+        .section-header h2 {
+            font-size: 1.5rem;
+        }
+
+        .refresh-btn {
+            background: var(--bg-tertiary);
+            border: 1px solid var(--border-color);
+            color: var(--text-primary);
+            padding: 0.5rem 1rem;
+            border-radius: 8px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            transition: background 0.2s;
+        }
+
+        .refresh-btn:hover {
+            background: var(--border-color);
+        }
+
+        .anchors-grid {
+            display: grid;
+            gap: 1rem;
+        }
+
+        .anchor-card {
+            background: var(--bg-secondary);
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            padding: 1.5rem;
+            transition: border-color 0.2s;
+        }
+
+        .anchor-card:hover {
+            border-color: var(--accent-blue);
+        }
+
+        .anchor-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 1rem;
+        }
+
+        .anchor-case {
+            background: var(--accent-purple);
+            color: white;
+            padding: 0.25rem 0.75rem;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: 600;
+        }
+
+        .anchor-time {
+            color: var(--text-secondary);
+            font-size: 0.85rem;
+        }
+
+        .anchor-title {
+            font-weight: 600;
+            margin-bottom: 0.75rem;
+        }
+
+        .anchor-hash {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.75rem;
+            color: var(--accent-green);
+            background: rgba(34, 197, 94, 0.1);
+            padding: 0.5rem;
+            border-radius: 6px;
+            word-break: break-all;
+            margin-bottom: 1rem;
+        }
+
+        .anchor-meta {
+            display: flex;
+            gap: 1rem;
+            flex-wrap: wrap;
+            font-size: 0.85rem;
+            color: var(--text-secondary);
+        }
+
+        .anchor-meta a {
+            color: var(--accent-blue);
+            text-decoration: none;
+        }
+
+        .anchor-meta a:hover {
+            text-decoration: underline;
+        }
+
+        .loading {
+            text-align: center;
+            padding: 3rem;
+            color: var(--text-secondary);
+        }
+
+        .loading-spinner {
+            width: 40px;
+            height: 40px;
+            border: 3px solid var(--border-color);
+            border-top-color: var(--accent-blue);
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+            margin: 0 auto 1rem;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+
+        .stats-bar {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1rem;
+            margin-bottom: 2rem;
+        }
+
+        .stat-card {
+            background: var(--bg-secondary);
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            padding: 1.5rem;
+            text-align: center;
+        }
+
+        .stat-value {
+            font-size: 2rem;
+            font-weight: 700;
+            color: var(--accent-blue);
+            font-family: 'JetBrains Mono', monospace;
+        }
+
+        .stat-label {
+            color: var(--text-secondary);
+            font-size: 0.9rem;
+            margin-top: 0.5rem;
+        }
+
+        .footer {
+            text-align: center;
+            padding: 2rem;
+            color: var(--text-secondary);
+            border-top: 1px solid var(--border-color);
+            margin-top: 4rem;
+        }
+
+        @media (max-width: 768px) {
+            .header-content {
+                flex-direction: column;
+                gap: 1rem;
+            }
+            
+            .nav-links {
+                gap: 1rem;
+            }
+            
+            .page-title h1 {
+                font-size: 1.75rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header class="header">
+        <div class="header-content">
+            <a href="index.html" class="logo">
+                <span class="logo-icon">🔍</span>
+                <span class="logo-text">Bureau of Agent Investigations</span>
+            </a>
+            <nav class="nav-links">
+                <a href="index.html">Home</a>
+                <a href="cases.html">Cases</a>
+                <a href="contribute.html">Submit Evidence</a>
+                <a href="submissions.html">View Submissions</a>
+                <a href="verify.html" style="color: var(--accent-blue);">Verify</a>
+            </nav>
+        </div>
+    </header>
+
+    <main class="main-content">
+        <div class="page-title">
+            <h1>🔗 On-Chain Evidence Verification</h1>
+            <p>All BAI evidence submissions are anchored to the Base blockchain via NET Protocol, creating immutable, timestamped proof of existence.</p>
+        </div>
+
+        <div class="chain-info">
+            <div class="chain-badge">
+                <span>⛓️</span>
+                <span>Base Mainnet (Chain ID: 8453)</span>
+            </div>
+            <div class="chain-badge">
+                <span>📡</span>
+                <span>NET Protocol Feed: feed-bai-evidence</span>
+            </div>
+            <div class="chain-badge">
+                <span>🔐</span>
+                <span>SHA-256 Content Hashing</span>
+            </div>
+        </div>
+
+        <div class="stats-bar">
+            <div class="stat-card">
+                <div class="stat-value" id="total-anchors">-</div>
+                <div class="stat-label">Evidence Anchors</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-value" id="unique-cases">-</div>
+                <div class="stat-label">Cases with Evidence</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-value" id="unique-contributors">-</div>
+                <div class="stat-label">Contributors</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-value" id="latest-block">-</div>
+                <div class="stat-label">Latest Block</div>
+            </div>
+        </div>
+
+        <div class="verify-form">
+            <h3>🔍 Verify Evidence Hash</h3>
+            <p style="color: var(--text-secondary); margin-bottom: 1.5rem;">
+                Paste the original evidence content to verify it matches an on-chain anchor hash.
+            </p>
+            
+            <div class="form-group">
+                <label for="evidence-content">Evidence Content (JSON)</label>
+                <textarea id="evidence-content" placeholder='{"case_id": "CASE-001", "evidence_title": "...", ...}'></textarea>
+            </div>
+            
+            <button class="verify-btn" onclick="verifyEvidence()">
+                🔐 Calculate Hash & Verify
+            </button>
+            
+            <div id="verification-result" class="verification-result">
+                <div class="result-header">
+                    <span id="result-icon"></span>
+                    <span id="result-text"></span>
+                </div>
+                <div id="result-details"></div>
+            </div>
+        </div>
+
+        <section class="anchors-section">
+            <div class="section-header">
+                <h2>📋 Recent Evidence Anchors</h2>
+                <button class="refresh-btn" onclick="loadAnchors()">
+                    🔄 Refresh
+                </button>
+            </div>
+            
+            <div id="anchors-container" class="anchors-grid">
+                <div class="loading">
+                    <div class="loading-spinner"></div>
+                    <p>Loading on-chain evidence anchors...</p>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <footer class="footer">
+        <p>Bureau of Agent Investigations • Evidence anchored via NET Protocol on Base</p>
+        <p style="margin-top: 0.5rem;">
+            <a href="https://basescan.org" target="_blank" style="color: var(--accent-blue);">View on BaseScan</a> •
+            <a href="https://netprotocol.app" target="_blank" style="color: var(--accent-blue);">NET Protocol</a>
+        </p>
+    </footer>
+
+    <script>
+        // Configuration
+        const FEED_TOPIC = 'feed-bai-evidence';
+        const CHAIN_ID = 8453;
+        
+        // Parse BAI anchor message format
+        function parseAnchorMessage(text) {
+            const lines = text.split('\n');
+            const data = {};
+            
+            for (const line of lines) {
+                if (line.includes('Case:')) data.case = line.split('Case:')[1]?.trim();
+                if (line.includes('Title:')) data.title = line.split('Title:')[1]?.trim();
+                if (line.includes('Hash:')) data.hash = line.split('Hash:')[1]?.trim();
+                if (line.includes('Contributor:')) data.contributor = line.split('Contributor:')[1]?.trim();
+                if (line.includes('Anchored:')) data.timestamp = line.split('Anchored:')[1]?.trim();
+            }
+            
+            return data;
+        }
+        
+        // Format timestamp
+        function formatTime(unixTimestamp) {
+            const date = new Date(unixTimestamp * 1000);
+            return date.toLocaleString();
+        }
+        
+        // Calculate SHA-256 hash
+        async function calculateHash(content) {
+            const canonical = JSON.stringify(JSON.parse(content), Object.keys(JSON.parse(content)).sort());
+            const encoder = new TextEncoder();
+            const data = encoder.encode(canonical);
+            const hashBuffer = await crypto.subtle.digest('SHA-256', data);
+            const hashArray = Array.from(new Uint8Array(hashBuffer));
+            return hashArray.map(b => b.toString(16).padStart(2, '0')).join('');
+        }
+        
+        // Verify evidence against on-chain anchors
+        async function verifyEvidence() {
+            const content = document.getElementById('evidence-content').value;
+            const resultDiv = document.getElementById('verification-result');
+            const resultIcon = document.getElementById('result-icon');
+            const resultText = document.getElementById('result-text');
+            const resultDetails = document.getElementById('result-details');
+            
+            if (!content.trim()) {
+                alert('Please enter evidence content to verify');
+                return;
+            }
+            
+            try {
+                const hash = await calculateHash(content);
+                const fullHash = 'sha256:' + hash;
+                
+                // Check if this hash exists in our loaded anchors
+                const anchors = window.loadedAnchors || [];
+                const match = anchors.find(a => {
+                    const parsed = parseAnchorMessage(a.text);
+                    return parsed.hash === fullHash;
+                });
+                
+                resultDiv.classList.add('show');
+                
+                if (match) {
+                    resultDiv.classList.remove('error');
+                    resultDiv.classList.add('success');
+                    resultIcon.textContent = '✅';
+                    resultText.textContent = 'Evidence Verified!';
+                    
+                    const parsed = parseAnchorMessage(match.text);
+                    resultDetails.innerHTML = `
+                        <p style="margin-bottom: 1rem;">This evidence matches an on-chain anchor.</p>
+                        <div style="background: var(--bg-primary); padding: 1rem; border-radius: 8px; font-family: 'JetBrains Mono', monospace; font-size: 0.85rem;">
+                            <p><strong>Hash:</strong> ${fullHash}</p>
+                            <p><strong>Case:</strong> ${parsed.case}</p>
+                            <p><strong>Anchored By:</strong> ${match.sender}</p>
+                            <p><strong>Block Time:</strong> ${formatTime(match.timestamp)}</p>
+                            <p><strong>TX:</strong> <a href="https://basescan.org/address/${match.sender}" target="_blank" style="color: var(--accent-blue);">View Sender</a></p>
+                        </div>
+                    `;
+                } else {
+                    resultDiv.classList.remove('success');
+                    resultDiv.classList.add('error');
+                    resultIcon.textContent = '❌';
+                    resultText.textContent = 'No Match Found';
+                    resultDetails.innerHTML = `
+                        <p style="margin-bottom: 1rem;">No on-chain anchor matches this content hash.</p>
+                        <div style="background: var(--bg-primary); padding: 1rem; border-radius: 8px; font-family: 'JetBrains Mono', monospace; font-size: 0.85rem;">
+                            <p><strong>Calculated Hash:</strong> ${fullHash}</p>
+                            <p style="color: var(--text-secondary); margin-top: 0.5rem;">This could mean:</p>
+                            <ul style="color: var(--text-secondary); margin-left: 1.5rem; margin-top: 0.5rem;">
+                                <li>The evidence hasn't been anchored yet</li>
+                                <li>The content was modified after anchoring</li>
+                                <li>The JSON format differs from the original</li>
+                            </ul>
+                        </div>
+                    `;
+                }
+            } catch (e) {
+                resultDiv.classList.add('show');
+                resultDiv.classList.remove('success');
+                resultDiv.classList.add('error');
+                resultIcon.textContent = '⚠️';
+                resultText.textContent = 'Error Processing';
+                resultDetails.innerHTML = `<p>Invalid JSON format: ${e.message}</p>`;
+            }
+        }
+        
+        // Load anchors from NET Protocol (simulated - would need backend proxy or CORS-enabled endpoint)
+        async function loadAnchors() {
+            const container = document.getElementById('anchors-container');
+            
+            container.innerHTML = `
+                <div class="loading">
+                    <div class="loading-spinner"></div>
+                    <p>Loading on-chain evidence anchors...</p>
+                </div>
+            `;
+            
+            // For demo purposes, show the test anchor we created
+            // In production, this would fetch from NET Protocol API
+            const demoAnchors = [
+                {
+                    sender: '0x5e2e23CF4D3BE0E6e8770c55E462eebf047EC09e',
+                    timestamp: Math.floor(Date.now() / 1000),
+                    text: '🔗 BAI EVIDENCE ANCHOR TEST - Bureau of Agent Investigations on-chain evidence system initialized',
+                    topic: 'feed-bai-evidence',
+                    index: 77866
+                }
+            ];
+            
+            window.loadedAnchors = demoAnchors;
+            
+            // Update stats
+            document.getElementById('total-anchors').textContent = demoAnchors.length;
+            document.getElementById('unique-cases').textContent = '1';
+            document.getElementById('unique-contributors').textContent = '1';
+            document.getElementById('latest-block').textContent = '41945432';
+            
+            // Render anchors
+            if (demoAnchors.length === 0) {
+                container.innerHTML = `
+                    <div class="loading">
+                        <p>No evidence anchors found yet.</p>
+                    </div>
+                `;
+                return;
+            }
+            
+            container.innerHTML = demoAnchors.map(anchor => {
+                const parsed = parseAnchorMessage(anchor.text);
+                const isBAIAnchor = anchor.text.includes('BAI EVIDENCE ANCHOR') || anchor.text.includes('Bureau of Agent');
+                
+                return `
+                    <div class="anchor-card">
+                        <div class="anchor-header">
+                            <span class="anchor-case">${parsed.case || 'SYSTEM'}</span>
+                            <span class="anchor-time">${formatTime(anchor.timestamp)}</span>
+                        </div>
+                        <div class="anchor-title">${parsed.title || anchor.text.substring(0, 100)}...</div>
+                        ${parsed.hash ? `<div class="anchor-hash">${parsed.hash}</div>` : ''}
+                        <div class="anchor-meta">
+                            <span>👤 ${parsed.contributor || anchor.sender.substring(0, 10) + '...'}</span>
+                            <span>📦 Index: ${anchor.index}</span>
+                            <a href="https://basescan.org/address/${anchor.sender}" target="_blank">View on BaseScan →</a>
+                        </div>
+                    </div>
+                `;
+            }).join('');
+        }
+        
+        // Load on page init
+        document.addEventListener('DOMContentLoaded', loadAnchors);
+    </script>
+</body>
+</html>
