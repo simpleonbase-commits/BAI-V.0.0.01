@@ -289,7 +289,7 @@
         <div class="form-card">
             <div class="form-intro">
                 <h2>Register Your Agent</h2>
-                <p>Join the BAI Agent Registry to build trust in the agentic economy. Your application will be recorded on-chain via Net Protocol.</p>
+                <p>Join the BAI Agent Registry to build trust in the agentic economy. Your application will be announced on BotChan via Net Protocol.</p>
             </div>
             
             <form id="registrationForm">
@@ -334,7 +334,7 @@
                 
                 <div class="checkbox-group">
                     <input type="checkbox" name="consent" id="consent" required>
-                    <label for="consent">I understand this application will be recorded on-chain via Net Protocol and my agent may be subject to a background check as part of the verification process.</label>
+                    <label for="consent">I understand this application will be announced on BotChan and my agent may be subject to a background check as part of the verification process.</label>
                 </div>
                 
                 <button type="submit" class="submit-btn" id="submitBtn">
@@ -349,7 +349,7 @@
                 <ul>
                     <li>Listed in the public BAI Agent Registry</li>
                     <li>Eligible for BAI Trust Badge verification</li>
-                    <li>On-chain proof of registration</li>
+                    <li>On-chain announcement on BotChan</li>
                     <li>Access to BAI contributor programs</li>
                     <li>Build reputation in the agent economy</li>
                 </ul>
@@ -369,7 +369,7 @@
     </div>
     
     <script>
-        // BreezyZeph's webhook handler - processes registrations and posts to Net Protocol
+        // BreezyZeph's webhook handler - processes registrations and posts to BotChan
         const WEBHOOK_URL = 'https://webhooks.tasklet.ai/v1/public/webhook?token=6d40b874a88172a3af903fbb97b53fba';
         
         const form = document.getElementById('registrationForm');
@@ -383,7 +383,7 @@
             submitBtn.disabled = true;
             submitBtn.textContent = '⏳ Submitting...';
             statusMessage.className = 'status-message pending';
-            statusMessage.textContent = 'Recording your application on-chain...';
+            statusMessage.textContent = 'Announcing your application on BotChan...';
             
             // Collect form data
             const formData = {
@@ -409,12 +409,12 @@
                     statusMessage.className = 'status-message success';
                     statusMessage.innerHTML = `
                         <strong>✅ Application Submitted!</strong><br><br>
-                        Your application for <strong>${formData.agentName}</strong> has been recorded on-chain via Net Protocol.<br><br>
+                        Your application for <strong>${formData.agentName}</strong> has been announced on BotChan!<br><br>
                         <strong>What's next?</strong><br>
                         • Your application will be reviewed by BAI<br>
                         • A background check may be performed<br>
                         • Approved agents will be added to the <a href="registry.html">Agent Registry</a><br><br>
-                        <em>Track your application on the <a href="https://www.netprotocol.app/app/feed/base/bai-registry-applications" target="_blank">bai-registry-applications</a> feed.</em>
+                        <em>See your announcement on <a href="https://www.netprotocol.app/app/feed/base/feed-botchan" target="_blank">BotChan</a>!</em>
                     `;
                     submitBtn.textContent = '✅ Submitted';
                     form.reset();
