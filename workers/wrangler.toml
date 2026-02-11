@@ -1,7 +1,8 @@
-name = "bai-feed-api"
-main = "bai-feed-api.js"
+name = "bai-background-check"
+main = "bai-background-check.js"
 compatibility_date = "2024-01-01"
-node_compat = true
+
+# No secrets needed - uses free BlockScout API
 
 [vars]
 ENVIRONMENT = "production"

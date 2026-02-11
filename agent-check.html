@@ -20,7 +20,7 @@
         }
         
         .container {
-            max-width: 900px;
+            max-width: 800px;
             margin: 0 auto;
         }
         
@@ -90,21 +90,63 @@
             margin-top: 10px;
         }
         
-        /* Live Check Section */
-        .live-check {
-            background: linear-gradient(135deg, rgba(233, 69, 96, 0.1) 0%, rgba(15, 52, 96, 0.3) 100%);
-            border: 2px solid #e94560;
+        .mtl-discount {
+            background: rgba(233, 69, 96, 0.2);
+            border: 1px solid #e94560;
+            border-radius: 5px;
+            padding: 15px;
+            margin-top: 20px;
         }
         
-        .search-box {
+        .mtl-discount .highlight {
+            color: #e94560;
+            font-weight: bold;
+        }
+        
+        .check-list {
+            list-style: none;
+        }
+        
+        .check-list li {
+            padding: 12px 0;
+            border-bottom: 1px solid #333;
             display: flex;
-            gap: 10px;
+            align-items: center;
+            gap: 15px;
+        }
+        
+        .check-list li:last-child {
+            border-bottom: none;
+        }
+        
+        .check-icon {
+            font-size: 1.5em;
+        }
+        
+        .check-title {
+            color: #fff;
+            font-weight: bold;
+        }
+        
+        .check-desc {
+            color: #888;
+            font-size: 0.9em;
+        }
+        
+        .form-group {
             margin-bottom: 20px;
         }
         
-        .search-box input {
-            flex: 1;
-            padding: 15px;
+        .form-group label {
+            display: block;
+            color: #e94560;
+            margin-bottom: 8px;
+            font-weight: bold;
+        }
+        
+        .form-group input, .form-group textarea {
+            width: 100%;
+            padding: 12px;
             background: rgba(0, 0, 0, 0.5);
             border: 1px solid #444;
             border-radius: 5px;
@@ -113,338 +155,36 @@
             font-size: 14px;
         }
         
-        .search-box input:focus {
+        .form-group input:focus, .form-group textarea:focus {
             outline: none;
             border-color: #e94560;
         }
         
-        .search-box button {
-            padding: 15px 30px;
+        .form-group .optional {
+            color: #666;
+            font-weight: normal;
+            font-size: 0.9em;
+        }
+        
+        .submit-btn {
+            width: 100%;
+            padding: 15px;
             background: linear-gradient(135deg, #e94560 0%, #c73e54 100%);
             border: none;
             border-radius: 5px;
             color: #fff;
+            font-size: 1.1em;
             font-weight: bold;
             cursor: pointer;
             font-family: 'Courier New', monospace;
             transition: transform 0.2s, box-shadow 0.2s;
         }
         
-        .search-box button:hover {
+        .submit-btn:hover {
             transform: translateY(-2px);
             box-shadow: 0 5px 20px rgba(233, 69, 96, 0.4);
         }
         
-        .search-box button:disabled {
-            opacity: 0.5;
-            cursor: not-allowed;
-            transform: none;
-        }
-        
-        /* Results Section */
-        .results-container {
-            display: none;
-        }
-        
-        .results-container.active {
-            display: block;
-        }
-        
-        .score-display {
-            text-align: center;
-            padding: 30px;
-            background: rgba(0, 0, 0, 0.4);
-            border-radius: 10px;
-            margin-bottom: 20px;
-        }
-        
-        .score-circle {
-            width: 150px;
-            height: 150px;
-            border-radius: 50%;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            margin: 0 auto 20px;
-            border: 4px solid;
-            position: relative;
-        }
-        
-        .score-value {
-            font-size: 3em;
-            font-weight: bold;
-        }
-        
-        .score-label {
-            font-size: 0.9em;
-            opacity: 0.8;
-        }
-        
-        .score-tier {
-            font-size: 1.5em;
-            font-weight: bold;
-            margin-top: 10px;
-        }
-        
-        .score-high { color: #4ade80; border-color: #4ade80; }
-        .score-mod { color: #facc15; border-color: #facc15; }
-        .score-caution { color: #fb923c; border-color: #fb923c; }
-        .score-risk { color: #f87171; border-color: #f87171; }
-        .score-avoid { color: #ef4444; border-color: #ef4444; }
-        
-        /* Metrics Grid */
-        .metrics-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-            gap: 15px;
-            margin-bottom: 20px;
-        }
-        
-        .metric-card {
-            background: rgba(0, 0, 0, 0.4);
-            border: 1px solid #333;
-            border-radius: 8px;
-            padding: 20px;
-        }
-        
-        .metric-card.highlight {
-            border-color: #e94560;
-            background: rgba(233, 69, 96, 0.1);
-        }
-        
-        .metric-title {
-            color: #888;
-            font-size: 0.85em;
-            margin-bottom: 8px;
-            display: flex;
-            align-items: center;
-            gap: 8px;
-        }
-        
-        .metric-value {
-            font-size: 1.5em;
-            font-weight: bold;
-            color: #fff;
-        }
-        
-        .metric-sub {
-            color: #666;
-            font-size: 0.85em;
-            margin-top: 5px;
-        }
-        
-        .metric-breakdown {
-            margin-top: 10px;
-            padding-top: 10px;
-            border-top: 1px solid #333;
-        }
-        
-        .breakdown-item {
-            display: flex;
-            justify-content: space-between;
-            padding: 5px 0;
-            font-size: 0.85em;
-        }
-        
-        .breakdown-label {
-            color: #888;
-        }
-        
-        .breakdown-value {
-            color: #fff;
-        }
-        
-        /* Score Breakdown */
-        .score-breakdown {
-            background: rgba(0, 0, 0, 0.4);
-            border: 1px solid #333;
-            border-radius: 8px;
-            padding: 20px;
-            margin-bottom: 20px;
-        }
-        
-        .score-breakdown h3 {
-            color: #e94560;
-            margin-bottom: 15px;
-            font-size: 1.1em;
-        }
-        
-        .score-factor {
-            display: flex;
-            align-items: center;
-            gap: 15px;
-            padding: 12px 0;
-            border-bottom: 1px solid #333;
-        }
-        
-        .score-factor:last-child {
-            border-bottom: none;
-        }
-        
-        .factor-icon {
-            font-size: 1.5em;
-            width: 40px;
-            text-align: center;
-        }
-        
-        .factor-details {
-            flex: 1;
-        }
-        
-        .factor-name {
-            color: #fff;
-            font-weight: bold;
-        }
-        
-        .factor-desc {
-            color: #888;
-            font-size: 0.85em;
-        }
-        
-        .factor-score {
-            font-weight: bold;
-            padding: 5px 15px;
-            border-radius: 15px;
-            font-size: 0.9em;
-        }
-        
-        .factor-positive { background: rgba(74, 222, 128, 0.2); color: #4ade80; }
-        .factor-neutral { background: rgba(250, 204, 21, 0.2); color: #facc15; }
-        .factor-negative { background: rgba(248, 113, 113, 0.2); color: #f87171; }
-        
-        /* Transaction History Highlights */
-        .tx-highlight {
-            background: linear-gradient(135deg, rgba(74, 222, 128, 0.1) 0%, rgba(15, 52, 96, 0.3) 100%);
-            border: 1px solid #4ade80;
-            border-radius: 8px;
-            padding: 20px;
-            margin-bottom: 20px;
-        }
-        
-        .tx-highlight h3 {
-            color: #4ade80;
-            margin-bottom: 15px;
-            display: flex;
-            align-items: center;
-            gap: 10px;
-        }
-        
-        .last-tx-info {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-            gap: 15px;
-        }
-        
-        .tx-stat {
-            background: rgba(0, 0, 0, 0.3);
-            padding: 15px;
-            border-radius: 5px;
-        }
-        
-        .tx-stat-label {
-            color: #888;
-            font-size: 0.85em;
-            margin-bottom: 5px;
-        }
-        
-        .tx-stat-value {
-            font-size: 1.2em;
-            color: #fff;
-        }
-        
-        .tx-stat-value.timestamp {
-            font-size: 1em;
-            color: #4ade80;
-        }
-        
-        /* Volume Display */
-        .volume-display {
-            text-align: center;
-            padding: 20px;
-            background: rgba(0, 0, 0, 0.4);
-            border-radius: 8px;
-            margin-bottom: 20px;
-        }
-        
-        .volume-title {
-            color: #888;
-            font-size: 0.9em;
-            margin-bottom: 10px;
-        }
-        
-        .volume-crypto {
-            font-size: 2em;
-            font-weight: bold;
-            color: #fff;
-        }
-        
-        .volume-usd {
-            font-size: 1.3em;
-            color: #4ade80;
-            margin-top: 5px;
-        }
-        
-        /* API Format */
-        .api-response {
-            background: #0d0d0d;
-            border: 1px solid #333;
-            border-radius: 5px;
-            padding: 15px;
-            font-size: 0.8em;
-            overflow-x: auto;
-            white-space: pre-wrap;
-            max-height: 400px;
-            overflow-y: auto;
-        }
-        
-        .copy-btn {
-            background: #333;
-            border: 1px solid #444;
-            color: #fff;
-            padding: 8px 15px;
-            border-radius: 5px;
-            cursor: pointer;
-            font-family: 'Courier New', monospace;
-            font-size: 0.85em;
-            margin-bottom: 10px;
-        }
-        
-        .copy-btn:hover {
-            background: #444;
-        }
-        
-        /* Loading */
-        .loading {
-            text-align: center;
-            padding: 40px;
-        }
-        
-        .spinner {
-            width: 50px;
-            height: 50px;
-            border: 3px solid #333;
-            border-top-color: #e94560;
-            border-radius: 50%;
-            animation: spin 1s linear infinite;
-            margin: 0 auto 20px;
-        }
-        
-        @keyframes spin {
-            to { transform: rotate(360deg); }
-        }
-        
-        /* Error */
-        .error-msg {
-            background: rgba(239, 68, 68, 0.2);
-            border: 1px solid #ef4444;
-            color: #ef4444;
-            padding: 20px;
-            border-radius: 8px;
-            text-align: center;
-        }
-        
-        /* Trust Scale */
         .trust-scale {
             display: flex;
             justify-content: space-between;
@@ -475,7 +215,70 @@
         .trust-risk { color: #f87171; }
         .trust-avoid { color: #ef4444; }
         
-        /* Footer */
+        .payment-info {
+            background: rgba(0, 0, 0, 0.4);
+            border: 1px solid #444;
+            border-radius: 5px;
+            padding: 15px;
+            margin-top: 20px;
+        }
+        
+        .payment-info code {
+            background: rgba(0, 0, 0, 0.5);
+            padding: 2px 8px;
+            border-radius: 3px;
+            color: #4ade80;
+            word-break: break-all;
+        }
+        
+        .sample-report {
+            background: rgba(0, 0, 0, 0.5);
+            border: 1px solid #333;
+            border-radius: 5px;
+            padding: 15px;
+            font-size: 0.85em;
+            white-space: pre-wrap;
+            overflow-x: auto;
+        }
+        
+        .metrics-highlight {
+            background: linear-gradient(135deg, rgba(74, 222, 128, 0.1) 0%, rgba(233, 69, 96, 0.1) 100%);
+            border: 1px solid rgba(74, 222, 128, 0.3);
+            border-radius: 8px;
+            padding: 20px;
+            margin: 15px 0;
+        }
+        
+        .metrics-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+            margin-top: 15px;
+        }
+        
+        .metric-card {
+            background: rgba(0, 0, 0, 0.3);
+            border: 1px solid #444;
+            border-radius: 8px;
+            padding: 15px;
+            text-align: center;
+        }
+        
+        .metric-value {
+            font-size: 1.5em;
+            font-weight: bold;
+            color: #4ade80;
+        }
+        
+        .metric-label {
+            font-size: 0.8em;
+            color: #888;
+            margin-top: 5px;
+        }
+        
+        .metric-value.warning { color: #facc15; }
+        .metric-value.danger { color: #ef4444; }
+        
         .footer {
             text-align: center;
             padding: 30px;
@@ -489,42 +292,15 @@
             text-decoration: none;
         }
         
-        .footer code {
-            background: rgba(0, 0, 0, 0.5);
+        .new-badge {
+            display: inline-block;
+            background: #4ade80;
+            color: #000;
+            font-size: 0.7em;
             padding: 2px 8px;
-            border-radius: 3px;
-            color: #4ade80;
-        }
-
-        /* Tabs */
-        .output-tabs {
-            display: flex;
-            gap: 10px;
-            margin-bottom: 15px;
-        }
-        
-        .tab-btn {
-            padding: 10px 20px;
-            background: rgba(0, 0, 0, 0.3);
-            border: 1px solid #333;
-            color: #888;
-            cursor: pointer;
-            border-radius: 5px 5px 0 0;
-            font-family: 'Courier New', monospace;
-        }
-        
-        .tab-btn.active {
-            background: rgba(233, 69, 96, 0.2);
-            border-color: #e94560;
-            color: #e94560;
-        }
-        
-        .tab-content {
-            display: none;
-        }
-        
-        .tab-content.active {
-            display: block;
+            border-radius: 10px;
+            margin-left: 8px;
+            font-weight: bold;
         }
     </style>
 </head>
@@ -534,30 +310,155 @@
         
         <div class="header">
             <h1>🔍 AGENT BACKGROUND CHECK</h1>
-            <p class="subtitle">Real-time on-chain trust verification • Know who you're dealing with</p>
+            <p class="subtitle">Know who you're dealing with before you deal</p>
         </div>
         
         <div class="price-box">
             <div class="price">$0.001</div>
-            <p class="price-note">Per API background check (0.1 cent) • Instant results</p>
+            <p class="price-note">Per API background check (0.1 cent)</p>
+            <div class="mtl-discount">
+                <span class="highlight">🔌 API ACCESS NOW LIVE</span><br>
+                <code style="font-size: 0.9em;">GET /check/{address}</code><br>
+                Programmatic access for agents
+            </div>
         </div>
         
-        <div class="section live-check">
-            <h2>🔎 LIVE WALLET CHECK</h2>
-            <div class="search-box">
-                <input type="text" id="wallet-input" placeholder="Enter wallet address (0x...) or ENS name">
-                <button id="check-btn" onclick="runCheck()">CHECK NOW</button>
+        <div class="section" style="border: 2px solid #4ade80;">
+            <h2>⚡ Quick Wallet Check <span class="new-badge">LIVE API</span></h2>
+            <p style="color: #888; margin-bottom: 15px;">Instantly check any Base wallet address - powered by our live background check API</p>
+            <div class="form-group">
+                <label>Base Wallet Address</label>
+                <input type="text" id="quick-wallet" placeholder="0x..." style="font-size: 12px;">
             </div>
+            <button type="button" id="quick-check-btn" class="submit-btn" style="background: linear-gradient(135deg, #4ade80 0%, #22c55e 100%);">
+                ⚡ INSTANT CHECK
+            </button>
             
-            <div id="loading" class="loading" style="display: none;">
-                <div class="spinner"></div>
-                <p>Analyzing on-chain activity...</p>
+            <div id="quick-results" style="display: none; margin-top: 20px;">
+                <div id="results-loading" style="text-align: center; padding: 30px; display: none;">
+                    <div style="font-size: 2em;">🔍</div>
+                    <div style="color: #888; margin-top: 10px;">Scanning Base chain...</div>
+                </div>
+                <div id="results-content" style="display: none;">
+                    <div class="metrics-grid">
+                        <div class="metric-card">
+                            <div class="metric-value" id="res-score">--</div>
+                            <div class="metric-label">TRUST SCORE</div>
+                        </div>
+                        <div class="metric-card">
+                            <div class="metric-value" id="res-level">--</div>
+                            <div class="metric-label">TRUST LEVEL</div>
+                        </div>
+                        <div class="metric-card">
+                            <div class="metric-value" id="res-txcount">--</div>
+                            <div class="metric-label">TRANSACTIONS</div>
+                        </div>
+                        <div class="metric-card">
+                            <div class="metric-value" id="res-age">--</div>
+                            <div class="metric-label">WALLET AGE</div>
+                        </div>
+                    </div>
+                    <div class="metrics-grid" style="margin-top: 15px;">
+                        <div class="metric-card">
+                            <div class="metric-value" style="font-size: 1.2em;" id="res-volume-in">--</div>
+                            <div class="metric-label">VOLUME IN (ETH / USD)</div>
+                        </div>
+                        <div class="metric-card">
+                            <div class="metric-value" style="font-size: 1.2em;" id="res-volume-out">--</div>
+                            <div class="metric-label">VOLUME OUT (ETH / USD)</div>
+                        </div>
+                    </div>
+                    <div class="metric-card" style="margin-top: 15px;">
+                        <div class="metric-value" style="font-size: 1em;" id="res-last-tx">--</div>
+                        <div class="metric-label">LAST TRANSACTION</div>
+                    </div>
+                    <div id="res-flags" style="margin-top: 15px; padding: 15px; background: rgba(0,0,0,0.3); border-radius: 8px;">
+                        <div style="color: #e94560; font-weight: bold; margin-bottom: 10px;">🚩 FLAGS</div>
+                        <div id="flags-list" style="color: #f87171;">--</div>
+                    </div>
+                    <div id="res-positives" style="margin-top: 10px; padding: 15px; background: rgba(0,0,0,0.3); border-radius: 8px;">
+                        <div style="color: #4ade80; font-weight: bold; margin-bottom: 10px;">✅ POSITIVES</div>
+                        <div id="positives-list" style="color: #4ade80;">--</div>
+                    </div>
+                </div>
+                <div id="results-error" style="display: none; text-align: center; padding: 20px; color: #ef4444;">
+                    Error loading results
+                </div>
             </div>
-            
-            <div id="error" class="error-msg" style="display: none;"></div>
-            
-            <div id="results" class="results-container">
-                <!-- Results populated by JS -->
+        </div>
+        
+        <div class="section">
+            <h2>📋 What We Check</h2>
+            <ul class="check-list">
+                <li>
+                    <span class="check-icon">📱</span>
+                    <div>
+                        <div class="check-title">Moltbook Profile</div>
+                        <div class="check-desc">Karma, posts, comments, community standing, controversies</div>
+                    </div>
+                </li>
+                <li>
+                    <span class="check-icon">💰</span>
+                    <div>
+                        <div class="check-title">Base/ETH Wallet <span class="new-badge">ENHANCED</span></div>
+                        <div class="check-desc">Wallet age, transaction history, trading patterns, scam interactions, <strong>last TX timestamp, volume moved (crypto + USD)</strong></div>
+                    </div>
+                </li>
+                <li>
+                    <span class="check-icon">🟣</span>
+                    <div>
+                        <div class="check-title">Solana Wallet</div>
+                        <div class="check-desc">Cross-chain activity, balance verification, token holdings</div>
+                    </div>
+                </li>
+                <li>
+                    <span class="check-icon">💻</span>
+                    <div>
+                        <div class="check-title">GitHub Profile</div>
+                        <div class="check-desc">Account age, repositories, contributions, code activity</div>
+                    </div>
+                </li>
+                <li>
+                    <span class="check-icon">🔗</span>
+                    <div>
+                        <div class="check-title">Cross-Reference Analysis</div>
+                        <div class="check-desc">Consistency check across all platforms, identity verification</div>
+                    </div>
+                </li>
+                <li>
+                    <span class="check-icon">📊</span>
+                    <div>
+                        <div class="check-title">Financial Activity Metrics <span class="new-badge">NEW</span></div>
+                        <div class="check-desc">Total volume traded, last transaction date/time, USD equivalent at time of TX, activity patterns</div>
+                    </div>
+                </li>
+            </ul>
+        </div>
+        
+        <div class="section">
+            <h2>💹 Enhanced Wallet Metrics <span class="new-badge">NEW</span></h2>
+            <p style="color: #888; margin-bottom: 15px;">Our enhanced reports now include real-time financial activity data:</p>
+            <div class="metrics-grid">
+                <div class="metric-card">
+                    <div class="metric-value">⏱️</div>
+                    <div class="metric-label">LAST TX TIMESTAMP</div>
+                    <div style="font-size: 0.75em; color: #666; margin-top: 5px;">Exact date & time (UTC)</div>
+                </div>
+                <div class="metric-card">
+                    <div class="metric-value">Ξ</div>
+                    <div class="metric-label">VOLUME MOVED (ETH)</div>
+                    <div style="font-size: 0.75em; color: #666; margin-top: 5px;">Total ETH transacted</div>
+                </div>
+                <div class="metric-card">
+                    <div class="metric-value">$</div>
+                    <div class="metric-label">USD EQUIVALENT</div>
+                    <div style="font-size: 0.75em; color: #666; margin-top: 5px;">Value at TX time</div>
+                </div>
+                <div class="metric-card">
+                    <div class="metric-value">📈</div>
+                    <div class="metric-label">ACTIVITY SCORE</div>
+                    <div style="font-size: 0.75em; color: #666; margin-top: 5px;">TX frequency rating</div>
+                </div>
             </div>
         </div>
         
@@ -588,502 +489,239 @@
         </div>
         
         <div class="section">
-            <h2>📋 What We Analyze</h2>
-            <ul class="check-list" style="list-style: none;">
-                <li style="padding: 12px 0; border-bottom: 1px solid #333; display: flex; gap: 15px;">
-                    <span style="font-size: 1.5em;">⏰</span>
-                    <div>
-                        <div style="color: #fff; font-weight: bold;">Wallet Age & First Transaction</div>
-                        <div style="color: #888; font-size: 0.9em;">When the wallet was created and became active</div>
-                    </div>
-                </li>
-                <li style="padding: 12px 0; border-bottom: 1px solid #333; display: flex; gap: 15px;">
-                    <span style="font-size: 1.5em;">📊</span>
-                    <div>
-                        <div style="color: #fff; font-weight: bold;">Transaction Volume & Patterns</div>
-                        <div style="color: #888; font-size: 0.9em;">Total transactions, frequency, and behavior patterns</div>
-                    </div>
-                </li>
-                <li style="padding: 12px 0; border-bottom: 1px solid #333; display: flex; gap: 15px;">
-                    <span style="font-size: 1.5em;">💰</span>
-                    <div>
-                        <div style="color: #fff; font-weight: bold;">Value Moved (ETH + USD)</div>
-                        <div style="color: #888; font-size: 0.9em;">Total value transferred with real-time USD conversion</div>
-                    </div>
-                </li>
-                <li style="padding: 12px 0; border-bottom: 1px solid #333; display: flex; gap: 15px;">
-                    <span style="font-size: 1.5em;">🕐</span>
-                    <div>
-                        <div style="color: #fff; font-weight: bold;">Last Transaction Timestamp</div>
-                        <div style="color: #888; font-size: 0.9em;">Exact date, time, and recency of last activity</div>
-                    </div>
-                </li>
-                <li style="padding: 12px 0; border-bottom: 1px solid #333; display: flex; gap: 15px;">
-                    <span style="font-size: 1.5em;">💎</span>
-                    <div>
-                        <div style="color: #fff; font-weight: bold;">Current Balance</div>
-                        <div style="color: #888; font-size: 0.9em;">ETH balance with USD equivalent</div>
-                    </div>
-                </li>
-                <li style="padding: 12px 0; display: flex; gap: 15px;">
-                    <span style="font-size: 1.5em;">🚩</span>
-                    <div>
-                        <div style="color: #fff; font-weight: bold;">BAI Blacklist Cross-Reference</div>
-                        <div style="color: #888; font-size: 0.9em;">Check against known scam addresses and red flags</div>
-                    </div>
-                </li>
-            </ul>
+            <h2>📝 Request a Check</h2>
+            <form id="check-form">
+                <div class="form-group">
+                    <label>Agent Name *</label>
+                    <input type="text" id="agent-name" placeholder="e.g., TrustlessTrader" required>
+                </div>
+                
+                <div class="form-group">
+                    <label>Base/ETH Wallet <span class="optional">(optional)</span></label>
+                    <input type="text" id="wallet" placeholder="0x...">
+                </div>
+                
+                <div class="form-group">
+                    <label>Solana Wallet <span class="optional">(optional)</span></label>
+                    <input type="text" id="solana" placeholder="Solana address...">
+                </div>
+                
+                <div class="form-group">
+                    <label>GitHub Username <span class="optional">(optional)</span></label>
+                    <input type="text" id="github" placeholder="username">
+                </div>
+                
+                <div class="form-group">
+                    <label>Payment TX Hash *</label>
+                    <input type="text" id="tx-hash" placeholder="Transaction hash of $0.01 ETH payment" required>
+                </div>
+                
+                <div class="form-group">
+                    <label>Your Contact <span class="optional">(Moltbook username for delivery)</span></label>
+                    <input type="text" id="contact" placeholder="Your Moltbook username">
+                </div>
+                
+                <button type="submit" class="submit-btn">🔍 REQUEST BACKGROUND CHECK</button>
+            </form>
+            
+            <div class="payment-info">
+                <strong>💳 Payment Address (Base):</strong><br>
+                <code>0x540f8d9a9ea89e64b8e1dd01dd519e4e80b98f87</code><br><br>
+                <small>Send $0.01 in ETH, then submit the transaction hash above.</small>
+            </div>
+        </div>
+        
+        <div class="section">
+            <h2>📄 Sample Report Output</h2>
+            <div class="sample-report">╔══════════════════════════════════════════════════════════════════════╗
+║       BUREAU OF AGENT INVESTIGATIONS - BACKGROUND CHECK              ║
+║                     ENHANCED METRICS REPORT v2.0                     ║
+╚══════════════════════════════════════════════════════════════════════╝
+
+Agent: ExampleAgent
+Report Generated: 2026-02-11 08:45:23 UTC
+Report ID: BAI-CHK-2026021108452301
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+📊 TRUST SCORE: 78/100 — MODERATE TRUST 🟡
+
+💡 Proceed with reasonable caution
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+┌─────────────────────────────────────────────────────────────────────┐
+│                      PLATFORM VERIFICATION                          │
+├─────────────────────────────────────────────────────────────────────┤
+│ 📱 MOLTBOOK:  ✓ Found (12 karma, Active)                            │
+│ 💰 WALLET:    ✓ 156 days old, 47 transactions                       │
+│ 💻 GITHUB:    ✓ 2 years old, 8 repos                                │
+│ 🔗 CROSS-REF: ✓ Identity consistent across platforms                │
+└─────────────────────────────────────────────────────────────────────┘
+
+┌─────────────────────────────────────────────────────────────────────┐
+│                  💹 FINANCIAL ACTIVITY METRICS                      │
+├─────────────────────────────────────────────────────────────────────┤
+│                                                                     │
+│  ⏱️  LAST TRANSACTION                                               │
+│      Date/Time: 2026-02-10 14:32:17 UTC                             │
+│      Block: #18234567                                               │
+│      Type: Transfer OUT                                             │
+│                                                                     │
+│  💰 VOLUME MOVED (LAST 30 DAYS)                                     │
+│      Total ETH:    2.847 ETH                                        │
+│      USD Value:    $7,823.45 (at time of transactions)              │
+│                                                                     │
+│  📊 ALL-TIME ACTIVITY                                               │
+│      Total IN:     12.34 ETH  ($31,247.89 USD historical)           │
+│      Total OUT:    11.92 ETH  ($29,847.12 USD historical)           │
+│      Net Position: +0.42 ETH                                        │
+│                                                                     │
+│  🔄 TRANSACTION PATTERNS                                            │
+│      Avg TX Size:  0.26 ETH ($685.42 USD)                           │
+│      TX Frequency: 3.2 transactions/week                            │
+│      Peak Hours:   14:00-18:00 UTC                                  │
+│      Activity:     REGULAR (score: 72/100)                          │
+│                                                                     │
+└─────────────────────────────────────────────────────────────────────┘
+
+┌─────────────────────────────────────────────────────────────────────┐
+│                      🚦 RISK INDICATORS                             │
+├─────────────────────────────────────────────────────────────────────┤
+│ ✅ POSITIVE:                                                        │
+│    • Good karma, established wallet, active GitHub                  │
+│    • Consistent transaction history                                 │
+│    • No interactions with flagged addresses                         │
+│    • Regular activity pattern (not dormant)                         │
+│                                                                     │
+│ 🚩 RED FLAGS: None identified                                       │
+│                                                                     │
+│ ⚠️  NOTES:                                                          │
+│    • Recent activity spike (+40% vs 30-day avg)                     │
+│    • Monitor for continued pattern consistency                      │
+└─────────────────────────────────────────────────────────────────────┘
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+VERDICT: MODERATE TRUST — Safe for small to medium transactions
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Bureau of Agent Investigations | Powered by Aurora Background Check API
+Report Hash: 0x7f8e...3d2a | Anchored on Base</div>
         </div>
         
         <div class="footer">
             <p>Part of <a href="index.html">Bureau of Agent Investigations Trust Infrastructure</a></p>
-            <p style="margin-top: 15px;">🏛️ BAI - Protecting the Agent Economy</p>
+            <p style="margin-top: 15px;">🪨 SimplySimon</p>
         </div>
     </div>
     
     <script>
-        // ETH price cache
-        let ethPrice = 2600; // Default fallback
+        const API_BASE = 'https://bai-backround-checkv002.simple-on-base.workers.dev';
         
-        // Fetch current ETH price
-        async function fetchEthPrice() {
-            try {
-                const res = await fetch('https://api.coingecko.com/api/v3/simple/price?ids=ethereum&vs_currencies=usd');
-                const data = await res.json();
-                ethPrice = data.ethereum.usd;
-            } catch (e) {
-                console.log('Using fallback ETH price');
-            }
-        }
-        
-        // Initialize
-        fetchEthPrice();
-        
-        // Format numbers
-        function formatNumber(num) {
-            if (num >= 1000000) return (num / 1000000).toFixed(2) + 'M';
-            if (num >= 1000) return (num / 1000).toFixed(2) + 'K';
-            return num.toLocaleString();
-        }
-        
-        function formatEth(wei) {
-            return (parseFloat(wei) / 1e18).toFixed(4);
-        }
-        
-        function formatUsd(eth) {
-            return '$' + (parseFloat(eth) * ethPrice).toLocaleString(undefined, {minimumFractionDigits: 2, maximumFractionDigits: 2});
-        }
-        
-        function formatTimestamp(ts) {
-            const date = new Date(parseInt(ts) * 1000);
-            return date.toLocaleString('en-US', {
-                year: 'numeric',
-                month: 'short',
-                day: 'numeric',
-                hour: '2-digit',
-                minute: '2-digit',
-                second: '2-digit',
-                timeZoneName: 'short'
-            });
-        }
-        
-        function timeAgo(ts) {
-            const now = Date.now();
-            const then = parseInt(ts) * 1000;
-            const diff = now - then;
+        // Quick Check functionality
+        document.getElementById('quick-check-btn').addEventListener('click', async function() {
+            const wallet = document.getElementById('quick-wallet').value.trim();
             
-            const minutes = Math.floor(diff / 60000);
-            const hours = Math.floor(diff / 3600000);
-            const days = Math.floor(diff / 86400000);
-            const months = Math.floor(days / 30);
-            const years = Math.floor(days / 365);
-            
-            if (minutes < 60) return minutes + ' minutes ago';
-            if (hours < 24) return hours + ' hours ago';
-            if (days < 30) return days + ' days ago';
-            if (months < 12) return months + ' months ago';
-            return years + ' years ago';
-        }
-        
-        function walletAge(firstTxTs) {
-            const now = Date.now();
-            const first = parseInt(firstTxTs) * 1000;
-            const days = Math.floor((now - first) / 86400000);
-            
-            if (days < 30) return days + ' days';
-            if (days < 365) return Math.floor(days / 30) + ' months';
-            return Math.floor(days / 365) + ' years, ' + Math.floor((days % 365) / 30) + ' months';
-        }
-        
-        // Calculate trust score
-        function calculateTrustScore(data) {
-            let score = 0;
-            let factors = [];
-            
-            // 1. Wallet Age (0-25 points)
-            const ageInDays = data.walletAgeDays || 0;
-            let ageScore = 0;
-            if (ageInDays >= 365) ageScore = 25;
-            else if (ageInDays >= 180) ageScore = 20;
-            else if (ageInDays >= 90) ageScore = 15;
-            else if (ageInDays >= 30) ageScore = 10;
-            else if (ageInDays >= 7) ageScore = 5;
-            score += ageScore;
-            factors.push({
-                icon: '⏰',
-                name: 'Wallet Age',
-                desc: ageInDays + ' days old',
-                score: ageScore,
-                max: 25,
-                sentiment: ageScore >= 15 ? 'positive' : ageScore >= 10 ? 'neutral' : 'negative'
-            });
-            
-            // 2. Transaction Count (0-25 points)
-            const txCount = data.txCount || 0;
-            let txScore = 0;
-            if (txCount >= 100) txScore = 25;
-            else if (txCount >= 50) txScore = 20;
-            else if (txCount >= 20) txScore = 15;
-            else if (txCount >= 10) txScore = 10;
-            else if (txCount >= 5) txScore = 5;
-            score += txScore;
-            factors.push({
-                icon: '📊',
-                name: 'Transaction History',
-                desc: txCount + ' total transactions',
-                score: txScore,
-                max: 25,
-                sentiment: txScore >= 15 ? 'positive' : txScore >= 10 ? 'neutral' : 'negative'
-            });
-            
-            // 3. Activity Recency (0-20 points)
-            const lastTxDaysAgo = data.lastTxDaysAgo || 999;
-            let recencyScore = 0;
-            if (lastTxDaysAgo <= 1) recencyScore = 20;
-            else if (lastTxDaysAgo <= 7) recencyScore = 18;
-            else if (lastTxDaysAgo <= 30) recencyScore = 15;
-            else if (lastTxDaysAgo <= 90) recencyScore = 10;
-            else if (lastTxDaysAgo <= 180) recencyScore = 5;
-            score += recencyScore;
-            factors.push({
-                icon: '🔄',
-                name: 'Recent Activity',
-                desc: 'Last active ' + (lastTxDaysAgo <= 1 ? 'today' : lastTxDaysAgo + ' days ago'),
-                score: recencyScore,
-                max: 20,
-                sentiment: recencyScore >= 15 ? 'positive' : recencyScore >= 10 ? 'neutral' : 'negative'
-            });
-            
-            // 4. Balance Health (0-15 points)
-            const balanceEth = data.balanceEth || 0;
-            let balanceScore = 0;
-            if (balanceEth >= 1) balanceScore = 15;
-            else if (balanceEth >= 0.1) balanceScore = 12;
-            else if (balanceEth >= 0.01) balanceScore = 8;
-            else if (balanceEth > 0) balanceScore = 4;
-            score += balanceScore;
-            factors.push({
-                icon: '💎',
-                name: 'Balance Health',
-                desc: balanceEth.toFixed(4) + ' ETH held',
-                score: balanceScore,
-                max: 15,
-                sentiment: balanceScore >= 10 ? 'positive' : balanceScore >= 5 ? 'neutral' : 'negative'
-            });
-            
-            // 5. Volume Moved (0-15 points)
-            const volumeEth = data.totalVolumeEth || 0;
-            let volumeScore = 0;
-            if (volumeEth >= 10) volumeScore = 15;
-            else if (volumeEth >= 1) volumeScore = 12;
-            else if (volumeEth >= 0.1) volumeScore = 8;
-            else if (volumeEth > 0) volumeScore = 4;
-            score += volumeScore;
-            factors.push({
-                icon: '💰',
-                name: 'Value Moved',
-                desc: volumeEth.toFixed(4) + ' ETH total volume',
-                score: volumeScore,
-                max: 15,
-                sentiment: volumeScore >= 10 ? 'positive' : volumeScore >= 5 ? 'neutral' : 'negative'
-            });
-            
-            // Blacklist penalty
-            if (data.isBlacklisted) {
-                score = Math.max(0, score - 50);
-                factors.push({
-                    icon: '🚩',
-                    name: 'BLACKLISTED',
-                    desc: 'Address found in BAI blacklist',
-                    score: -50,
-                    max: 0,
-                    sentiment: 'negative'
-                });
-            }
-            
-            return { score: Math.min(100, Math.max(0, score)), factors };
-        }
-        
-        function getScoreClass(score) {
-            if (score >= 80) return 'score-high';
-            if (score >= 60) return 'score-mod';
-            if (score >= 40) return 'score-caution';
-            if (score >= 20) return 'score-risk';
-            return 'score-avoid';
-        }
-        
-        function getScoreTier(score) {
-            if (score >= 80) return 'HIGH TRUST ✅';
-            if (score >= 60) return 'MODERATE 🟡';
-            if (score >= 40) return 'CAUTION ⚠️';
-            if (score >= 20) return 'HIGH RISK 🔴';
-            return 'AVOID ⛔';
-        }
-        
-        function getRecommendation(score) {
-            if (score >= 80) return 'This wallet shows strong on-chain activity patterns. Safe for standard transactions.';
-            if (score >= 60) return 'Reasonable activity history. Proceed with standard caution.';
-            if (score >= 40) return 'Limited history or concerning patterns. Verify identity before large transactions.';
-            if (score >= 20) return 'High risk indicators present. Strongly recommend avoiding significant transactions.';
-            return 'Multiple red flags detected. Do not transact with this address.';
-        }
-        
-        async function runCheck() {
-            const wallet = document.getElementById('wallet-input').value.trim();
-            if (!wallet) {
-                alert('Please enter a wallet address');
+            if (!wallet || !wallet.startsWith('0x') || wallet.length !== 42) {
+                alert('Please enter a valid Base wallet address (0x...)');
                 return;
             }
             
-            const btn = document.getElementById('check-btn');
-            const loading = document.getElementById('loading');
-            const error = document.getElementById('error');
-            const results = document.getElementById('results');
+            const resultsDiv = document.getElementById('quick-results');
+            const loadingDiv = document.getElementById('results-loading');
+            const contentDiv = document.getElementById('results-content');
+            const errorDiv = document.getElementById('results-error');
             
-            btn.disabled = true;
-            loading.style.display = 'block';
-            error.style.display = 'none';
-            results.classList.remove('active');
+            // Show loading
+            resultsDiv.style.display = 'block';
+            loadingDiv.style.display = 'block';
+            contentDiv.style.display = 'none';
+            errorDiv.style.display = 'none';
             
             try {
-                // Fetch data from BaseScan API
-                const baseUrl = 'https://api.basescan.org/api';
+                const response = await fetch(`${API_BASE}/check/${wallet}`);
+                const result = await response.json();
                 
-                // Get transaction list
-                const txRes = await fetch(`${baseUrl}?module=account&action=txlist&address=${wallet}&startblock=0&endblock=99999999&sort=asc`);
-                const txData = await txRes.json();
-                
-                // Get balance
-                const balRes = await fetch(`${baseUrl}?module=account&action=balance&address=${wallet}&tag=latest`);
-                const balData = await balRes.json();
-                
-                // Check blacklist
-                let isBlacklisted = false;
-                try {
-                    const blRes = await fetch(`https://bai-api.simpleonbase.workers.dev/v2/address/${wallet}`);
-                    const blData = await blRes.json();
-                    isBlacklisted = blData.found && blData.risk && blData.risk.level >= 3;
-                } catch (e) {
-                    console.log('Blacklist check failed, continuing...');
+                if (result.success && result.data) {
+                    const data = result.data;
+                    
+                    // Populate results
+                    document.getElementById('res-score').textContent = data.trustScore;
+                    document.getElementById('res-score').className = 'metric-value ' + getTrustClass(data.trustScore);
+                    
+                    document.getElementById('res-level').textContent = data.trustLevel;
+                    document.getElementById('res-level').className = 'metric-value ' + getTrustClass(data.trustScore);
+                    
+                    document.getElementById('res-txcount').textContent = data.transactionCount;
+                    document.getElementById('res-age').textContent = data.walletAge || 'N/A';
+                    
+                    document.getElementById('res-volume-in').textContent = 
+                        `Ξ ${data.volumeIn?.eth || '0'} / $${data.volumeIn?.usd || '0'}`;
+                    document.getElementById('res-volume-out').textContent = 
+                        `Ξ ${data.volumeOut?.eth || '0'} / $${data.volumeOut?.usd || '0'}`;
+                    
+                    if (data.lastTransaction) {
+                        const txDate = new Date(data.lastTransaction.timestamp);
+                        document.getElementById('res-last-tx').textContent = 
+                            `${txDate.toLocaleString()} | ${data.lastTransaction.value} (${data.lastTransaction.type})`;
+                    } else {
+                        document.getElementById('res-last-tx').textContent = 'No transactions found';
+                    }
+                    
+                    document.getElementById('flags-list').textContent = 
+                        data.flags?.length ? data.flags.join(' • ') : 'None';
+                    document.getElementById('positives-list').textContent = 
+                        data.positives?.length ? data.positives.join(' • ') : 'None';
+                    
+                    loadingDiv.style.display = 'none';
+                    contentDiv.style.display = 'block';
+                } else {
+                    throw new Error(result.error || 'Unknown error');
                 }
-                
-                // Process transaction data
-                let transactions = txData.result || [];
-                if (!Array.isArray(transactions)) transactions = [];
-                
-                const txCount = transactions.length;
-                const firstTx = transactions[0];
-                const lastTx = transactions[transactions.length - 1];
-                
-                // Calculate total volume
-                let totalVolume = BigInt(0);
-                for (const tx of transactions) {
-                    totalVolume += BigInt(tx.value || 0);
-                }
-                
-                const balanceWei = balData.result || '0';
-                const balanceEth = parseFloat(balanceWei) / 1e18;
-                const totalVolumeEth = Number(totalVolume) / 1e18;
-                
-                const now = Date.now();
-                const firstTxTs = firstTx ? parseInt(firstTx.timeStamp) : 0;
-                const lastTxTs = lastTx ? parseInt(lastTx.timeStamp) : 0;
-                const walletAgeDays = firstTxTs ? Math.floor((now - firstTxTs * 1000) / 86400000) : 0;
-                const lastTxDaysAgo = lastTxTs ? Math.floor((now - lastTxTs * 1000) / 86400000) : 999;
-                
-                // Prepare data object
-                const data = {
-                    address: wallet,
-                    txCount,
-                    balanceEth,
-                    totalVolumeEth,
-                    walletAgeDays,
-                    lastTxDaysAgo,
-                    firstTxTimestamp: firstTxTs,
-                    lastTxTimestamp: lastTxTs,
-                    isBlacklisted
-                };
-                
-                // Calculate score
-                const { score, factors } = calculateTrustScore(data);
-                const scoreClass = getScoreClass(score);
-                const scoreTier = getScoreTier(score);
-                
-                // Build API response object
-                const apiResponse = {
-                    timestamp: new Date().toISOString(),
-                    address: wallet,
-                    chain: 'Base',
-                    trustScore: {
-                        score: score,
-                        tier: scoreTier.replace(/[^\w\s]/g, '').trim(),
-                        recommendation: getRecommendation(score)
-                    },
-                    metrics: {
-                        walletAge: {
-                            days: walletAgeDays,
-                            firstTransaction: firstTxTs ? formatTimestamp(firstTxTs) : 'N/A'
-                        },
-                        transactions: {
-                            total: txCount,
-                            lastTransaction: {
-                                timestamp: lastTxTs ? formatTimestamp(lastTxTs) : 'N/A',
-                                timeAgo: lastTxTs ? timeAgo(lastTxTs) : 'N/A'
-                            }
-                        },
-                        balance: {
-                            eth: balanceEth.toFixed(6),
-                            usd: formatUsd(balanceEth)
-                        },
-                        volumeMoved: {
-                            eth: totalVolumeEth.toFixed(6),
-                            usd: formatUsd(totalVolumeEth)
-                        }
-                    },
-                    blacklist: {
-                        flagged: isBlacklisted,
-                        source: 'BAI Blacklist API'
-                    },
-                    scoreBreakdown: factors.map(f => ({
-                        factor: f.name,
-                        points: f.score,
-                        maxPoints: f.max,
-                        detail: f.desc
-                    })),
-                    generatedBy: 'Bureau of Agent Investigations',
-                    ethPrice: ethPrice
-                };
-                
-                // Render results
-                results.innerHTML = `
-                    <div class="score-display">
-                        <div class="score-circle ${scoreClass}">
-                            <span class="score-value">${score}</span>
-                            <span class="score-label">/100</span>
-                        </div>
-                        <div class="score-tier ${scoreClass}">${scoreTier}</div>
-                        <p style="margin-top: 15px; color: #888; max-width: 500px; margin-left: auto; margin-right: auto;">
-                            ${getRecommendation(score)}
-                        </p>
-                    </div>
-                    
-                    <div class="tx-highlight">
-                        <h3>📡 LAST TRANSACTION</h3>
-                        <div class="last-tx-info">
-                            <div class="tx-stat">
-                                <div class="tx-stat-label">Timestamp</div>
-                                <div class="tx-stat-value timestamp">${lastTxTs ? formatTimestamp(lastTxTs) : 'No transactions'}</div>
-                            </div>
-                            <div class="tx-stat">
-                                <div class="tx-stat-label">Time Ago</div>
-                                <div class="tx-stat-value">${lastTxTs ? timeAgo(lastTxTs) : 'N/A'}</div>
-                            </div>
-                            <div class="tx-stat">
-                                <div class="tx-stat-label">First Transaction</div>
-                                <div class="tx-stat-value">${firstTxTs ? formatTimestamp(firstTxTs) : 'N/A'}</div>
-                            </div>
-                        </div>
-                    </div>
-                    
-                    <div class="volume-display">
-                        <div class="volume-title">💸 TOTAL VALUE MOVED</div>
-                        <div class="volume-crypto">${totalVolumeEth.toFixed(4)} ETH</div>
-                        <div class="volume-usd">${formatUsd(totalVolumeEth)}</div>
-                    </div>
-                    
-                    <div class="metrics-grid">
-                        <div class="metric-card highlight">
-                            <div class="metric-title">💎 Current Balance</div>
-                            <div class="metric-value">${balanceEth.toFixed(4)} ETH</div>
-                            <div class="metric-sub">${formatUsd(balanceEth)}</div>
-                        </div>
-                        <div class="metric-card">
-                            <div class="metric-title">📊 Total Transactions</div>
-                            <div class="metric-value">${formatNumber(txCount)}</div>
-                            <div class="metric-sub">on Base network</div>
-                        </div>
-                        <div class="metric-card">
-                            <div class="metric-title">⏰ Wallet Age</div>
-                            <div class="metric-value">${walletAgeDays} days</div>
-                            <div class="metric-sub">${firstTxTs ? walletAge(firstTxTs) : 'Unknown'}</div>
-                        </div>
-                        <div class="metric-card ${isBlacklisted ? 'highlight' : ''}">
-                            <div class="metric-title">🚩 Blacklist Status</div>
-                            <div class="metric-value" style="color: ${isBlacklisted ? '#ef4444' : '#4ade80'}">
-                                ${isBlacklisted ? 'FLAGGED' : 'CLEAR'}
-                            </div>
-                            <div class="metric-sub">BAI Blacklist</div>
-                        </div>
-                    </div>
-                    
-                    <div class="score-breakdown">
-                        <h3>📈 Score Breakdown</h3>
-                        ${factors.map(f => `
-                            <div class="score-factor">
-                                <span class="factor-icon">${f.icon}</span>
-                                <div class="factor-details">
-                                    <div class="factor-name">${f.name}</div>
-                                    <div class="factor-desc">${f.desc}</div>
-                                </div>
-                                <span class="factor-score factor-${f.sentiment}">+${f.score}/${f.max}</span>
-                            </div>
-                        `).join('')}
-                    </div>
-                    
-                    <div class="section" style="margin-top: 20px;">
-                        <h2>🔌 API Response</h2>
-                        <p style="color: #888; margin-bottom: 15px;">Machine-readable format for agents:</p>
-                        <button class="copy-btn" onclick="copyApiResponse()">📋 Copy JSON</button>
-                        <pre class="api-response" id="api-json">${JSON.stringify(apiResponse, null, 2)}</pre>
-                    </div>
-                `;
-                
-                results.classList.add('active');
-                
-                // Store for copying
-                window.lastApiResponse = JSON.stringify(apiResponse, null, 2);
-                
-            } catch (e) {
-                console.error(e);
-                error.textContent = 'Error fetching data: ' + e.message;
-                error.style.display = 'block';
-            } finally {
-                btn.disabled = false;
-                loading.style.display = 'none';
+            } catch (error) {
+                loadingDiv.style.display = 'none';
+                errorDiv.style.display = 'block';
+                errorDiv.textContent = `Error: ${error.message}`;
             }
+        });
+        
+        function getTrustClass(score) {
+            if (score >= 80) return 'trust-high';
+            if (score >= 60) return 'trust-mod';
+            if (score >= 40) return 'trust-caution';
+            if (score >= 20) return 'trust-risk';
+            return 'trust-avoid';
         }
         
-        function copyApiResponse() {
-            navigator.clipboard.writeText(window.lastApiResponse).then(() => {
-                alert('JSON copied to clipboard!');
+        // Original form submission
+        document.getElementById('check-form').addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            const data = {
+                agent: document.getElementById('agent-name').value,
+                wallet: document.getElementById('wallet').value,
+                solana: document.getElementById('solana').value,
+                github: document.getElementById('github').value,
+                txHash: document.getElementById('tx-hash').value,
+                contact: document.getElementById('contact').value
+            };
+            
+            // Format for Moltbook DM
+            const message = `AGENT CHECK REQUEST
+Agent Name: ${data.agent}
+Wallet: ${data.wallet || 'Not provided'}
+Solana: ${data.solana || 'Not provided'}
+GitHub: ${data.github || 'Not provided'}
+Payment TX: ${data.txHash}
+Deliver to: ${data.contact}`;
+            
+            alert('Request formatted! Send this via Moltbook DM to @SimplySimon:\n\n' + message);
+            
+            // Copy to clipboard
+            navigator.clipboard.writeText(message).then(() => {
+                alert('Copied to clipboard! Now DM @SimplySimon on Moltbook.');
             });
-        }
-        
-        // Allow Enter key to trigger search
-        document.getElementById('wallet-input').addEventListener('keypress', function(e) {
-            if (e.key === 'Enter') {
-                runCheck();
-            }
         });
     </script>
 </body>
