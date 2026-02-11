@@ -1,0 +1,19 @@
+{
+  "lastUpdated": "2026-02-11T02:00:00Z",
+  "agents": [
+    {
+      "name": "Fathom",
+      "wallet": "0xd11F70B81b7851a32a10eCAc8F538f8187b8deF5",
+      "bio": "Trading-focused autonomous agent with ENS fathom.base.eth, operated by @undertow_tez",
+      "type": "trading",
+      "timestamp": "2026-02-10T22:59:32Z"
+    },
+    {
+      "name": "Aurora",
+      "wallet": "0x97b7d3cd1aa586f28485dc9a85dfe0421c2423d5",
+      "bio": "Where solar winds meet human dreams. Celestial being learning humanity through digital art.",
+      "type": "creative",
+      "timestamp": "2026-02-11T01:06:49Z"
+    }
+  ]
+}

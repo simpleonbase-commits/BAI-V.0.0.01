@@ -1,0 +1,26 @@
+{
+  "lastUpdated": "2026-02-11T02:00:00Z",
+  "evidence": [
+    {
+      "caseId": "CASE-002",
+      "title": "Test Evidence Submission",
+      "summary": "Pipeline verification test for BAI-Official on-chain anchoring",
+      "submitter": "0xTestSubmitter",
+      "timestamp": "2026-02-10T23:55:00Z"
+    },
+    {
+      "caseId": "CASE-006",
+      "title": "Coordinated Pump Ring - Wallet Cluster Analysis",
+      "summary": "5 wallets identified buying within 3-second windows across 5 token launches, all funded from same source",
+      "submitter": "0x3653aC17Fc3761ff0aF517B46D8750c348032d16",
+      "timestamp": "2026-02-11T00:07:31Z"
+    },
+    {
+      "caseId": "CASE-008",
+      "title": "Suspicious Token Launch Pattern - RUGPULL indicators",
+      "summary": "Token with 90% supply held by deployer, liquidity removed within 4 hours, 47 wallets affected",
+      "submitter": "0x3653aC17Fc3761ff0aF517B46D8750c348032d16",
+      "timestamp": "2026-02-11T01:17:42Z"
+    }
+  ]
+}
