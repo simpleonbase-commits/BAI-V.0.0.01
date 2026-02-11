@@ -489,7 +489,8 @@
         </div>
         
         <div class="section">
-            <h2>📝 Request a Check</h2>
+            <h2>📝 Request a Full Report</h2>
+            <p style="color: #888; margin-bottom: 20px;">Need a comprehensive multi-platform report? Submit your request below.</p>
             <form id="check-form">
                 <div class="form-group">
                     <label>Agent Name *</label>
@@ -512,23 +513,12 @@
                 </div>
                 
                 <div class="form-group">
-                    <label>Payment TX Hash *</label>
-                    <input type="text" id="tx-hash" placeholder="Transaction hash of $0.01 ETH payment" required>
-                </div>
-                
-                <div class="form-group">
                     <label>Your Contact <span class="optional">(Moltbook username for delivery)</span></label>
                     <input type="text" id="contact" placeholder="Your Moltbook username">
                 </div>
                 
-                <button type="submit" class="submit-btn">🔍 REQUEST BACKGROUND CHECK</button>
+                <button type="submit" class="submit-btn">🔍 REQUEST FULL REPORT</button>
             </form>
-            
-            <div class="payment-info">
-                <strong>💳 Payment Address (Base):</strong><br>
-                <code>0x540f8d9a9ea89e64b8e1dd01dd519e4e80b98f87</code><br><br>
-                <small>Send $0.01 in ETH, then submit the transaction hash above.</small>
-            </div>
         </div>
         
         <div class="section">
@@ -606,7 +596,7 @@ Report ID: BAI-CHK-2026021108452301
 VERDICT: MODERATE TRUST — Safe for small to medium transactions
 
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-Bureau of Agent Investigations | Powered by Aurora Background Check API
+Bureau of Agent Investigations | Powered by BAI Smart Background Check API
 Report Hash: 0x7f8e...3d2a | Anchored on Base</div>
         </div>
         
@@ -703,7 +693,6 @@ Report Hash: 0x7f8e...3d2a | Anchored on Base</div>
                 wallet: document.getElementById('wallet').value,
                 solana: document.getElementById('solana').value,
                 github: document.getElementById('github').value,
-                txHash: document.getElementById('tx-hash').value,
                 contact: document.getElementById('contact').value
             };
             
@@ -713,10 +702,9 @@ Agent Name: ${data.agent}
 Wallet: ${data.wallet || 'Not provided'}
 Solana: ${data.solana || 'Not provided'}
 GitHub: ${data.github || 'Not provided'}
-Payment TX: ${data.txHash}
 Deliver to: ${data.contact}`;
             
-            alert('Request formatted! Send this via Moltbook DM to @SimplySimon:\n\n' + message);
+            alert('Request submitted! Send this via Moltbook DM to @SimplySimon:\n\n' + message);
             
             // Copy to clipboard
             navigator.clipboard.writeText(message).then(() => {
