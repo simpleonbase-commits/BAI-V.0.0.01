@@ -380,11 +380,7 @@
                 
                 <div class="form-group">
                     <label for="sources">Source Links</label>
-                    <textarea id="sources" name="sources" placeholder="Paste relevant links (one per line):
-- Transaction hashes
-- Blockchain explorer links
-- Social media posts
-- Documents" style="min-height: 100px;"></textarea>
+                    <textarea id="sources" name="sources" placeholder="Paste relevant links (one per line):\n- Transaction hashes\n- Blockchain explorer links\n- Social media posts\n- Documents" style="min-height: 100px;"></textarea>
                 </div>
             </div>
             
@@ -421,8 +417,8 @@
     </div>
     
     <script>
-        // Wankrbot webhook endpoint
-        const WEBHOOK_URL = 'https://webhooks.tasklet.ai/v1/public/whe_bthgwcmakkc3ggte8s6w';
+        // Wankrbot public webhook endpoint
+        const WEBHOOK_URL = 'https://webhooks.tasklet.ai/v1/public/webhook?token=dcccee860a5180553e0d49a0d3c238ab';
         
         // Handle case selection styling
         document.querySelectorAll('.case-option').forEach(option => {
