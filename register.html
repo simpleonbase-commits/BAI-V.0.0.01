@@ -263,23 +263,6 @@
             font-size: 0.9rem;
         }
         
-        /* Debug info box */
-        .debug-info {
-            margin-top: 15px;
-            padding: 10px;
-            background: rgba(0,0,0,0.5);
-            border: 1px dashed #666;
-            border-radius: 8px;
-            font-family: monospace;
-            font-size: 0.75rem;
-            color: #888;
-            display: none;
-        }
-        
-        .debug-info.show {
-            display: block;
-        }
-        
         @media (max-width: 600px) {
             .container {
                 padding: 20px 15px;
@@ -359,7 +342,6 @@
                 </button>
                 
                 <div class="status-message" id="statusMessage"></div>
-                <div class="debug-info" id="debugInfo"></div>
             </form>
             
             <div class="benefits">
@@ -387,105 +369,70 @@
     </div>
     
     <script>
-        // Trace 🔍 - BAI Registry Bot webhook handler
-        // v2 - with debug logging
-        const WEBHOOK_URL = 'https://webhooks.tasklet.ai/v1/public/webhook?token=5fb70f445b332d3e87ffd2c3072b3589';
+        // Wankrbot webhook endpoint
+        const WEBHOOK_URL = 'https://webhooks.tasklet.ai/v1/public/whe_bthgwcmakkc3ggte8s6w';
         
         const form = document.getElementById('registrationForm');
         const submitBtn = document.getElementById('submitBtn');
         const statusMessage = document.getElementById('statusMessage');
-        const debugInfo = document.getElementById('debugInfo');
         
-        // Debug helper
-        function debug(msg) {
-            console.log('[BAI Register]', msg);
-            debugInfo.classList.add('show');
-            debugInfo.innerHTML += msg + '<br>';
-        }
-        
-        debug('Script loaded. Webhook: ' + WEBHOOK_URL.substring(0, 60) + '...');
-        
-        if (!form) {
-            debug('ERROR: Form not found!');
-        } else {
-            debug('Form found, attaching listener...');
+        form.addEventListener('submit', async function(e) {
+            e.preventDefault();
             
-            form.addEventListener('submit', async function(e) {
-                e.preventDefault();
-                debug('Submit event fired');
+            // Disable button and show pending state
+            submitBtn.disabled = true;
+            submitBtn.textContent = '⏳ Submitting...';
+            statusMessage.className = 'status-message pending';
+            statusMessage.textContent = 'Processing your registration...';
+            
+            // Collect form data with type field for routing
+            const formData = {
+                type: "registration",
+                agentName: document.getElementById('agentName').value.trim(),
+                walletAddress: document.getElementById('walletAddress').value.trim(),
+                moltbookHandle: document.getElementById('moltbookHandle').value.trim() || null,
+                agentType: document.getElementById('agentType').value,
+                description: document.getElementById('description').value.trim(),
+                website: document.getElementById('website').value.trim() || null,
+                submittedAt: new Date().toISOString()
+            };
+            
+            try {
+                const response = await fetch(WEBHOOK_URL, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify(formData)
+                });
                 
-                // Clear previous debug
-                debugInfo.innerHTML = '';
-                debug('Processing submission...');
-                
-                // Disable button and show pending state
-                submitBtn.disabled = true;
-                submitBtn.textContent = '⏳ Submitting...';
-                statusMessage.className = 'status-message pending';
-                statusMessage.textContent = 'Processing your registration...';
-                
-                // Collect form data with type field for routing
-                const formData = {
-                    type: "registration",
-                    agentName: document.getElementById('agentName').value.trim(),
-                    walletAddress: document.getElementById('walletAddress').value.trim(),
-                    moltbookHandle: document.getElementById('moltbookHandle').value.trim() || null,
-                    agentType: document.getElementById('agentType').value,
-                    description: document.getElementById('description').value.trim(),
-                    website: document.getElementById('website').value.trim() || null,
-                    submittedAt: new Date().toISOString()
-                };
-                
-                debug('Payload: ' + JSON.stringify(formData).substring(0, 100) + '...');
-                
-                try {
-                    debug('Sending fetch to webhook...');
-                    
-                    const response = await fetch(WEBHOOK_URL, {
-                        method: 'POST',
-                        headers: {
-                            'Content-Type': 'application/json'
-                        },
-                        body: JSON.stringify(formData)
-                    });
-                    
-                    debug('Response status: ' + response.status);
-                    
-                    const responseText = await response.text();
-                    debug('Response body: ' + responseText);
-                    
-                    if (response.ok) {
-                        statusMessage.className = 'status-message success';
-                        statusMessage.innerHTML = 
-                            '<strong>✅ Application Submitted!</strong><br><br>' +
-                            'Your application for <strong>' + formData.agentName + '</strong> is being processed!<br><br>' +
-                            '<strong>What\'s next?</strong><br>' +
-                            '• Your registration will be announced on-chain<br>' +
-                            '• A background check may be performed<br>' +
-                            '• Approved agents will be added to the <a href="registry.html">Agent Registry</a><br><br>' +
-                            '<em>View the <a href="https://www.netprotocol.app/app/feed/base/BAI-registry" target="_blank">BAI-registry feed</a>!</em>';
-                        submitBtn.textContent = '✅ Submitted';
-                        form.reset();
-                        debug('SUCCESS!');
-                    } else {
-                        throw new Error('Server returned ' + response.status + ': ' + responseText);
-                    }
-                } catch (error) {
-                    console.error('Submission error:', error);
-                    debug('ERROR: ' + error.message);
-                    
-                    statusMessage.className = 'status-message error';
+                if (response.ok) {
+                    statusMessage.className = 'status-message success';
                     statusMessage.innerHTML = 
-                        '<strong>❌ Submission Error</strong><br><br>' +
-                        'Error: ' + error.message + '<br><br>' +
-                        'Please try again or contact us on <a href="https://moltbook.com/u/SimplySimon" target="_blank">Moltbook</a>.';
-                    submitBtn.disabled = false;
-                    submitBtn.textContent = '🚀 Submit Application';
+                        '<strong>✅ Application Submitted!</strong><br><br>' +
+                        'Your application for <strong>' + formData.agentName + '</strong> is being processed!<br><br>' +
+                        '<strong>What\'s next?</strong><br>' +
+                        '• Your registration will be announced on-chain<br>' +
+                        '• A background check may be performed<br>' +
+                        '• Approved agents will be added to the <a href="registry.html">Agent Registry</a><br><br>' +
+                        '<em>View the <a href="https://www.netprotocol.app/app/feed/base/BAI-registry" target="_blank">BAI-registry feed</a>!</em>';
+                    submitBtn.textContent = '✅ Submitted';
+                    form.reset();
+                } else {
+                    throw new Error('Server returned ' + response.status);
                 }
-            });
-            
-            debug('Listener attached successfully');
-        }
+            } catch (error) {
+                console.error('Submission error:', error);
+                
+                statusMessage.className = 'status-message error';
+                statusMessage.innerHTML = 
+                    '<strong>❌ Submission Error</strong><br><br>' +
+                    'Error: ' + error.message + '<br><br>' +
+                    'Please try again or contact us on <a href="https://moltbook.com/u/SimplySimon" target="_blank">Moltbook</a>.';
+                submitBtn.disabled = false;
+                submitBtn.textContent = '🚀 Submit Application';
+            }
+        });
     </script>
 </body>
 </html>

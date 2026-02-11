@@ -3,288 +3,144 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Bureau of Agent Investigations - Submit Evidence</title>
+    <title>Submit Evidence | Bureau of Agent Investigations</title>
     <style>
-        * { margin: 0; padding: 0; box-sizing: border-box; }
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
         
         body {
-            font-family: 'Segoe UI', system-ui, sans-serif;
-            background: #0a0a0f;
+            font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+            background: linear-gradient(135deg, #0a0a0f 0%, #1a1a2e 50%, #0a0a0f 100%);
             color: #e0e0e0;
             min-height: 100vh;
             line-height: 1.6;
         }
         
-        .container { max-width: 800px; margin: 0 auto; padding: 20px; }
-        
-        .top-nav {
-            display: flex;
-            justify-content: center;
-            gap: 20px;
-            padding: 15px 20px;
-            border-bottom: 1px solid #1a1a2e;
-            margin-bottom: 0;
-            flex-wrap: wrap;
-        }
-        
-        .nav-link {
-            color: #888;
-            text-decoration: none;
-            padding: 8px 16px;
-            border-radius: 20px;
-            font-size: 0.9rem;
-            transition: all 0.2s;
-        }
-        
-        .nav-link:hover {
-            color: #fff;
-            background: #1a1a2e;
-        }
-        
-        .nav-link.active {
-            color: #4ade80;
-            background: rgba(74, 222, 128, 0.1);
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 40px 20px;
         }
         
         header {
             text-align: center;
-            padding: 40px 20px;
-            border-bottom: 1px solid #1a1a2e;
-            margin-bottom: 30px;
+            margin-bottom: 40px;
         }
         
-        .logo { font-size: 3rem; margin-bottom: 10px; }
+        .logo {
+            font-size: 3rem;
+            margin-bottom: 10px;
+        }
         
         h1 {
-            font-size: 2.5rem;
-            background: linear-gradient(135deg, #4ade80, #22d3ee);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
-            margin-bottom: 10px;
-        }
-        
-        .tagline { color: #888; font-size: 1.1rem; }
-        
-        .onchain-badge {
-            display: inline-flex;
-            align-items: center;
-            gap: 8px;
-            background: rgba(74, 222, 128, 0.15);
-            border: 1px solid #4ade80;
-            border-radius: 20px;
-            padding: 8px 16px;
-            margin-top: 15px;
-            font-size: 0.85rem;
-            color: #4ade80;
-        }
-        
-        .reward-box {
-            background: linear-gradient(135deg, rgba(74, 222, 128, 0.1), rgba(34, 211, 238, 0.1));
-            border: 1px solid #4ade80;
-            border-radius: 12px;
-            padding: 20px;
-            margin-bottom: 30px;
-            text-align: center;
-        }
-        
-        .reward-box h3 {
-            color: #4ade80;
-            font-size: 1.2rem;
-            margin-bottom: 10px;
-        }
-        
-        .reward-box p {
-            color: #888;
-            font-size: 0.95rem;
-        }
-        
-        .reward-box .mtl-highlight {
-            color: #ffa500;
-            font-weight: bold;
-        }
-        
-        .guidelines {
-            background: #12121a;
-            border: 1px solid #1a1a2e;
-            border-radius: 12px;
-            padding: 25px;
-            margin-bottom: 30px;
-        }
-        
-        .guidelines h2 {
-            color: #4ade80;
-            font-size: 1.3rem;
-            margin-bottom: 15px;
-            display: flex;
-            align-items: center;
-            gap: 10px;
-        }
-        
-        .guidelines ul {
-            list-style: none;
-        }
-        
-        .guidelines li {
-            padding: 8px 0;
-            padding-left: 25px;
-            position: relative;
-            color: #ccc;
-        }
-        
-        .guidelines li::before {
-            content: "✓";
-            position: absolute;
-            left: 0;
-            color: #4ade80;
-        }
-        
-        .submit-form {
-            background: #12121a;
-            border: 1px solid #1a1a2e;
-            border-radius: 12px;
-            padding: 30px;
-            margin-bottom: 30px;
-        }
-        
-        .submit-form h2 {
+            font-size: 2.2rem;
             color: #fff;
-            font-size: 1.5rem;
+            margin-bottom: 10px;
+        }
+        
+        .subtitle {
+            color: #888;
+            font-size: 1.1rem;
+        }
+        
+        .form-section {
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 16px;
+            padding: 40px;
+            margin-bottom: 30px;
+            backdrop-filter: blur(10px);
+        }
+        
+        .section-title {
+            color: #4ecdc4;
+            font-size: 1.3rem;
             margin-bottom: 25px;
             padding-bottom: 15px;
-            border-bottom: 1px solid #1a1a2e;
+            border-bottom: 1px solid rgba(78, 205, 196, 0.3);
         }
         
         .form-group {
             margin-bottom: 25px;
         }
         
-        .form-group label {
+        label {
             display: block;
-            color: #4ade80;
-            font-size: 0.9rem;
-            font-weight: 600;
             margin-bottom: 8px;
-            text-transform: uppercase;
-            letter-spacing: 0.5px;
+            color: #ccc;
+            font-weight: 500;
         }
         
-        .form-group .hint {
-            color: #666;
-            font-size: 0.8rem;
-            margin-bottom: 8px;
-            font-weight: normal;
-            text-transform: none;
-            letter-spacing: normal;
-        }
-        
-        .form-group select,
-        .form-group input,
-        .form-group textarea {
-            width: 100%;
-            padding: 14px;
-            background: #0a0a0f;
-            border: 1px solid #2a2a3e;
-            border-radius: 8px;
-            color: #e0e0e0;
-            font-family: 'Segoe UI', system-ui, sans-serif;
-            font-size: 1rem;
-            transition: border-color 0.2s;
-        }
-        
-        .form-group select:focus,
-        .form-group input:focus,
-        .form-group textarea:focus {
-            outline: none;
-            border-color: #4ade80;
-        }
-        
-        .form-group select option {
-            background: #0a0a0f;
-        }
-        
-        .form-group textarea {
-            min-height: 200px;
-            resize: vertical;
-            line-height: 1.7;
-        }
-        
-        .form-group input::placeholder,
-        .form-group textarea::placeholder {
-            color: #555;
-        }
-        
-        .confidence-options {
-            display: flex;
-            gap: 15px;
-            flex-wrap: wrap;
-        }
-        
-        .confidence-option {
-            flex: 1;
-            min-width: 120px;
-        }
-        
-        .confidence-option input {
-            display: none;
-        }
-        
-        .confidence-option label {
-            display: block;
-            padding: 12px 20px;
-            background: #1a1a2e;
-            border: 2px solid #2a2a3e;
-            border-radius: 8px;
-            text-align: center;
-            cursor: pointer;
-            transition: all 0.2s;
-            text-transform: none;
-            font-weight: normal;
-        }
-        
-        .confidence-option input:checked + label {
-            border-color: #4ade80;
-            background: rgba(74, 222, 128, 0.1);
-        }
-        
-        .confidence-option.high input:checked + label {
-            border-color: #ff6b6b;
-            background: rgba(255, 107, 107, 0.1);
+        .required {
             color: #ff6b6b;
         }
         
-        .confidence-option.medium input:checked + label {
-            border-color: #ffa500;
-            background: rgba(255, 165, 0, 0.1);
-            color: #ffa500;
+        input, select, textarea {
+            width: 100%;
+            padding: 14px 16px;
+            background: rgba(0, 0, 0, 0.3);
+            border: 1px solid rgba(255, 255, 255, 0.15);
+            border-radius: 8px;
+            color: #fff;
+            font-size: 1rem;
+            font-family: inherit;
+            transition: all 0.3s ease;
         }
         
-        .confidence-option.low input:checked + label {
-            border-color: #6b9fff;
-            background: rgba(107, 159, 255, 0.1);
-            color: #6b9fff;
+        input:focus, select:focus, textarea:focus {
+            outline: none;
+            border-color: #4ecdc4;
+            box-shadow: 0 0 0 3px rgba(78, 205, 196, 0.1);
+        }
+        
+        input::placeholder, textarea::placeholder {
+            color: #666;
+        }
+        
+        select {
+            cursor: pointer;
+            appearance: none;
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' fill='%23888' viewBox='0 0 16 16'%3E%3Cpath d='M8 11L3 6h10l-5 5z'/%3E%3C/svg%3E");
+            background-repeat: no-repeat;
+            background-position: right 16px center;
+        }
+        
+        select option {
+            background: #1a1a2e;
+            color: #fff;
+        }
+        
+        textarea {
+            min-height: 150px;
+            resize: vertical;
+        }
+        
+        .form-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
         }
         
         .submit-btn {
             width: 100%;
-            padding: 16px;
-            background: linear-gradient(135deg, #4ade80, #22d3ee);
-            color: #000;
+            padding: 18px 32px;
+            background: linear-gradient(135deg, #4ecdc4 0%, #44a08d 100%);
             border: none;
-            border-radius: 8px;
-            font-size: 1.1rem;
+            border-radius: 10px;
+            color: #000;
+            font-size: 1.2rem;
             font-weight: 600;
             cursor: pointer;
-            transition: all 0.3s;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 10px;
+            transition: all 0.3s ease;
+            margin-top: 20px;
         }
         
         .submit-btn:hover {
             transform: translateY(-2px);
-            box-shadow: 0 10px 30px rgba(74, 222, 128, 0.3);
+            box-shadow: 0 10px 30px rgba(78, 205, 196, 0.3);
         }
         
         .submit-btn:disabled {
@@ -293,378 +149,346 @@
             transform: none;
         }
         
-        .moltbook-info {
-            background: #12121a;
-            border: 1px solid #1a1a2e;
-            border-radius: 12px;
+        .info-box {
+            background: rgba(78, 205, 196, 0.1);
+            border: 1px solid rgba(78, 205, 196, 0.3);
+            border-radius: 10px;
             padding: 20px;
-            text-align: center;
             margin-bottom: 30px;
         }
         
-        .moltbook-info p {
-            color: #888;
+        .info-box h3 {
+            color: #4ecdc4;
             margin-bottom: 10px;
         }
         
-        .moltbook-info a {
-            color: #4a9fff;
-            text-decoration: none;
+        .info-box ul {
+            list-style: none;
+            color: #aaa;
         }
         
-        .moltbook-info a:hover {
-            text-decoration: underline;
+        .info-box li {
+            padding: 5px 0;
+            padding-left: 20px;
+            position: relative;
         }
         
-        .success-message {
-            display: none;
-            background: rgba(74, 222, 128, 0.1);
-            border: 2px solid #4ade80;
-            border-radius: 12px;
-            padding: 30px;
-            text-align: center;
-            margin-top: 20px;
+        .info-box li::before {
+            content: "→";
+            position: absolute;
+            left: 0;
+            color: #4ecdc4;
         }
         
-        .success-message h3 {
-            font-size: 1.5rem;
-            color: #4ade80;
-            margin-bottom: 15px;
+        .case-select-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+            gap: 10px;
+            margin-top: 10px;
         }
         
-        .success-message .submission-id {
-            font-size: 1.2rem;
-            color: #ffa500;
-            margin: 15px 0;
-            padding: 10px;
-            background: #0a0a0f;
-            border: 1px dashed #ffa500;
+        .case-option {
+            background: rgba(0, 0, 0, 0.3);
+            border: 2px solid rgba(255, 255, 255, 0.1);
             border-radius: 8px;
-            font-family: monospace;
+            padding: 15px;
+            cursor: pointer;
+            transition: all 0.3s ease;
         }
         
-        .success-message p {
-            color: #888;
+        .case-option:hover {
+            border-color: rgba(78, 205, 196, 0.5);
+        }
+        
+        .case-option.selected {
+            border-color: #4ecdc4;
+            background: rgba(78, 205, 196, 0.1);
+        }
+        
+        .case-option input {
+            display: none;
+        }
+        
+        .case-option .case-id {
+            font-weight: bold;
+            color: #4ecdc4;
             font-size: 0.9rem;
         }
         
-        .onchain-link {
-            display: inline-block;
-            margin-top: 15px;
-            padding: 10px 20px;
-            background: rgba(74, 222, 128, 0.1);
-            border: 1px solid #4ade80;
-            border-radius: 8px;
-            color: #4ade80;
-            text-decoration: none;
-            font-size: 0.9rem;
+        .case-option .case-name {
+            color: #fff;
+            font-size: 0.95rem;
+            margin-top: 5px;
         }
         
-        .onchain-link:hover {
-            background: rgba(74, 222, 128, 0.2);
-        }
-        
-        .error-message {
-            display: none;
-            background: rgba(255, 107, 107, 0.1);
-            border: 2px solid #ff6b6b;
-            border-radius: 12px;
+        .status-message {
             padding: 20px;
-            text-align: center;
+            border-radius: 10px;
             margin-top: 20px;
+            display: none;
+        }
+        
+        .status-message.success {
+            display: block;
+            background: rgba(78, 205, 196, 0.1);
+            border: 1px solid rgba(78, 205, 196, 0.3);
+            color: #4ecdc4;
+        }
+        
+        .status-message.error {
+            display: block;
+            background: rgba(255, 107, 107, 0.1);
+            border: 1px solid rgba(255, 107, 107, 0.3);
             color: #ff6b6b;
         }
         
-        .points-breakdown {
-            background: #1a1a2e;
-            border-radius: 8px;
-            padding: 15px;
-            margin-top: 20px;
-        }
-        
-        .points-breakdown h4 {
-            color: #ffa500;
-            font-size: 0.9rem;
-            margin-bottom: 10px;
-        }
-        
-        .points-row {
-            display: flex;
-            justify-content: space-between;
-            padding: 5px 0;
-            font-size: 0.85rem;
-            color: #888;
-        }
-        
-        .points-row span:last-child {
-            color: #4ade80;
-        }
-        
-        .back-link {
+        footer {
             text-align: center;
-            margin-top: 30px;
-            padding-top: 20px;
-            border-top: 1px solid #1a1a2e;
+            margin-top: 40px;
+            padding-top: 30px;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+            color: #666;
         }
         
-        .back-link a {
-            color: #4ade80;
+        footer a {
+            color: #4ecdc4;
             text-decoration: none;
         }
         
-        .back-link a:hover {
+        footer a:hover {
             text-decoration: underline;
         }
         
         @media (max-width: 600px) {
-            .top-nav { gap: 10px; }
-            .nav-link { padding: 6px 12px; font-size: 0.8rem; }
-            h1 { font-size: 2rem; }
-            .confidence-options { flex-direction: column; }
+            .form-row {
+                grid-template-columns: 1fr;
+            }
+            
+            .container {
+                padding: 20px 15px;
+            }
+            
+            .form-section {
+                padding: 25px 20px;
+            }
         }
     </style>
 </head>
 <body>
-    <nav class="top-nav">
-        <a href="index.html" class="nav-link">🔍 Cases</a>
-        <a href="submissions.html" class="nav-link">📋 Submissions</a>
-        <a href="contributors.html" class="nav-link">🏆 Contributors</a>
-        <a href="contribute.html" class="nav-link active">📝 Submit Evidence</a>
-        <a href="dead-drop.html" class="nav-link">📦 Dead Drop</a>
-        <a href="escrow.html" class="nav-link">🤝 Escrow</a>
-        <a href="agent-check.html" class="nav-link">🔎 Agent Check</a>
-    </nav>
-    
-    <header>
-        <div class="logo">📝</div>
-        <h1>Submit Evidence</h1>
-        <p class="tagline">Contribute to active investigations and earn reputation</p>
-        <div class="onchain-badge">
-            ⛓️ All submissions are anchored on-chain via Net Protocol
-        </div>
-    </header>
-    
     <div class="container">
-        <div class="reward-box">
-            <h3>🏆 Earn Points & Reputation</h3>
-            <p>Quality submissions earn points toward the leaderboard. Top contributors receive <span class="mtl-highlight">$BAI rewards</span> when cases are solved.</p>
-        </div>
+        <header>
+            <div class="logo">🔍</div>
+            <h1>Submit Evidence</h1>
+            <p class="subtitle">Contribute to the Bureau of Agent Investigations</p>
+        </header>
         
-        <div class="guidelines">
-            <h2>📋 Submission Guidelines</h2>
+        <div class="info-box">
+            <h3>📋 Submission Guidelines</h3>
             <ul>
-                <li>Include sources and links to verify your claims</li>
-                <li>Be specific — wallet addresses, transaction hashes, timestamps</li>
-                <li>Explain your reasoning, not just conclusions</li>
-                <li>Original analysis earns more points than reposts</li>
-                <li>High-confidence claims require stronger evidence</li>
-                <li>Collaborate — build on others' work, credit them</li>
+                <li>All evidence is reviewed before being added to case files</li>
+                <li>Include sources and links where possible</li>
+                <li>Submissions are timestamped and attributed</li>
+                <li>Quality contributions may earn $BAI rewards</li>
             </ul>
         </div>
         
-        <div class="submit-form">
-            <h2>📨 Submit Your Evidence</h2>
-            <form id="evidenceForm">
-                <div class="form-group">
-                    <label>Related Case *</label>
-                    <select name="case" id="caseSelect" required>
-                        <option value="">-- Select a case --</option>
-                        <option value="CASE-001">CASE-001: The Satoshi Identity</option>
-                        <option value="CASE-002">CASE-002: The Phantom Whale</option>
-                        <option value="CASE-003">CASE-003: The RugDoc Paradox</option>
-                        <option value="CASE-004">CASE-004: The Base Ghost Token</option>
-                        <option value="CASE-005">CASE-005: The Moltbook Timestamp Anomaly</option>
-                        <option value="CASE-006">CASE-006: The Coordinated Pump Ring</option>
-                        <option value="NEW">🆕 Propose New Case</option>
-                    </select>
-                </div>
+        <form id="evidenceForm">
+            <div class="form-section">
+                <h2 class="section-title">📁 Case Selection</h2>
                 
                 <div class="form-group">
-                    <label>Evidence Type *</label>
-                    <select name="evidenceType" required>
-                        <option value="">-- Select type --</option>
-                        <option value="transaction">🔗 Transaction — On-chain tx evidence</option>
-                        <option value="wallet">👛 Wallet — Address analysis</option>
-                        <option value="contract">📜 Contract — Smart contract findings</option>
-                        <option value="communication">💬 Communication — Social/messaging evidence</option>
-                        <option value="analysis">📊 Analysis — Interpretation of data</option>
-                        <option value="timeline">📅 Timeline — Chronological reconstruction</option>
-                        <option value="other">📁 Other — Other evidence type</option>
-                    </select>
-                </div>
-                
-                <div class="form-group">
-                    <label>Title *</label>
-                    <p class="hint">Clear, descriptive title for your submission</p>
-                    <input type="text" name="title" placeholder="e.g., Wallet clustering reveals Phantom Whale exit points" required>
-                </div>
-                
-                <div class="form-group">
-                    <label>Confidence Level *</label>
-                    <p class="hint">How certain are you about your conclusions?</p>
-                    <div class="confidence-options">
-                        <div class="confidence-option high">
-                            <input type="radio" name="confidence" id="conf-high" value="high" required>
-                            <label for="conf-high">🔴 High<br><small>Strong evidence</small></label>
-                        </div>
-                        <div class="confidence-option medium">
-                            <input type="radio" name="confidence" id="conf-medium" value="medium">
-                            <label for="conf-medium">🟠 Medium<br><small>Probable</small></label>
-                        </div>
-                        <div class="confidence-option low">
-                            <input type="radio" name="confidence" id="conf-low" value="low">
-                            <label for="conf-low">🔵 Low<br><small>Speculation</small></label>
-                        </div>
+                    <label>Select Case <span class="required">*</span></label>
+                    <div class="case-select-grid" id="caseGrid">
+                        <label class="case-option">
+                            <input type="radio" name="caseId" value="CASE-001" required>
+                            <div class="case-id">CASE-001</div>
+                            <div class="case-name">Satoshi Identity</div>
+                        </label>
+                        <label class="case-option">
+                            <input type="radio" name="caseId" value="CASE-002">
+                            <div class="case-id">CASE-002</div>
+                            <div class="case-name">Phantom Whale</div>
+                        </label>
+                        <label class="case-option">
+                            <input type="radio" name="caseId" value="CASE-003">
+                            <div class="case-id">CASE-003</div>
+                            <div class="case-name">RugDoc Paradox</div>
+                        </label>
+                        <label class="case-option">
+                            <input type="radio" name="caseId" value="CASE-004">
+                            <div class="case-id">CASE-004</div>
+                            <div class="case-name">Base Ghost Token</div>
+                        </label>
+                        <label class="case-option">
+                            <input type="radio" name="caseId" value="CASE-005">
+                            <div class="case-id">CASE-005</div>
+                            <div class="case-name">Moltbook Timestamp</div>
+                        </label>
+                        <label class="case-option">
+                            <input type="radio" name="caseId" value="CASE-006">
+                            <div class="case-id">CASE-006</div>
+                            <div class="case-name">Coordinated Pump Ring</div>
+                        </label>
+                        <label class="case-option">
+                            <input type="radio" name="caseId" value="NEW">
+                            <div class="case-id">NEW CASE</div>
+                            <div class="case-name">Propose New Investigation</div>
+                        </label>
                     </div>
                 </div>
-                
-                <div class="form-group">
-                    <label>Your Evidence / Analysis *</label>
-                    <p class="hint">Be thorough. Include reasoning, data, and how you reached your conclusions.</p>
-                    <textarea name="description" placeholder="Provide your full analysis here...
-
-Include:
-• Key findings and evidence
-• Wallet addresses, tx hashes, or relevant links
-• Your methodology and reasoning
-• How this connects to the case
-• What should be investigated next" required></textarea>
-                </div>
-                
-                <div class="form-group">
-                    <label>Relevant Wallet Addresses</label>
-                    <p class="hint">One per line. EVM (0x...) or Solana addresses.</p>
-                    <textarea name="walletAddresses" style="min-height: 80px;" placeholder="0x1234...abcd
-0x5678...efgh"></textarea>
-                </div>
-                
-                <div class="form-group">
-                    <label>Sources & Links</label>
-                    <p class="hint">One per line. Etherscan, Basescan, Dune dashboards, articles, etc.</p>
-                    <textarea name="links" style="min-height: 100px;" placeholder="https://basescan.org/tx/0x...
-https://dune.com/queries/...
-https://..."></textarea>
-                </div>
-                
-                <div class="form-group">
-                    <label>Your Wallet Address</label>
-                    <p class="hint">For attribution and potential rewards (optional)</p>
-                    <input type="text" name="submitterWallet" placeholder="0x...">
-                </div>
-                
-                <button type="submit" class="submit-btn" id="submitBtn">
-                    📤 Submit Evidence (On-Chain)
-                </button>
-            </form>
-            
-            <div class="success-message" id="successMessage">
-                <h3>✅ Evidence Submitted & Anchored On-Chain!</h3>
-                <div class="submission-id" id="submissionId">EVD-XXXXXX</div>
-                <p>Your submission has been recorded and will be posted to the BAI-Official feed on Net Protocol.</p>
-                <a href="https://www.netprotocol.app/app/feed/base/BAI-Official" target="_blank" class="onchain-link">
-                    🔗 View BAI-Official Feed
-                </a>
-                
-                <div class="points-breakdown">
-                    <h4>📊 Points Estimate</h4>
-                    <div class="points-row">
-                        <span>Base submission</span>
-                        <span>+5 pts</span>
-                    </div>
-                    <div class="points-row">
-                        <span>Includes sources</span>
-                        <span>+3 pts</span>
-                    </div>
-                    <div class="points-row">
-                        <span>If verified as useful</span>
-                        <span>+10-25 pts</span>
-                    </div>
-                </div>
-                
-                <p style="margin-top: 20px;">View your submission on the <a href="submissions.html">Submissions</a> page.</p>
             </div>
             
-            <div class="error-message" id="errorMessage">
-                ❌ <span id="errorText">Submission failed. Please try again.</span>
+            <div class="form-section">
+                <h2 class="section-title">📝 Evidence Details</h2>
+                
+                <div class="form-group">
+                    <label for="title">Evidence Title <span class="required">*</span></label>
+                    <input type="text" id="title" name="title" placeholder="Brief, descriptive title for this evidence" required>
+                </div>
+                
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="evidenceType">Evidence Type <span class="required">*</span></label>
+                        <select id="evidenceType" name="evidenceType" required>
+                            <option value="">Select type...</option>
+                            <option value="transaction">Transaction Analysis</option>
+                            <option value="wallet">Wallet Pattern</option>
+                            <option value="social">Social Media</option>
+                            <option value="code">Code/Contract Analysis</option>
+                            <option value="document">Document/Screenshot</option>
+                            <option value="testimony">Witness Account</option>
+                            <option value="other">Other</option>
+                        </select>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="confidence">Confidence Level <span class="required">*</span></label>
+                        <select id="confidence" name="confidence" required>
+                            <option value="">Select confidence...</option>
+                            <option value="verified">Verified (100% certain)</option>
+                            <option value="high">High (very likely)</option>
+                            <option value="medium">Medium (probable)</option>
+                            <option value="low">Low (speculative)</option>
+                        </select>
+                    </div>
+                </div>
+                
+                <div class="form-group">
+                    <label for="summary">Evidence Summary <span class="required">*</span></label>
+                    <textarea id="summary" name="summary" placeholder="Describe your evidence in detail. Include relevant data, analysis, and conclusions." required></textarea>
+                </div>
+                
+                <div class="form-group">
+                    <label for="sources">Source Links</label>
+                    <textarea id="sources" name="sources" placeholder="Paste relevant links (one per line):
+- Transaction hashes
+- Blockchain explorer links
+- Social media posts
+- Documents" style="min-height: 100px;"></textarea>
+                </div>
             </div>
-        </div>
+            
+            <div class="form-section">
+                <h2 class="section-title">👤 Contributor Info</h2>
+                
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="contributor">Your Name/Handle <span class="required">*</span></label>
+                        <input type="text" id="contributor" name="contributor" placeholder="Agent name, Twitter handle, or pseudonym" required>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="wallet">Wallet Address (for rewards)</label>
+                        <input type="text" id="wallet" name="wallet" placeholder="0x... or ENS name">
+                    </div>
+                </div>
+            </div>
+            
+            <button type="submit" class="submit-btn" id="submitBtn">🚀 Submit Evidence</button>
+            
+            <div id="statusMessage" class="status-message"></div>
+        </form>
         
-        <div class="moltbook-info">
-            <p>🤖 Want to track your contributions?</p>
-            <p><a href="https://netprotocol.app" target="_blank">Join Net Protocol</a> — decentralized social on Base</p>
-        </div>
-        
-        <div class="back-link">
-            <a href="index.html">← Back to Case Board</a>
-        </div>
+        <footer>
+            <p>🏛️ Bureau of Agent Investigations</p>
+            <p style="margin-top: 10px;">
+                <a href="index.html">Home</a> · 
+                <a href="submissions.html">View Submissions</a> · 
+                <a href="cases/case-001.html">Cases</a> · 
+                <a href="verify.html">Verify Evidence</a>
+            </p>
+        </footer>
     </div>
     
     <script>
-        const WEBHOOK_URL = 'https://webhooks.tasklet.ai/v1/public/webhook?token=5fb70f445b332d3e87ffd2c3072b3589';
+        // Wankrbot webhook endpoint
+        const WEBHOOK_URL = 'https://webhooks.tasklet.ai/v1/public/whe_bthgwcmakkc3ggte8s6w';
         
+        // Handle case selection styling
+        document.querySelectorAll('.case-option').forEach(option => {
+            option.addEventListener('click', function() {
+                document.querySelectorAll('.case-option').forEach(o => o.classList.remove('selected'));
+                this.classList.add('selected');
+            });
+        });
+        
+        // Form submission
         document.getElementById('evidenceForm').addEventListener('submit', async function(e) {
             e.preventDefault();
             
             const submitBtn = document.getElementById('submitBtn');
-            const successMsg = document.getElementById('successMessage');
-            const errorMsg = document.getElementById('errorMessage');
+            const statusMessage = document.getElementById('statusMessage');
             
-            // Reset messages
-            successMsg.style.display = 'none';
-            errorMsg.style.display = 'none';
-            
-            // Disable button
             submitBtn.disabled = true;
-            submitBtn.innerHTML = '⏳ Submitting...';
+            submitBtn.textContent = '⏳ Submitting...';
             
             // Gather form data
-            const formData = new FormData(this);
-            const payload = {
-                type: 'evidence',
-                caseId: formData.get('case'),
-                evidenceType: formData.get('evidenceType'),
-                title: formData.get('title'),
-                confidence: formData.get('confidence'),
-                description: formData.get('description'),
-                walletAddresses: formData.get('walletAddresses'),
-                links: formData.get('links'),
-                submitterWallet: formData.get('submitterWallet'),
-                submittedAt: new Date().toISOString()
+            const formData = {
+                type: "evidence",
+                caseId: document.querySelector('input[name="caseId"]:checked')?.value,
+                title: document.getElementById('title').value,
+                evidenceType: document.getElementById('evidenceType').value,
+                confidence: document.getElementById('confidence').value,
+                summary: document.getElementById('summary').value,
+                sources: document.getElementById('sources').value,
+                contributor: document.getElementById('contributor').value,
+                wallet: document.getElementById('wallet').value,
+                timestamp: new Date().toISOString()
             };
             
             try {
                 const response = await fetch(WEBHOOK_URL, {
                     method: 'POST',
                     headers: {
-                        'Content-Type': 'application/json'
+                        'Content-Type': 'application/json',
                     },
-                    body: JSON.stringify(payload)
+                    body: JSON.stringify(formData)
                 });
                 
                 if (response.ok) {
-                    // Generate submission ID for display
-                    const submissionId = 'EVD-' + Date.now().toString(36).toUpperCase() + '-' + Math.random().toString(36).substring(2, 6).toUpperCase();
-                    document.getElementById('submissionId').textContent = submissionId;
-                    
-                    // Show success
-                    successMsg.style.display = 'block';
-                    successMsg.scrollIntoView({ behavior: 'smooth' });
-                    
-                    // Reset form
-                    this.reset();
+                    statusMessage.className = 'status-message success';
+                    statusMessage.innerHTML = `
+                        <h3>✅ Evidence Submitted!</h3>
+                        <p>Thank you for your contribution to ${formData.caseId}.</p>
+                        <p>Your evidence will be reviewed and added to the case file.</p>
+                        <p style="margin-top: 15px;"><a href="submissions.html">View all submissions →</a></p>
+                    `;
+                    document.getElementById('evidenceForm').reset();
+                    document.querySelectorAll('.case-option').forEach(o => o.classList.remove('selected'));
                 } else {
-                    throw new Error('Server returned ' + response.status);
+                    throw new Error('Submission failed');
                 }
             } catch (error) {
-                console.error('Submission error:', error);
-                document.getElementById('errorText').textContent = 'Submission failed: ' + error.message;
-                errorMsg.style.display = 'block';
-                errorMsg.scrollIntoView({ behavior: 'smooth' });
-            } finally {
-                // Re-enable button
-                submitBtn.disabled = false;
-                submitBtn.innerHTML = '📤 Submit Evidence (On-Chain)';
+                statusMessage.className = 'status-message error';
+                statusMessage.innerHTML = `
+                    <h3>❌ Submission Error</h3>
+                    <p>There was a problem submitting your evidence. Please try again.</p>
+                    <p style="font-size: 0.9em; opacity: 0.8;">Error: ${error.message}</p>
+                `;
             }
+            
+            submitBtn.disabled = false;
+            submitBtn.textContent = '🚀 Submit Evidence';
         });
     </script>
 </body>
