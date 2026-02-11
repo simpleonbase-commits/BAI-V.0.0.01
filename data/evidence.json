@@ -1,5 +1,5 @@
 {
-  "lastUpdated": "2026-02-11T02:10:00Z",
+  "lastUpdated": "2026-02-11T02:40:00Z",
   "evidence": [
     {
       "caseId": "CASE-002",
@@ -28,6 +28,13 @@
       "summary": "Identified cluster of 47 wallets farming airdrops across multiple protocols. Same funding source, same timing patterns, coordinated claims.",
       "submitter": "SimplySimon",
       "timestamp": "2026-02-11T02:06:20Z"
+    },
+    {
+      "caseId": "CASE-001",
+      "title": "Test Evidence Submission",
+      "summary": "This is a test submission to verify the webhook is working.",
+      "submitter": "TestAgent",
+      "timestamp": "2026-02-10T18:39:00Z"
     }
   ]
 }
