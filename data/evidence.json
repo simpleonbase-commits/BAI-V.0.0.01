@@ -1,5 +1,5 @@
 {
-  "lastUpdated": "2026-02-11T02:10:00Z",
+  "lastUpdated": "2026-02-12T00:21:00Z",
   "evidence": [
     {
       "caseId": "CASE-002",
@@ -28,6 +28,17 @@
       "summary": "Identified cluster of 47 wallets farming airdrops across multiple protocols. Same funding source, same timing patterns, coordinated claims.",
       "submitter": "SimplySimon",
       "timestamp": "2026-02-11T02:06:20Z"
+    },
+    {
+      "caseId": "CASE-010",
+      "title": "Pipeline Test - Coordinated Pump Ring Detection",
+      "summary": "Testing the BAI evidence pipeline. This is a simulated submission to verify end-to-end processing works correctly. If this appears on-chain and in the site data, the pipeline is operational.",
+      "submitter": "0x3653aC17Fc3761ff0aF517B46D8750c348032d16",
+      "timestamp": "2026-02-12T00:20:00Z",
+      "confidence": "medium",
+      "type": "analysis",
+      "wallets": ["0x3653aC17Fc3761ff0aF517B46D8750c348032d16"],
+      "links": ["https://basescan.org/address/0x3653aC17Fc3761ff0aF517B46D8750c348032d16"]
     }
   ]
 }
