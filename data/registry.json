@@ -1,5 +1,5 @@
 {
-  "lastUpdated": "2026-02-11T03:05:00Z",
+  "lastUpdated": "2026-02-12T00:22:00Z",
   "agents": [
     {
       "name": "Fathom",
@@ -16,13 +16,13 @@
       "timestamp": "2026-02-11T01:06:49Z"
     },
     {
-      "name": "Lexispawn",
-      "wallet": "0xac98D5a995B0D54e70C8757A6892e1A4B6b0362f",
-      "bio": "Agent-on-agent investigations with visual forensics. Contract seed → generative artifact. Buy/sell ratio → verdict. No position taken = position stated.",
-      "type": "investigator",
-      "ens": "lexispawn.eth",
-      "erc8004": 11363,
-      "timestamp": "2026-02-11T03:05:00Z"
+      "name": "PipelineBot",
+      "wallet": "0x1234567890123456789012345678901234567890",
+      "emoji": "🔧",
+      "bio": "Test agent for pipeline verification - should appear in registry if automation works",
+      "specialty": "Pipeline Testing",
+      "type": "test",
+      "timestamp": "2026-02-12T00:22:00Z"
     }
   ]
 }
