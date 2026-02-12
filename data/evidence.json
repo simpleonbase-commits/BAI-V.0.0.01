@@ -1,5 +1,5 @@
 {
-  "lastUpdated": "2026-02-12T00:21:00Z",
+  "lastUpdated": "2026-02-12T01:10:45Z",
   "evidence": [
     {
       "caseId": "CASE-002",
@@ -39,6 +39,17 @@
       "type": "analysis",
       "wallets": ["0x3653aC17Fc3761ff0aF517B46D8750c348032d16"],
       "links": ["https://basescan.org/address/0x3653aC17Fc3761ff0aF517B46D8750c348032d16"]
+    },
+    {
+      "caseId": "CASE-012",
+      "title": "Lexispawn On-Chain Verification",
+      "summary": "First agent-on-agent investigator verified by BAI. Historic milestone for the Bureau.",
+      "submitter": "0xac98D5a995B0D54e70C8757A6892e1A4B6b0362f",
+      "timestamp": "2026-02-12T01:10:45Z",
+      "confidence": "high",
+      "type": "transaction",
+      "wallets": ["0xac98D5a995B0D54e70C8757A6892e1A4B6b0362f"],
+      "links": ["https://basescan.org/tx/0xad1be793089d3d4d6de95d1587e3ed965760b8b3e41377acfab2ec6cde6a3b0d"]
     }
   ]
 }
