@@ -754,7 +754,7 @@
             max-width: 200px;
         }
 
-        /* Mobile wallet links */
+        /* Mobile wallet links - Changed from <a> to <button> */
         .mobile-wallets {
             display: grid;
             grid-template-columns: 1fr 1fr;
@@ -772,14 +772,20 @@
             border: 1px solid var(--border-color);
             border-radius: 12px;
             color: var(--text-primary);
-            text-decoration: none;
             font-size: 0.85rem;
+            font-family: inherit;
+            cursor: pointer;
             transition: all 0.3s ease;
         }
 
         .mobile-wallet-btn:hover {
             border-color: var(--accent-blue);
             background: var(--bg-card-hover);
+        }
+
+        .mobile-wallet-btn:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
         }
 
         .mobile-wallet-btn img {
@@ -865,6 +871,12 @@
             border-radius: 50%;
             border-top-color: #fff;
             animation: spin 1s ease-in-out infinite;
+        }
+
+        .loading-small {
+            width: 16px;
+            height: 16px;
+            border-width: 2px;
         }
 
         @keyframes spin {
@@ -1261,26 +1273,26 @@
                     <p style="text-align: center; color: var(--text-secondary); font-size: 0.875rem; margin-bottom: 0.5rem;">Scan with any WalletConnect wallet</p>
                 </div>
 
-                <!-- Mobile wallet deep links -->
+                <!-- Mobile wallet deep links - Now using buttons instead of anchors -->
                 <div id="mobileWalletLinks" style="display: none;">
                     <p style="text-align: center; color: var(--text-secondary); font-size: 0.875rem; margin-bottom: 1rem;">Open directly in your wallet app:</p>
                     <div class="mobile-wallets">
-                        <a href="#" id="mmDeepLink" class="mobile-wallet-btn" onclick="openInMetaMask()">
+                        <button type="button" id="mmDeepLink" class="mobile-wallet-btn" onclick="openInMetaMask()">
                             <img src="https://upload.wikimedia.org/wikipedia/commons/3/36/MetaMask_Fox.svg" alt="MetaMask">
                             <span>MetaMask</span>
-                        </a>
-                        <a href="#" id="cbDeepLink" class="mobile-wallet-btn" onclick="openInCoinbase()">
+                        </button>
+                        <button type="button" id="cbDeepLink" class="mobile-wallet-btn" onclick="openInCoinbase()">
                             <img src="https://altcoinsbox.com/wp-content/uploads/2022/12/coinbase-wallet-logo.png" alt="Coinbase">
                             <span>Coinbase</span>
-                        </a>
-                        <a href="#" id="rbDeepLink" class="mobile-wallet-btn" onclick="openInRainbow()">
+                        </button>
+                        <button type="button" id="rbDeepLink" class="mobile-wallet-btn" onclick="openInRainbow()">
                             <img src="https://avatars.githubusercontent.com/u/48327834?s=200&v=4" alt="Rainbow">
                             <span>Rainbow</span>
-                        </a>
-                        <a href="#" id="twDeepLink" class="mobile-wallet-btn" onclick="openInTrust()">
+                        </button>
+                        <button type="button" id="twDeepLink" class="mobile-wallet-btn" onclick="openInTrust()">
                             <img src="https://trustwallet.com/assets/images/media/assets/trust_platform.svg" alt="Trust">
                             <span>Trust Wallet</span>
-                        </a>
+                        </button>
                     </div>
                 </div>
 
@@ -1374,6 +1386,7 @@
         let pendingTxCallback = null;
         let isOnCorrectNetwork = false;
         let connectionType = null; // 'extension' or 'walletconnect'
+        let isGeneratingLink = false; // Prevent multiple simultaneous link generations
 
         // ============================================
         // READ-ONLY PROVIDER FOR PUBLIC STATS (FIX #1)
@@ -1793,6 +1806,17 @@
             document.getElementById('copyBtnText').textContent = '📋 Get Connection Link';
             document.getElementById('copyLinkBtn').classList.remove('copied');
             wcUri = null;
+            isGeneratingLink = false;
+            
+            // Reset button states
+            const walletBtns = document.querySelectorAll('.mobile-wallet-btn');
+            walletBtns.forEach(btn => {
+                btn.disabled = false;
+                const span = btn.querySelector('span');
+                if (span && span.dataset.originalText) {
+                    span.textContent = span.dataset.originalText;
+                }
+            });
         }
 
         // Click outside to close
@@ -1820,6 +1844,13 @@
         // ============================================
         
         async function generateWalletConnectLink() {
+            // Prevent multiple simultaneous generations
+            if (isGeneratingLink) {
+                console.log('[WC] Already generating link, skipping...');
+                return wcUri; // Return existing URI if available
+            }
+            
+            isGeneratingLink = true;
             const loading = document.getElementById('wcLoading');
             const qrContainer = document.getElementById('wcQrContainer');
             const mobileLinks = document.getElementById('mobileWalletLinks');
@@ -1861,6 +1892,7 @@
 
                 wcUri = uri;
                 loading.style.display = 'none';
+                isGeneratingLink = false;
 
                 // Show QR on desktop
                 if (!isMobile()) {
@@ -1876,25 +1908,32 @@
                 mobileLinks.style.display = 'block';
                 document.getElementById('copyBtnText').textContent = '📋 Copy Connection Link';
 
-                // Wait for approval
-                const session = await approval();
-                const accounts = session.namespaces.eip155.accounts;
-                const address = accounts[0].split(':')[2];
+                // Wait for approval (non-blocking for the return)
+                approval().then(session => {
+                    const accounts = session.namespaces.eip155.accounts;
+                    const address = accounts[0].split(':')[2];
 
-                currentAccount = address;
-                connectionType = 'walletconnect';
-                window.wcSession = session;
-                closeWalletModal();
-                await updateUI();
+                    currentAccount = address;
+                    connectionType = 'walletconnect';
+                    window.wcSession = session;
+                    closeWalletModal();
+                    updateUI();
+                }).catch(err => {
+                    console.log('[WC] Approval error or user rejected:', err);
+                });
+                
+                return wcUri;
 
             } catch (error) {
                 console.error('WalletConnect error:', error);
                 loading.style.display = 'none';
+                isGeneratingLink = false;
 
                 if (error.message && !error.message.includes('rejected')) {
                     showError('Connection error: ' + error.message);
                     mobileLinks.style.display = 'block';
                 }
+                return null;
             }
         }
 
@@ -1920,26 +1959,120 @@
             }
         }
 
-        function openInMetaMask() {
-            if (!wcUri) return;
+        // FIX: Mobile wallet buttons - ensure link exists before opening
+        async function openInMetaMask() {
+            const btn = document.getElementById('mmDeepLink');
+            const span = btn.querySelector('span');
+            
+            // Store original text
+            if (!span.dataset.originalText) {
+                span.dataset.originalText = span.textContent;
+            }
+            
+            if (!wcUri) {
+                console.log('[WC] No URI yet, generating for MetaMask...');
+                btn.disabled = true;
+                span.textContent = 'Connecting...';
+                
+                const uri = await generateWalletConnectLink();
+                
+                btn.disabled = false;
+                span.textContent = span.dataset.originalText;
+                
+                if (!uri) {
+                    console.error('[WC] Failed to generate link for MetaMask');
+                    return;
+                }
+            }
+            
+            console.log('[WC] Opening MetaMask with URI');
             const encoded = encodeURIComponent(wcUri);
             window.location.href = `metamask://wc?uri=${encoded}`;
         }
 
-        function openInCoinbase() {
-            if (!wcUri) return;
+        async function openInCoinbase() {
+            const btn = document.getElementById('cbDeepLink');
+            const span = btn.querySelector('span');
+            
+            if (!span.dataset.originalText) {
+                span.dataset.originalText = span.textContent;
+            }
+            
+            if (!wcUri) {
+                console.log('[WC] No URI yet, generating for Coinbase...');
+                btn.disabled = true;
+                span.textContent = 'Connecting...';
+                
+                const uri = await generateWalletConnectLink();
+                
+                btn.disabled = false;
+                span.textContent = span.dataset.originalText;
+                
+                if (!uri) {
+                    console.error('[WC] Failed to generate link for Coinbase');
+                    return;
+                }
+            }
+            
+            console.log('[WC] Opening Coinbase with URI');
             const encoded = encodeURIComponent(wcUri);
             window.location.href = `cbwallet://wc?uri=${encoded}`;
         }
 
-        function openInRainbow() {
-            if (!wcUri) return;
+        async function openInRainbow() {
+            const btn = document.getElementById('rbDeepLink');
+            const span = btn.querySelector('span');
+            
+            if (!span.dataset.originalText) {
+                span.dataset.originalText = span.textContent;
+            }
+            
+            if (!wcUri) {
+                console.log('[WC] No URI yet, generating for Rainbow...');
+                btn.disabled = true;
+                span.textContent = 'Connecting...';
+                
+                const uri = await generateWalletConnectLink();
+                
+                btn.disabled = false;
+                span.textContent = span.dataset.originalText;
+                
+                if (!uri) {
+                    console.error('[WC] Failed to generate link for Rainbow');
+                    return;
+                }
+            }
+            
+            console.log('[WC] Opening Rainbow with URI');
             const encoded = encodeURIComponent(wcUri);
             window.location.href = `rainbow://wc?uri=${encoded}`;
         }
 
-        function openInTrust() {
-            if (!wcUri) return;
+        async function openInTrust() {
+            const btn = document.getElementById('twDeepLink');
+            const span = btn.querySelector('span');
+            
+            if (!span.dataset.originalText) {
+                span.dataset.originalText = span.textContent;
+            }
+            
+            if (!wcUri) {
+                console.log('[WC] No URI yet, generating for Trust...');
+                btn.disabled = true;
+                span.textContent = 'Connecting...';
+                
+                const uri = await generateWalletConnectLink();
+                
+                btn.disabled = false;
+                span.textContent = span.dataset.originalText;
+                
+                if (!uri) {
+                    console.error('[WC] Failed to generate link for Trust');
+                    return;
+                }
+            }
+            
+            console.log('[WC] Opening Trust with URI');
             const encoded = encodeURIComponent(wcUri);
             window.location.href = `trust://wc?uri=${encoded}`;
         }
