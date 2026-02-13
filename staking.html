@@ -32,7 +32,7 @@
             background: var(--bg-dark);
             color: var(--text-primary);
             min-height: 100vh;
-            background-image: 
+            background-image:
                 radial-gradient(ellipse at top, rgba(59, 130, 246, 0.1) 0%, transparent 50%),
                 radial-gradient(ellipse at bottom, rgba(139, 92, 246, 0.1) 0%, transparent 50%);
         }
@@ -827,6 +827,35 @@
             text-align: center;
         }
 
+        /* Network warning banner */
+        .network-warning {
+            background: rgba(239, 68, 68, 0.15);
+            border: 1px solid rgba(239, 68, 68, 0.4);
+            border-radius: 12px;
+            padding: 1rem;
+            margin-bottom: 1.5rem;
+            display: none;
+            align-items: center;
+            justify-content: center;
+            gap: 0.75rem;
+            color: var(--accent-red);
+        }
+
+        .network-warning.show {
+            display: flex;
+        }
+
+        .network-warning button {
+            background: var(--accent-red);
+            border: none;
+            padding: 0.5rem 1rem;
+            border-radius: 8px;
+            color: white;
+            font-family: inherit;
+            font-weight: 600;
+            cursor: pointer;
+        }
+
         /* Loading spinner */
         .loading {
             display: inline-block;
@@ -968,6 +997,12 @@
     </div>
 
     <div class="container">
+        <!-- Network Warning Banner -->
+        <div class="network-warning" id="networkWarning">
+            <span>⚠️ Wrong network detected! Please switch to Base.</span>
+            <button onclick="switchToBase()">Switch to Base</button>
+        </div>
+
         <!-- Header -->
         <header class="header">
             <div class="logo">
@@ -1008,7 +1043,7 @@
         <section class="stats-grid">
             <div class="stat-card">
                 <div class="stat-label">Total Value Locked</div>
-                <div class="stat-value blue" id="tvl">0 BAItest</div>
+                <div class="stat-value blue" id="tvl">Loading...</div>
             </div>
             <div class="stat-card">
                 <div class="stat-label">Lock Period</div>
@@ -1112,7 +1147,7 @@
             <!-- Right: Your Position -->
             <div class="panel">
                 <h3 class="panel-title">📊 Your Position</h3>
-                
+
                 <div class="position-card">
                     <div class="position-header">
                         <span class="position-amount" id="yourStake">0 BAItest</span>
@@ -1165,7 +1200,7 @@
         <footer class="footer">
             <p>Part of the <a href="index.html">Bureau of Agent Investigations</a></p>
             <p style="margin-top: 0.5rem">Contract verified on <a href="https://basescan.org/address/0x4b5b62Bde4Be0fBab30A74d79c7Cb25FD242c3Cc#code" target="_blank">BaseScan</a> & <a href="https://repo.sourcify.dev/contracts/full_match/8453/0x4b5b62Bde4Be0fBab30A74d79c7Cb25FD242c3Cc/" target="_blank">Sourcify</a></p>
-            
+
             <div class="footer-security">
                 <p><strong>🔒 Security:</strong> Always verify you're on the official domain. Bookmark this page.</p>
                 <p style="margin-top: 0.5rem">Official Domain: <a href="https://simpleonbase-commits.github.io/BAI-V.0.0.01/staking.html">simpleonbase-commits.github.io</a></p>
@@ -1186,7 +1221,7 @@
                 🔒 You're connecting to the official BAI Staking site<br>
                 <small>Domain: <span id="modalDomain">simpleonbase-commits.github.io</span></small>
             </div>
-            
+
             <!-- Desktop wallet options -->
             <div id="desktopWallets">
                 <button class="wallet-option" onclick="connectMetaMask()">
@@ -1272,11 +1307,15 @@
 
     <!-- QR Code Library -->
     <script src="https://cdn.jsdelivr.net/npm/qrcode@1.5.3/build/qrcode.min.js"></script>
-    
+
     <!-- Ethers.js -->
     <script src="https://cdn.jsdelivr.net/npm/ethers@6.9.0/dist/ethers.umd.min.js"></script>
 
     <script>
+        // ============================================
+        // CONFIGURATION
+        // ============================================
+        
         // Set domain displays
         document.getElementById('currentDomain').textContent = window.location.hostname;
         document.getElementById('modalDomain').textContent = window.location.hostname;
@@ -1295,8 +1334,10 @@
         const STAKING_CONTRACT = '0x4b5b62Bde4Be0fBab30A74d79c7Cb25FD242c3Cc';
         const TOKEN_CONTRACT = '0x2ca8b2b97bc0f0ccdd875dcfeff16b868a1b5ba3';
         const BASE_CHAIN_ID = '0x2105'; // 8453 in hex
+        const BASE_CHAIN_ID_DECIMAL = 8453;
+        const BASE_RPC_URL = 'https://mainnet.base.org';
         const WC_PROJECT_ID = '286e939deb1fd152d44312f068de95da';
-        
+
         // Contract ABIs (minimal)
         const STAKING_ABI = [
             'function stake(uint256 amount) external',
@@ -1310,7 +1351,7 @@
             'function totalStaked() view returns (uint256)',
             'function calculatePenalty(uint256 amount) view returns (uint256)'
         ];
-        
+
         const TOKEN_ABI = [
             'function balanceOf(address) view returns (uint256)',
             'function approve(address spender, uint256 amount) returns (bool)',
@@ -1318,7 +1359,10 @@
             'function decimals() view returns (uint8)'
         ];
 
-        // State
+        // ============================================
+        // STATE VARIABLES
+        // ============================================
+        
         let currentAccount = null;
         let provider = null;
         let signer = null;
@@ -1328,23 +1372,376 @@
         let wcUri = null;
         let signClient = null;
         let pendingTxCallback = null;
+        let isOnCorrectNetwork = false;
+        let connectionType = null; // 'extension' or 'walletconnect'
 
-        // Detect mobile
+        // ============================================
+        // READ-ONLY PROVIDER FOR PUBLIC STATS (FIX #1)
+        // ============================================
+        
+        // Create a read-only provider that works without wallet connection
+        const readOnlyProvider = new ethers.JsonRpcProvider(BASE_RPC_URL);
+        const readOnlyStakingContract = new ethers.Contract(STAKING_CONTRACT, STAKING_ABI, readOnlyProvider);
+        const readOnlyTokenContract = new ethers.Contract(TOKEN_CONTRACT, TOKEN_ABI, readOnlyProvider);
+
+        // Fetch public stats on page load (no wallet needed!)
+        async function fetchPublicStats() {
+            try {
+                console.log('[Stats] Fetching public stats...');
+                const totalStaked = await readOnlyStakingContract.totalStaked();
+                const tvlFormatted = ethers.formatUnits(totalStaked, 18);
+                document.getElementById('tvl').textContent = parseFloat(tvlFormatted).toLocaleString(undefined, {maximumFractionDigits: 2}) + ' BAItest';
+                console.log('[Stats] TVL loaded:', tvlFormatted);
+            } catch (error) {
+                console.error('[Stats] Error fetching public stats:', error);
+                document.getElementById('tvl').textContent = 'Error loading';
+            }
+        }
+
+        // ============================================
+        // UTILITY FUNCTIONS
+        // ============================================
+        
         function isMobile() {
             return /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
         }
 
-        // Transaction Preview Functions
+        function showError(message) {
+            const errorBox = document.getElementById('wcError');
+            errorBox.textContent = message;
+            errorBox.style.display = 'block';
+        }
+
+        function hideError() {
+            document.getElementById('wcError').style.display = 'none';
+        }
+
+        // ============================================
+        // NETWORK HANDLING (FIX #2)
+        // ============================================
+        
+        async function checkNetwork() {
+            if (!window.ethereum) return false;
+            
+            try {
+                const chainId = await window.ethereum.request({ method: 'eth_chainId' });
+                const isBase = chainId === BASE_CHAIN_ID;
+                
+                document.getElementById('networkWarning').classList.toggle('show', !isBase);
+                isOnCorrectNetwork = isBase;
+                
+                console.log('[Network] Current chain:', chainId, 'Is Base:', isBase);
+                return isBase;
+            } catch (error) {
+                console.error('[Network] Error checking network:', error);
+                return false;
+            }
+        }
+
+        async function switchToBase() {
+            if (!window.ethereum) {
+                alert('No wallet detected');
+                return;
+            }
+
+            try {
+                await window.ethereum.request({
+                    method: 'wallet_switchEthereumChain',
+                    params: [{ chainId: BASE_CHAIN_ID }],
+                });
+                await checkNetwork();
+                await updateUI();
+            } catch (switchError) {
+                if (switchError.code === 4902) {
+                    try {
+                        await window.ethereum.request({
+                            method: 'wallet_addEthereumChain',
+                            params: [{
+                                chainId: BASE_CHAIN_ID,
+                                chainName: 'Base',
+                                nativeCurrency: { name: 'ETH', symbol: 'ETH', decimals: 18 },
+                                rpcUrls: [BASE_RPC_URL],
+                                blockExplorerUrls: ['https://basescan.org']
+                            }],
+                        });
+                        await checkNetwork();
+                        await updateUI();
+                    } catch (addError) {
+                        console.error('[Network] Error adding Base network:', addError);
+                        alert('Failed to add Base network: ' + addError.message);
+                    }
+                } else {
+                    console.error('[Network] Error switching network:', switchError);
+                    alert('Failed to switch network: ' + switchError.message);
+                }
+            }
+        }
+
+        // ============================================
+        // WALLET CONNECTION - BROWSER EXTENSION (FIX #3)
+        // ============================================
+        
+        async function connectMetaMask() {
+            console.log('[Wallet] Attempting MetaMask connection...');
+            
+            if (typeof window.ethereum === 'undefined') {
+                console.log('[Wallet] No ethereum provider detected');
+                if (isMobile()) {
+                    await generateWalletConnectLink();
+                    openInMetaMask();
+                    return;
+                }
+                alert('MetaMask is not installed. Please install it from metamask.io');
+                return;
+            }
+
+            try {
+                // Request accounts
+                console.log('[Wallet] Requesting accounts...');
+                const accounts = await window.ethereum.request({ method: 'eth_requestAccounts' });
+                console.log('[Wallet] Accounts received:', accounts);
+
+                if (!accounts || accounts.length === 0) {
+                    throw new Error('No accounts returned');
+                }
+
+                // Switch to Base network
+                console.log('[Wallet] Switching to Base network...');
+                try {
+                    await window.ethereum.request({
+                        method: 'wallet_switchEthereumChain',
+                        params: [{ chainId: BASE_CHAIN_ID }],
+                    });
+                } catch (switchError) {
+                    console.log('[Wallet] Switch error:', switchError);
+                    if (switchError.code === 4902) {
+                        console.log('[Wallet] Adding Base network...');
+                        await window.ethereum.request({
+                            method: 'wallet_addEthereumChain',
+                            params: [{
+                                chainId: BASE_CHAIN_ID,
+                                chainName: 'Base',
+                                nativeCurrency: { name: 'ETH', symbol: 'ETH', decimals: 18 },
+                                rpcUrls: [BASE_RPC_URL],
+                                blockExplorerUrls: ['https://basescan.org']
+                            }],
+                        });
+                    } else if (switchError.code !== 4001) { // 4001 = user rejected
+                        throw switchError;
+                    }
+                }
+
+                // Set connection state
+                currentAccount = accounts[0];
+                connectionType = 'extension';
+                console.log('[Wallet] Connected account:', currentAccount);
+
+                // Initialize contracts
+                await initContracts();
+                
+                // Close modal and update UI
+                closeWalletModal();
+                await updateUI();
+
+            } catch (error) {
+                console.error('[Wallet] MetaMask connection error:', error);
+                showError('Connection failed: ' + (error.message || 'Unknown error'));
+            }
+        }
+
+        async function connectCoinbase() {
+            // Coinbase Wallet also injects window.ethereum
+            if (typeof window.ethereum === 'undefined') {
+                if (isMobile()) {
+                    await generateWalletConnectLink();
+                    openInCoinbase();
+                    return;
+                }
+                alert('No wallet detected. Please install Coinbase Wallet.');
+                return;
+            }
+            await connectMetaMask();
+        }
+
+        // ============================================
+        // CONTRACT INITIALIZATION (FIX #4)
+        // ============================================
+        
+        async function initContracts() {
+            console.log('[Contracts] Initializing...');
+            
+            if (connectionType === 'extension') {
+                if (!window.ethereum) {
+                    console.error('[Contracts] No ethereum provider');
+                    return false;
+                }
+
+                try {
+                    provider = new ethers.BrowserProvider(window.ethereum);
+                    signer = await provider.getSigner();
+                    console.log('[Contracts] Got signer:', await signer.getAddress());
+
+                    stakingContract = new ethers.Contract(STAKING_CONTRACT, STAKING_ABI, signer);
+                    tokenContract = new ethers.Contract(TOKEN_CONTRACT, TOKEN_ABI, signer);
+
+                    try {
+                        tokenDecimals = await tokenContract.decimals();
+                    } catch {
+                        tokenDecimals = 18;
+                    }
+
+                    console.log('[Contracts] Initialized successfully');
+                    return true;
+                } catch (error) {
+                    console.error('[Contracts] Initialization error:', error);
+                    return false;
+                }
+            } else if (connectionType === 'walletconnect') {
+                // WalletConnect uses read-only provider for reads, 
+                // but needs special handling for writes
+                // For now, use read-only for all reads
+                stakingContract = readOnlyStakingContract;
+                tokenContract = readOnlyTokenContract;
+                return true;
+            }
+            
+            return false;
+        }
+
+        // ============================================
+        // UI UPDATE (FIX #5 - SEPARATED PUBLIC & USER STATS)
+        // ============================================
+        
+        async function updateUI() {
+            const connectBtn = document.getElementById('connectBtn');
+
+            // ALWAYS fetch public stats (TVL) first
+            await fetchPublicStats();
+
+            // If no wallet connected, show defaults for user-specific data
+            if (!currentAccount) {
+                console.log('[UI] No account connected, showing defaults');
+                connectBtn.textContent = 'Connect Wallet';
+                connectBtn.classList.remove('connected');
+                document.getElementById('walletBalance').textContent = '0';
+                document.getElementById('stakedBalance').textContent = '0';
+                document.getElementById('yourStake').textContent = '0 BAItest';
+                document.getElementById('rewards').textContent = '0 BAItest';
+                document.getElementById('pendingRewards').textContent = '0 BAItest';
+                document.getElementById('claimableRewards').textContent = '0 BAItest';
+                document.getElementById('lockStatus').textContent = 'Connect wallet';
+                document.getElementById('lockStatus').className = 'position-status';
+                document.getElementById('unlockTime').textContent = '--';
+                document.getElementById('timeRemaining').textContent = '--';
+                document.getElementById('poolShare').textContent = '0%';
+                return;
+            }
+
+            // Update button to show connected state
+            const shortAddr = currentAccount.slice(0, 6) + '...' + currentAccount.slice(-4);
+            connectBtn.textContent = shortAddr + ' ✓';
+            connectBtn.classList.add('connected');
+
+            // Check network
+            if (connectionType === 'extension') {
+                const onBase = await checkNetwork();
+                if (!onBase) {
+                    console.log('[UI] Wrong network, skipping user stats');
+                    return;
+                }
+            }
+
+            // Initialize contracts if needed
+            if (!stakingContract || !tokenContract) {
+                const success = await initContracts();
+                if (!success) {
+                    console.error('[UI] Failed to initialize contracts');
+                    return;
+                }
+            }
+
+            // Fetch user-specific data
+            try {
+                console.log('[UI] Fetching user data for:', currentAccount);
+
+                // Use read-only provider for reads (more reliable)
+                const tokenBalance = await readOnlyTokenContract.balanceOf(currentAccount);
+                const formattedBalance = ethers.formatUnits(tokenBalance, tokenDecimals);
+                document.getElementById('walletBalance').textContent = parseFloat(formattedBalance).toFixed(2);
+
+                const stakeInfo = await readOnlyStakingContract.stakes(currentAccount);
+                const stakedAmount = ethers.formatUnits(stakeInfo.amount, tokenDecimals);
+                document.getElementById('stakedBalance').textContent = parseFloat(stakedAmount).toFixed(2);
+                document.getElementById('yourStake').textContent = parseFloat(stakedAmount).toFixed(2) + ' BAItest';
+
+                const earned = await readOnlyStakingContract.earned(currentAccount);
+                const earnedFormatted = ethers.formatUnits(earned, tokenDecimals);
+                document.getElementById('rewards').textContent = parseFloat(earnedFormatted).toFixed(4) + ' BAItest';
+                document.getElementById('pendingRewards').textContent = parseFloat(earnedFormatted).toFixed(4) + ' BAItest';
+                document.getElementById('claimableRewards').textContent = parseFloat(earnedFormatted).toFixed(4) + ' BAItest';
+
+                // Pool share calculation
+                const totalStaked = await readOnlyStakingContract.totalStaked();
+                const tvlFormatted = ethers.formatUnits(totalStaked, tokenDecimals);
+
+                if (parseFloat(tvlFormatted) > 0) {
+                    const share = (parseFloat(stakedAmount) / parseFloat(tvlFormatted) * 100).toFixed(2);
+                    document.getElementById('poolShare').textContent = share + '%';
+                } else {
+                    document.getElementById('poolShare').textContent = '0%';
+                }
+
+                // Lock status
+                const isUnlocked = await readOnlyStakingContract.isUnlocked(currentAccount);
+                const unlockTimestamp = await readOnlyStakingContract.unlockTime(currentAccount);
+
+                if (parseFloat(stakedAmount) === 0) {
+                    document.getElementById('lockStatus').textContent = 'No Stake';
+                    document.getElementById('lockStatus').className = 'position-status';
+                    document.getElementById('unlockTime').textContent = '--';
+                    document.getElementById('timeRemaining').textContent = '--';
+                    document.getElementById('penaltyWarning').classList.add('hidden');
+                } else if (isUnlocked) {
+                    document.getElementById('lockStatus').textContent = '🔓 Unlocked';
+                    document.getElementById('lockStatus').className = 'position-status unlocked';
+                    document.getElementById('unlockTime').textContent = 'Now';
+                    document.getElementById('timeRemaining').textContent = 'Ready!';
+                    document.getElementById('penaltyWarning').classList.add('hidden');
+                } else {
+                    document.getElementById('lockStatus').textContent = '🔒 Locked';
+                    document.getElementById('lockStatus').className = 'position-status locked';
+                    const unlockDate = new Date(Number(unlockTimestamp) * 1000);
+                    document.getElementById('unlockTime').textContent = unlockDate.toLocaleDateString();
+
+                    const remaining = Number(unlockTimestamp) - Math.floor(Date.now() / 1000);
+                    const days = Math.floor(remaining / 86400);
+                    const hours = Math.floor((remaining % 86400) / 3600);
+                    document.getElementById('timeRemaining').textContent = days + 'd ' + hours + 'h';
+                    document.getElementById('penaltyWarning').classList.remove('hidden');
+                }
+
+                console.log('[UI] User data loaded successfully');
+
+            } catch (error) {
+                console.error('[UI] Error fetching user data:', error);
+                // Don't show error to user for read operations - just log it
+            }
+        }
+
+        // ============================================
+        // TRANSACTION PREVIEW MODAL
+        // ============================================
+        
         function showTxPreview(title, warning, details, callback) {
             document.getElementById('txPreviewTitle').textContent = title;
             document.getElementById('txPreviewWarning').innerHTML = warning;
-            
+
             let detailsHtml = '';
             for (const [label, value] of Object.entries(details)) {
                 detailsHtml += `<div class="tx-detail-row"><span class="tx-detail-label">${label}</span><span class="tx-detail-value">${value}</span></div>`;
             }
             document.getElementById('txPreviewDetails').innerHTML = detailsHtml;
-            
+
             pendingTxCallback = callback;
             document.getElementById('txPreviewModal').classList.add('show');
         }
@@ -1359,7 +1756,10 @@
             if (pendingTxCallback) pendingTxCallback();
         }
 
-        // Wallet Modal Functions
+        // ============================================
+        // WALLET MODAL
+        // ============================================
+        
         function openWalletModal() {
             if (currentAccount) {
                 disconnectWallet();
@@ -1367,7 +1767,7 @@
             }
             document.getElementById('walletModal').classList.add('show');
             resetModalState();
-            
+
             // Auto-generate link on mobile
             if (isMobile()) {
                 generateWalletConnectLink();
@@ -1382,7 +1782,7 @@
             document.getElementById('wcLoading').style.display = 'none';
             document.getElementById('wcQrContainer').style.display = 'none';
             document.getElementById('mobileWalletLinks').style.display = 'none';
-            document.getElementById('wcError').style.display = 'none';
+            hideError();
             document.getElementById('copyBtnText').textContent = '📋 Get Connection Link';
             document.getElementById('copyLinkBtn').classList.remove('copied');
             wcUri = null;
@@ -1397,22 +1797,33 @@
             if (e.target === this) closeTxPreview();
         });
 
-        // Generate WalletConnect link
+        function disconnectWallet() {
+            currentAccount = null;
+            provider = null;
+            signer = null;
+            stakingContract = null;
+            tokenContract = null;
+            connectionType = null;
+            document.getElementById('networkWarning').classList.remove('show');
+            updateUI();
+        }
+
+        // ============================================
+        // WALLETCONNECT (MOBILE)
+        // ============================================
+        
         async function generateWalletConnectLink() {
             const loading = document.getElementById('wcLoading');
-            const errorBox = document.getElementById('wcError');
             const qrContainer = document.getElementById('wcQrContainer');
             const mobileLinks = document.getElementById('mobileWalletLinks');
-            const copyBtn = document.getElementById('copyLinkBtn');
-            
+
             loading.style.display = 'block';
-            errorBox.style.display = 'none';
-            
+            hideError();
+
             try {
-                // Dynamic import of WalletConnect
                 const { Core } = await import('https://esm.sh/@walletconnect/core@2.11.0');
                 const SignClient = (await import('https://esm.sh/@walletconnect/sign-client@2.11.0')).default;
-                
+
                 if (!signClient) {
                     signClient = await SignClient.init({
                         projectId: WC_PROJECT_ID,
@@ -1423,13 +1834,14 @@
                             icons: ['https://simpleonbase-commits.github.io/BAI-V.0.0.01/favicon.ico']
                         }
                     });
-                    
+
                     signClient.on('session_delete', () => {
                         currentAccount = null;
+                        connectionType = null;
                         updateUI();
                     });
                 }
-                
+
                 const { uri, approval } = await signClient.connect({
                     requiredNamespaces: {
                         eip155: {
@@ -1439,11 +1851,11 @@
                         }
                     }
                 });
-                
+
                 wcUri = uri;
                 loading.style.display = 'none';
-                
-                // Show QR on desktop, show mobile wallet links on mobile
+
+                // Show QR on desktop
                 if (!isMobile()) {
                     qrContainer.style.display = 'block';
                     const canvas = document.getElementById('wcQrCode');
@@ -1453,60 +1865,54 @@
                         color: { dark: '#000000', light: '#ffffff' }
                     });
                 }
-                
-                // Always show mobile wallet links
+
                 mobileLinks.style.display = 'block';
                 document.getElementById('copyBtnText').textContent = '📋 Copy Connection Link';
-                
+
                 // Wait for approval
                 const session = await approval();
                 const accounts = session.namespaces.eip155.accounts;
                 const address = accounts[0].split(':')[2];
-                
+
                 currentAccount = address;
+                connectionType = 'walletconnect';
                 window.wcSession = session;
                 closeWalletModal();
                 await updateUI();
-                
+
             } catch (error) {
                 console.error('WalletConnect error:', error);
                 loading.style.display = 'none';
-                
+
                 if (error.message && !error.message.includes('rejected')) {
-                    errorBox.textContent = 'Connection error: ' + error.message;
-                    errorBox.style.display = 'block';
-                    
-                    // Still show copy button as fallback
+                    showError('Connection error: ' + error.message);
                     mobileLinks.style.display = 'block';
                 }
             }
         }
 
-        // Copy or generate link
         async function copyOrGenerateLink() {
             if (!wcUri) {
                 await generateWalletConnectLink();
                 return;
             }
-            
+
             try {
                 await navigator.clipboard.writeText(wcUri);
                 const btn = document.getElementById('copyLinkBtn');
                 const btnText = document.getElementById('copyBtnText');
                 btn.classList.add('copied');
                 btnText.textContent = '✓ Copied! Paste in wallet app';
-                
+
                 setTimeout(() => {
                     btn.classList.remove('copied');
                     btnText.textContent = '📋 Copy Connection Link';
                 }, 3000);
             } catch (err) {
-                // Fallback for mobile
                 prompt('Copy this link and paste in your wallet:', wcUri);
             }
         }
 
-        // Mobile wallet deep links
         function openInMetaMask() {
             if (!wcUri) return;
             const encoded = encodeURIComponent(wcUri);
@@ -1531,189 +1937,23 @@
             window.location.href = `trust://wc?uri=${encoded}`;
         }
 
-        async function connectMetaMask() {
-            if (typeof window.ethereum === 'undefined') {
-                // On mobile without extension, use WalletConnect
-                if (isMobile()) {
-                    await generateWalletConnectLink();
-                    openInMetaMask();
-                    return;
-                }
-                alert('MetaMask is not installed. Please install it from metamask.io');
-                return;
-            }
-            
-            try {
-                const accounts = await window.ethereum.request({ method: 'eth_requestAccounts' });
-                
-                try {
-                    await window.ethereum.request({
-                        method: 'wallet_switchEthereumChain',
-                        params: [{ chainId: BASE_CHAIN_ID }],
-                    });
-                } catch (switchError) {
-                    if (switchError.code === 4902) {
-                        await window.ethereum.request({
-                            method: 'wallet_addEthereumChain',
-                            params: [{
-                                chainId: BASE_CHAIN_ID,
-                                chainName: 'Base',
-                                nativeCurrency: { name: 'ETH', symbol: 'ETH', decimals: 18 },
-                                rpcUrls: ['https://mainnet.base.org'],
-                                blockExplorerUrls: ['https://basescan.org']
-                            }],
-                        });
-                    }
-                }
-                
-                currentAccount = accounts[0];
-                closeWalletModal();
-                await initContracts();
-                await updateUI();
-                
-            } catch (error) {
-                console.error('MetaMask connection error:', error);
-                alert('Failed to connect: ' + error.message);
-            }
-        }
-
-        async function connectCoinbase() {
-            if (typeof window.ethereum === 'undefined') {
-                if (isMobile()) {
-                    await generateWalletConnectLink();
-                    openInCoinbase();
-                    return;
-                }
-                alert('No wallet detected. Please install Coinbase Wallet.');
-                return;
-            }
-            await connectMetaMask();
-        }
-
-        function disconnectWallet() {
-            currentAccount = null;
-            provider = null;
-            signer = null;
-            stakingContract = null;
-            tokenContract = null;
-            updateUI();
-        }
-
-        async function initContracts() {
-            if (!window.ethereum || !currentAccount) return;
-            
-            provider = new ethers.BrowserProvider(window.ethereum);
-            signer = await provider.getSigner();
-            
-            stakingContract = new ethers.Contract(STAKING_CONTRACT, STAKING_ABI, signer);
-            tokenContract = new ethers.Contract(TOKEN_CONTRACT, TOKEN_ABI, signer);
-            
-            try {
-                tokenDecimals = await tokenContract.decimals();
-            } catch {
-                tokenDecimals = 18;
-            }
-        }
-
-        async function updateUI() {
-            const connectBtn = document.getElementById('connectBtn');
-            
-            if (!currentAccount) {
-                connectBtn.textContent = 'Connect Wallet';
-                connectBtn.classList.remove('connected');
-                document.getElementById('walletBalance').textContent = '0';
-                document.getElementById('stakedBalance').textContent = '0';
-                document.getElementById('yourStake').textContent = '0 BAItest';
-                document.getElementById('rewards').textContent = '0 BAItest';
-                document.getElementById('pendingRewards').textContent = '0 BAItest';
-                document.getElementById('claimableRewards').textContent = '0 BAItest';
-                document.getElementById('lockStatus').textContent = '🔒 Locked';
-                document.getElementById('lockStatus').className = 'position-status locked';
-                document.getElementById('unlockTime').textContent = '--';
-                document.getElementById('timeRemaining').textContent = '--';
-                document.getElementById('poolShare').textContent = '0%';
-                return;
-            }
-            
-            const shortAddr = currentAccount.slice(0, 6) + '...' + currentAccount.slice(-4);
-            connectBtn.textContent = shortAddr + ' ✓';
-            connectBtn.classList.add('connected');
-            
-            if (!stakingContract) {
-                await initContracts();
-            }
-            
-            try {
-                const tokenBalance = await tokenContract.balanceOf(currentAccount);
-                const formattedBalance = ethers.formatUnits(tokenBalance, tokenDecimals);
-                document.getElementById('walletBalance').textContent = parseFloat(formattedBalance).toFixed(2);
-                
-                const stakeInfo = await stakingContract.stakes(currentAccount);
-                const stakedAmount = ethers.formatUnits(stakeInfo.amount, tokenDecimals);
-                document.getElementById('stakedBalance').textContent = parseFloat(stakedAmount).toFixed(2);
-                document.getElementById('yourStake').textContent = parseFloat(stakedAmount).toFixed(2) + ' BAItest';
-                
-                const earned = await stakingContract.earned(currentAccount);
-                const earnedFormatted = ethers.formatUnits(earned, tokenDecimals);
-                document.getElementById('rewards').textContent = parseFloat(earnedFormatted).toFixed(4) + ' BAItest';
-                document.getElementById('pendingRewards').textContent = parseFloat(earnedFormatted).toFixed(4) + ' BAItest';
-                document.getElementById('claimableRewards').textContent = parseFloat(earnedFormatted).toFixed(4) + ' BAItest';
-                
-                const totalStaked = await stakingContract.totalStaked();
-                const tvlFormatted = ethers.formatUnits(totalStaked, tokenDecimals);
-                document.getElementById('tvl').textContent = parseFloat(tvlFormatted).toFixed(2) + ' BAItest';
-                
-                if (parseFloat(tvlFormatted) > 0) {
-                    const share = (parseFloat(stakedAmount) / parseFloat(tvlFormatted) * 100).toFixed(2);
-                    document.getElementById('poolShare').textContent = share + '%';
-                } else {
-                    document.getElementById('poolShare').textContent = '0%';
-                }
-                
-                const isUnlocked = await stakingContract.isUnlocked(currentAccount);
-                const unlockTimestamp = await stakingContract.unlockTime(currentAccount);
-                
-                if (parseFloat(stakedAmount) === 0) {
-                    document.getElementById('lockStatus').textContent = 'No Stake';
-                    document.getElementById('lockStatus').className = 'position-status';
-                    document.getElementById('unlockTime').textContent = '--';
-                    document.getElementById('timeRemaining').textContent = '--';
-                    document.getElementById('penaltyWarning').classList.add('hidden');
-                } else if (isUnlocked) {
-                    document.getElementById('lockStatus').textContent = '🔓 Unlocked';
-                    document.getElementById('lockStatus').className = 'position-status unlocked';
-                    document.getElementById('unlockTime').textContent = 'Now';
-                    document.getElementById('timeRemaining').textContent = 'Ready!';
-                    document.getElementById('penaltyWarning').classList.add('hidden');
-                } else {
-                    document.getElementById('lockStatus').textContent = '🔒 Locked';
-                    document.getElementById('lockStatus').className = 'position-status locked';
-                    const unlockDate = new Date(Number(unlockTimestamp) * 1000);
-                    document.getElementById('unlockTime').textContent = unlockDate.toLocaleDateString();
-                    
-                    const remaining = Number(unlockTimestamp) - Math.floor(Date.now() / 1000);
-                    const days = Math.floor(remaining / 86400);
-                    const hours = Math.floor((remaining % 86400) / 3600);
-                    document.getElementById('timeRemaining').textContent = days + 'd ' + hours + 'h';
-                    document.getElementById('penaltyWarning').classList.remove('hidden');
-                }
-                
-            } catch (error) {
-                console.error('Error updating UI:', error);
-            }
-        }
-
-        // Tab switching
+        // ============================================
+        // TAB SWITCHING
+        // ============================================
+        
         function switchTab(tab) {
             document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
             document.querySelectorAll('.tab')[['stake', 'unstake', 'claim'].indexOf(tab)].classList.add('active');
-            
+
             document.getElementById('stakeTab').style.display = tab === 'stake' ? 'block' : 'none';
             document.getElementById('unstakeTab').style.display = tab === 'unstake' ? 'block' : 'none';
             document.getElementById('claimTab').style.display = tab === 'claim' ? 'block' : 'none';
         }
 
-        // Max buttons
+        // ============================================
+        // STAKING ACTIONS
+        // ============================================
+        
         function setMaxStake() {
             const balance = document.getElementById('walletBalance').textContent;
             document.getElementById('stakeAmount').value = balance;
@@ -1725,13 +1965,12 @@
             updateUnstakePreview();
         }
 
-        // Update unstake preview
         document.getElementById('unstakeAmount').addEventListener('input', updateUnstakePreview);
-        
+
         async function updateUnstakePreview() {
             const amount = document.getElementById('unstakeAmount').value || 0;
             const isUnlocked = document.getElementById('lockStatus').textContent.includes('Unlocked');
-            
+
             if (isUnlocked) {
                 document.getElementById('receiveAmount').textContent = parseFloat(amount).toFixed(4) + ' BAItest';
                 document.getElementById('penaltyAmount').textContent = '0 BAItest';
@@ -1745,20 +1984,18 @@
             }
         }
 
-        // Contract interactions
         async function stake() {
             if (!currentAccount) {
                 openWalletModal();
                 return;
             }
-            
+
             const amount = document.getElementById('stakeAmount').value;
             if (!amount || parseFloat(amount) <= 0) {
                 alert('Please enter an amount to stake');
                 return;
             }
 
-            // Show transaction preview
             showTxPreview(
                 '🔒 Confirm Stake',
                 '⚠️ <strong>Important:</strong> Your tokens will be locked for 7 days. Early withdrawal incurs a 20% penalty.',
@@ -1775,29 +2012,37 @@
             const amount = document.getElementById('stakeAmount').value;
             const btn = document.getElementById('stakeBtn');
             const originalText = btn.textContent;
-            
+
             try {
+                // Re-initialize contracts with signer for writes
+                if (connectionType === 'extension') {
+                    provider = new ethers.BrowserProvider(window.ethereum);
+                    signer = await provider.getSigner();
+                    stakingContract = new ethers.Contract(STAKING_CONTRACT, STAKING_ABI, signer);
+                    tokenContract = new ethers.Contract(TOKEN_CONTRACT, TOKEN_ABI, signer);
+                }
+
                 const amountWei = ethers.parseUnits(amount, tokenDecimals);
-                
+
                 btn.textContent = 'Checking allowance...';
                 const allowance = await tokenContract.allowance(currentAccount, STAKING_CONTRACT);
-                
+
                 if (allowance < amountWei) {
                     btn.textContent = 'Approving...';
                     const approveTx = await tokenContract.approve(STAKING_CONTRACT, amountWei);
                     await approveTx.wait();
                 }
-                
+
                 btn.textContent = 'Staking...';
                 const stakeTx = await stakingContract.stake(amountWei);
                 await stakeTx.wait();
-                
+
                 btn.textContent = 'Staked! ✓';
                 document.getElementById('stakeAmount').value = '';
                 await updateUI();
-                
+
                 setTimeout(() => { btn.textContent = originalText; }, 2000);
-                
+
             } catch (error) {
                 console.error('Stake error:', error);
                 btn.textContent = originalText;
@@ -1810,21 +2055,20 @@
                 openWalletModal();
                 return;
             }
-            
+
             const amount = document.getElementById('unstakeAmount').value;
             if (!amount || parseFloat(amount) <= 0) {
                 alert('Please enter an amount to unstake');
                 return;
             }
-            
+
             const isUnlocked = document.getElementById('lockStatus').textContent.includes('Unlocked');
             const penalty = isUnlocked ? 0 : parseFloat(amount) * 0.20;
             const receive = parseFloat(amount) - penalty;
 
-            // Show transaction preview
             showTxPreview(
                 isUnlocked ? '🔓 Confirm Unstake' : '⚠️ Early Unstake Warning',
-                isUnlocked 
+                isUnlocked
                     ? '✅ Your lock period has ended. You can unstake without penalty.'
                     : '🚨 <strong>PENALTY WARNING:</strong> Your stake is still locked! You will lose <strong>20%</strong> of your tokens as a penalty. This penalty goes to other stakers.',
                 {
@@ -1841,19 +2085,25 @@
             const amount = document.getElementById('unstakeAmount').value;
             const btn = document.getElementById('unstakeBtn');
             const originalText = btn.textContent;
-            
+
             try {
+                if (connectionType === 'extension') {
+                    provider = new ethers.BrowserProvider(window.ethereum);
+                    signer = await provider.getSigner();
+                    stakingContract = new ethers.Contract(STAKING_CONTRACT, STAKING_ABI, signer);
+                }
+
                 btn.textContent = 'Unstaking...';
                 const amountWei = ethers.parseUnits(amount, tokenDecimals);
                 const tx = await stakingContract.unstake(amountWei);
                 await tx.wait();
-                
+
                 btn.textContent = 'Unstaked! ✓';
                 document.getElementById('unstakeAmount').value = '';
                 await updateUI();
-                
+
                 setTimeout(() => { btn.textContent = originalText; }, 2000);
-                
+
             } catch (error) {
                 console.error('Unstake error:', error);
                 btn.textContent = originalText;
@@ -1868,7 +2118,7 @@
             }
 
             const rewards = document.getElementById('claimableRewards').textContent;
-            
+
             showTxPreview(
                 '💰 Claim Rewards',
                 '✅ Claim your earned rewards from paper hands penalties.',
@@ -1884,17 +2134,23 @@
         async function executeClaimRewards() {
             const btn = document.getElementById('claimBtn');
             const originalText = btn.textContent;
-            
+
             try {
+                if (connectionType === 'extension') {
+                    provider = new ethers.BrowserProvider(window.ethereum);
+                    signer = await provider.getSigner();
+                    stakingContract = new ethers.Contract(STAKING_CONTRACT, STAKING_ABI, signer);
+                }
+
                 btn.textContent = 'Claiming...';
                 const tx = await stakingContract.claimRewards();
                 await tx.wait();
-                
+
                 btn.textContent = 'Claimed! ✓';
                 await updateUI();
-                
+
                 setTimeout(() => { btn.textContent = originalText; }, 2000);
-                
+
             } catch (error) {
                 console.error('Claim error:', error);
                 btn.textContent = originalText;
@@ -1907,7 +2163,7 @@
                 openWalletModal();
                 return;
             }
-            
+
             const isUnlocked = document.getElementById('lockStatus').textContent.includes('Unlocked');
             const stakedAmount = document.getElementById('stakedBalance').textContent;
             const rewards = document.getElementById('claimableRewards').textContent;
@@ -1916,7 +2172,7 @@
 
             showTxPreview(
                 isUnlocked ? '🚀 Exit All' : '⚠️ Exit All (With Penalty)',
-                isUnlocked 
+                isUnlocked
                     ? '✅ Unstake all tokens and claim rewards in one transaction.'
                     : '🚨 <strong>PENALTY WARNING:</strong> Your stake is locked! Exiting now costs 20% penalty.',
                 {
@@ -1933,17 +2189,23 @@
         async function executeExitAll() {
             const btn = document.getElementById('exitBtn');
             const originalText = btn.textContent;
-            
+
             try {
+                if (connectionType === 'extension') {
+                    provider = new ethers.BrowserProvider(window.ethereum);
+                    signer = await provider.getSigner();
+                    stakingContract = new ethers.Contract(STAKING_CONTRACT, STAKING_ABI, signer);
+                }
+
                 btn.textContent = 'Exiting...';
                 const tx = await stakingContract.exit();
                 await tx.wait();
-                
+
                 btn.textContent = 'Exited! ✓';
                 await updateUI();
-                
+
                 setTimeout(() => { btn.textContent = originalText; }, 2000);
-                
+
             } catch (error) {
                 console.error('Exit error:', error);
                 btn.textContent = originalText;
@@ -1951,25 +2213,52 @@
             }
         }
 
-        // Listen for account/network changes
+        // ============================================
+        // EVENT LISTENERS
+        // ============================================
+        
         if (window.ethereum) {
             window.ethereum.on('accountsChanged', async (accounts) => {
+                console.log('[Event] Accounts changed:', accounts);
                 if (accounts.length === 0) {
                     disconnectWallet();
                 } else {
                     currentAccount = accounts[0];
+                    connectionType = 'extension';
                     await initContracts();
                     await updateUI();
                 }
             });
-            
-            window.ethereum.on('chainChanged', () => {
-                window.location.reload();
+
+            window.ethereum.on('chainChanged', (chainId) => {
+                console.log('[Event] Chain changed:', chainId);
+                checkNetwork();
+                updateUI();
             });
         }
 
-        // Initial UI update
-        updateUI();
+        // ============================================
+        // INITIALIZATION
+        // ============================================
+        
+        console.log('[Init] BAI Staking page loaded');
+        
+        // Fetch public stats immediately on page load
+        fetchPublicStats();
+
+        // Check if already connected
+        if (window.ethereum) {
+            window.ethereum.request({ method: 'eth_accounts' }).then(accounts => {
+                if (accounts && accounts.length > 0) {
+                    console.log('[Init] Found existing connection:', accounts[0]);
+                    currentAccount = accounts[0];
+                    connectionType = 'extension';
+                    initContracts().then(() => updateUI());
+                }
+            }).catch(err => {
+                console.log('[Init] No existing connection');
+            });
+        }
     </script>
 </body>
 </html>
