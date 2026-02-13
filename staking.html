@@ -1751,9 +1751,16 @@
             pendingTxCallback = null;
         }
 
+        // FIX: Save callback before closing modal (was being cleared before execution)
         function confirmTx() {
-            closeTxPreview();
-            if (pendingTxCallback) pendingTxCallback();
+            const callback = pendingTxCallback;  // Save callback before closing
+            closeTxPreview();  // This clears pendingTxCallback
+            if (callback) {
+                console.log('[TX] Executing confirmed transaction callback...');
+                callback();
+            } else {
+                console.error('[TX] No callback to execute!');
+            }
         }
 
         // ============================================
@@ -2009,33 +2016,51 @@
         }
 
         async function executeStake() {
+            console.log('[Stake] executeStake called');
             const amount = document.getElementById('stakeAmount').value;
             const btn = document.getElementById('stakeBtn');
             const originalText = btn.textContent;
 
+            console.log('[Stake] Amount:', amount, 'ConnectionType:', connectionType);
+
             try {
                 // Re-initialize contracts with signer for writes
                 if (connectionType === 'extension') {
+                    console.log('[Stake] Re-initializing contracts with signer...');
                     provider = new ethers.BrowserProvider(window.ethereum);
                     signer = await provider.getSigner();
                     stakingContract = new ethers.Contract(STAKING_CONTRACT, STAKING_ABI, signer);
                     tokenContract = new ethers.Contract(TOKEN_CONTRACT, TOKEN_ABI, signer);
+                    console.log('[Stake] Contracts initialized');
+                } else {
+                    console.error('[Stake] Unsupported connection type:', connectionType);
+                    alert('Please connect with MetaMask browser extension to stake.');
+                    return;
                 }
 
                 const amountWei = ethers.parseUnits(amount, tokenDecimals);
+                console.log('[Stake] Amount in wei:', amountWei.toString());
 
                 btn.textContent = 'Checking allowance...';
+                console.log('[Stake] Checking allowance...');
                 const allowance = await tokenContract.allowance(currentAccount, STAKING_CONTRACT);
+                console.log('[Stake] Current allowance:', allowance.toString());
 
                 if (allowance < amountWei) {
                     btn.textContent = 'Approving...';
+                    console.log('[Stake] Requesting approval...');
                     const approveTx = await tokenContract.approve(STAKING_CONTRACT, amountWei);
+                    console.log('[Stake] Approval tx sent:', approveTx.hash);
                     await approveTx.wait();
+                    console.log('[Stake] Approval confirmed');
                 }
 
                 btn.textContent = 'Staking...';
+                console.log('[Stake] Calling stake function...');
                 const stakeTx = await stakingContract.stake(amountWei);
+                console.log('[Stake] Stake tx sent:', stakeTx.hash);
                 await stakeTx.wait();
+                console.log('[Stake] Stake confirmed!');
 
                 btn.textContent = 'Staked! ✓';
                 document.getElementById('stakeAmount').value = '';
@@ -2044,7 +2069,7 @@
                 setTimeout(() => { btn.textContent = originalText; }, 2000);
 
             } catch (error) {
-                console.error('Stake error:', error);
+                console.error('[Stake] Error:', error);
                 btn.textContent = originalText;
                 alert('Stake failed: ' + (error.reason || error.message));
             }
@@ -2082,21 +2107,29 @@
         }
 
         async function executeUnstake() {
+            console.log('[Unstake] executeUnstake called');
             const amount = document.getElementById('unstakeAmount').value;
             const btn = document.getElementById('unstakeBtn');
             const originalText = btn.textContent;
 
             try {
                 if (connectionType === 'extension') {
+                    console.log('[Unstake] Re-initializing contracts with signer...');
                     provider = new ethers.BrowserProvider(window.ethereum);
                     signer = await provider.getSigner();
                     stakingContract = new ethers.Contract(STAKING_CONTRACT, STAKING_ABI, signer);
+                } else {
+                    alert('Please connect with MetaMask browser extension to unstake.');
+                    return;
                 }
 
                 btn.textContent = 'Unstaking...';
                 const amountWei = ethers.parseUnits(amount, tokenDecimals);
+                console.log('[Unstake] Calling unstake with amount:', amountWei.toString());
                 const tx = await stakingContract.unstake(amountWei);
+                console.log('[Unstake] Tx sent:', tx.hash);
                 await tx.wait();
+                console.log('[Unstake] Confirmed!');
 
                 btn.textContent = 'Unstaked! ✓';
                 document.getElementById('unstakeAmount').value = '';
@@ -2105,7 +2138,7 @@
                 setTimeout(() => { btn.textContent = originalText; }, 2000);
 
             } catch (error) {
-                console.error('Unstake error:', error);
+                console.error('[Unstake] Error:', error);
                 btn.textContent = originalText;
                 alert('Unstake failed: ' + (error.reason || error.message));
             }
@@ -2132,19 +2165,27 @@
         }
 
         async function executeClaimRewards() {
+            console.log('[Claim] executeClaimRewards called');
             const btn = document.getElementById('claimBtn');
             const originalText = btn.textContent;
 
             try {
                 if (connectionType === 'extension') {
+                    console.log('[Claim] Re-initializing contracts with signer...');
                     provider = new ethers.BrowserProvider(window.ethereum);
                     signer = await provider.getSigner();
                     stakingContract = new ethers.Contract(STAKING_CONTRACT, STAKING_ABI, signer);
+                } else {
+                    alert('Please connect with MetaMask browser extension to claim.');
+                    return;
                 }
 
                 btn.textContent = 'Claiming...';
+                console.log('[Claim] Calling claimRewards...');
                 const tx = await stakingContract.claimRewards();
+                console.log('[Claim] Tx sent:', tx.hash);
                 await tx.wait();
+                console.log('[Claim] Confirmed!');
 
                 btn.textContent = 'Claimed! ✓';
                 await updateUI();
@@ -2152,7 +2193,7 @@
                 setTimeout(() => { btn.textContent = originalText; }, 2000);
 
             } catch (error) {
-                console.error('Claim error:', error);
+                console.error('[Claim] Error:', error);
                 btn.textContent = originalText;
                 alert('Claim failed: ' + (error.reason || error.message));
             }
@@ -2187,19 +2228,27 @@
         }
 
         async function executeExitAll() {
+            console.log('[Exit] executeExitAll called');
             const btn = document.getElementById('exitBtn');
             const originalText = btn.textContent;
 
             try {
                 if (connectionType === 'extension') {
+                    console.log('[Exit] Re-initializing contracts with signer...');
                     provider = new ethers.BrowserProvider(window.ethereum);
                     signer = await provider.getSigner();
                     stakingContract = new ethers.Contract(STAKING_CONTRACT, STAKING_ABI, signer);
+                } else {
+                    alert('Please connect with MetaMask browser extension to exit.');
+                    return;
                 }
 
                 btn.textContent = 'Exiting...';
+                console.log('[Exit] Calling exit...');
                 const tx = await stakingContract.exit();
+                console.log('[Exit] Tx sent:', tx.hash);
                 await tx.wait();
+                console.log('[Exit] Confirmed!');
 
                 btn.textContent = 'Exited! ✓';
                 await updateUI();
@@ -2207,7 +2256,7 @@
                 setTimeout(() => { btn.textContent = originalText; }, 2000);
 
             } catch (error) {
-                console.error('Exit error:', error);
+                console.error('[Exit] Error:', error);
                 btn.textContent = originalText;
                 alert('Exit failed: ' + (error.reason || error.message));
             }
