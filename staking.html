@@ -193,37 +193,47 @@
             margin-bottom: 25px;
         }
 
-        .tab {
+        .tab-btn {
             flex: 1;
             padding: 12px 20px;
             background: #1a1a2e;
-            border: none;
+            border: 1px solid #2a2a3e;
             border-radius: 10px;
             color: #888;
-            font-size: 1rem;
             font-weight: 600;
             cursor: pointer;
             transition: all 0.3s;
         }
 
-        .tab:hover {
-            background: #252538;
+        .tab-btn:hover {
+            background: #252535;
+            color: #fff;
         }
 
-        .tab.active {
+        .tab-btn.active {
             background: linear-gradient(135deg, #ff6b6b, #ffa500);
             color: #000;
+            border-color: transparent;
         }
 
-        /* Input Section */
-        .input-section {
+        /* Tab Content */
+        .tab-content {
+            display: none;
+        }
+
+        .tab-content.active {
+            display: block;
+        }
+
+        /* Input Group */
+        .input-group {
             margin-bottom: 20px;
         }
 
         .input-label {
             display: flex;
             justify-content: space-between;
-            margin-bottom: 10px;
+            margin-bottom: 8px;
             color: #888;
             font-size: 0.9rem;
         }
@@ -235,70 +245,55 @@
         }
 
         .input-wrapper {
-            display: flex;
-            background: #0a0a0f;
-            border: 2px solid #1a1a2e;
-            border-radius: 12px;
-            overflow: hidden;
-            transition: border-color 0.3s;
-        }
-
-        .input-wrapper:focus-within {
-            border-color: #ffa500;
+            position: relative;
         }
 
         .amount-input {
-            flex: 1;
-            background: transparent;
-            border: none;
-            padding: 18px 20px;
-            color: #fff;
+            width: 100%;
+            background: #0a0a0f;
+            border: 1px solid #2a2a3e;
+            border-radius: 12px;
+            padding: 18px 100px 18px 18px;
             font-size: 1.3rem;
-            outline: none;
-        }
-
-        .amount-input::placeholder {
-            color: #444;
-        }
-
-        .token-badge {
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            padding: 0 20px;
-            background: #1a1a2e;
             color: #fff;
-            font-weight: 600;
+            outline: none;
+            transition: border-color 0.3s;
+        }
+
+        .amount-input:focus {
+            border-color: #ffa500;
         }
 
         .max-btn {
-            background: transparent;
-            border: 1px solid #ffa500;
-            color: #ffa500;
+            position: absolute;
+            right: 12px;
+            top: 50%;
+            transform: translateY(-50%);
+            background: #2a2a3e;
+            border: none;
             padding: 8px 16px;
-            border-radius: 6px;
-            cursor: pointer;
+            border-radius: 8px;
+            color: #ffa500;
             font-weight: 600;
-            margin-right: 10px;
-            transition: all 0.3s;
+            cursor: pointer;
+            transition: background 0.3s;
         }
 
         .max-btn:hover {
-            background: #ffa500;
-            color: #000;
+            background: #3a3a4e;
         }
 
-        /* Action Button */
+        /* Action Buttons */
         .action-btn {
             width: 100%;
             padding: 18px;
             border: none;
             border-radius: 12px;
-            font-size: 1.2rem;
+            font-size: 1.1rem;
             font-weight: 700;
             cursor: pointer;
             transition: all 0.3s;
-            margin-bottom: 15px;
+            margin-top: 10px;
         }
 
         .action-btn.primary {
@@ -307,18 +302,18 @@
         }
 
         .action-btn.primary:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 10px 30px rgba(255, 107, 107, 0.3);
+            transform: scale(1.02);
+            box-shadow: 0 0 25px rgba(255, 107, 107, 0.3);
         }
 
         .action-btn.secondary {
             background: #1a1a2e;
             color: #fff;
-            border: 1px solid #333;
+            border: 1px solid #2a2a3e;
         }
 
         .action-btn.secondary:hover {
-            background: #252538;
+            background: #252535;
         }
 
         .action-btn:disabled {
@@ -329,139 +324,85 @@
             box-shadow: none;
         }
 
-        /* Info Box */
-        .info-box {
-            background: #1a1510;
-            border: 1px solid #3d2a1a;
-            border-radius: 10px;
-            padding: 15px;
-            margin-top: 20px;
+        /* Warning Box */
+        .warning-box {
+            background: linear-gradient(135deg, #2a1a1a 0%, #1a1210 100%);
+            border: 1px solid #ff6b6b;
+            border-radius: 12px;
+            padding: 15px 20px;
+            margin-bottom: 20px;
         }
 
-        .info-box.warning {
-            background: #1f1a0d;
-            border-color: #3d3a1a;
+        .warning-box.locked {
+            border-color: #ffa500;
+            background: linear-gradient(135deg, #2a2010 0%, #1a1510 100%);
         }
 
-        .info-box.success {
-            background: #0d1f0d;
-            border-color: #1a3d1a;
+        .warning-title {
+            color: #ff6b6b;
+            font-weight: 600;
+            margin-bottom: 5px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
         }
 
-        .info-box h4 {
+        .warning-box.locked .warning-title {
             color: #ffa500;
-            margin-bottom: 8px;
-            font-size: 0.95rem;
         }
 
-        .info-box.warning h4 {
-            color: #ffd700;
-        }
-
-        .info-box.success h4 {
-            color: #4ade80;
-        }
-
-        .info-box p {
-            color: #d8c0a0;
+        .warning-text {
+            color: #888;
             font-size: 0.9rem;
         }
 
-        .info-box.warning p {
-            color: #d8d0a0;
-        }
-
-        .info-box.success p {
-            color: #a0d8a0;
-        }
-
-        /* Your Position */
-        .position-card {
-            background: linear-gradient(135deg, #12121a 0%, #0f1a0f 100%);
-            border: 1px solid #1a3d1a;
-            border-radius: 16px;
-            padding: 25px;
-            margin-bottom: 30px;
-        }
-
-        .position-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 20px;
-        }
-
-        .position-title {
-            font-size: 1.3rem;
-            color: #4ade80;
-        }
-
-        .position-grid {
+        /* Info Cards */
+        .info-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
-            gap: 20px;
-        }
-
-        .position-item {
-            text-align: center;
-        }
-
-        .position-label {
-            color: #666;
-            font-size: 0.85rem;
-            margin-bottom: 5px;
-        }
-
-        .position-value {
-            font-size: 1.4rem;
-            font-weight: bold;
-            color: #fff;
-        }
-
-        /* How It Works */
-        .how-it-works {
-            background: #12121a;
-            border: 1px solid #1a1a2e;
-            border-radius: 12px;
-            padding: 30px;
-            margin-bottom: 40px;
-        }
-
-        .how-it-works h2 {
-            margin-bottom: 20px;
-            color: #fff;
-        }
-
-        .steps {
-            display: grid;
-            gap: 20px;
-        }
-
-        .step {
-            display: flex;
+            grid-template-columns: repeat(2, 1fr);
             gap: 15px;
+            margin-bottom: 20px;
         }
 
-        .step-icon {
-            width: 48px;
-            height: 48px;
-            background: linear-gradient(135deg, #ff6b6b, #ffa500);
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 1.5rem;
-            flex-shrink: 0;
+        .info-card {
+            background: #0a0a0f;
+            border: 1px solid #1a1a2e;
+            border-radius: 10px;
+            padding: 15px;
         }
 
-        .step-content h3 {
-            color: #fff;
+        .info-label {
+            color: #666;
+            font-size: 0.8rem;
+            text-transform: uppercase;
             margin-bottom: 5px;
         }
 
-        .step-content p {
+        .info-value {
+            color: #fff;
+            font-size: 1.1rem;
+            font-weight: 600;
+        }
+
+        /* Rewards Section */
+        .rewards-display {
+            text-align: center;
+            padding: 30px;
+            background: linear-gradient(135deg, #0a150a 0%, #0a0a0f 100%);
+            border: 1px solid #2a4a2a;
+            border-radius: 12px;
+            margin-bottom: 20px;
+        }
+
+        .rewards-amount {
+            font-size: 2.5rem;
+            font-weight: bold;
+            color: #4ade80;
+            margin-bottom: 5px;
+        }
+
+        .rewards-label {
             color: #888;
-            font-size: 0.95rem;
         }
 
         /* Contract Info */
@@ -470,16 +411,35 @@
             border: 1px solid #1a1a2e;
             border-radius: 12px;
             padding: 20px;
-            text-align: center;
+            margin-top: 30px;
         }
 
-        .contract-info a {
+        .contract-title {
+            color: #888;
+            font-size: 0.9rem;
+            margin-bottom: 15px;
+            text-transform: uppercase;
+        }
+
+        .contract-links {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 15px;
+        }
+
+        .contract-link {
             color: #ffa500;
             text-decoration: none;
+            font-family: monospace;
+            font-size: 0.85rem;
+            padding: 8px 15px;
+            background: #0a0a0f;
+            border-radius: 8px;
+            transition: background 0.3s;
         }
 
-        .contract-info a:hover {
-            text-decoration: underline;
+        .contract-link:hover {
+            background: #1a1a2e;
         }
 
         /* Footer */
@@ -487,49 +447,21 @@
             text-align: center;
             padding: 40px 20px;
             border-top: 1px solid #1a1a2e;
+            margin-top: 40px;
             color: #666;
-            font-size: 0.9rem;
         }
 
         footer a {
-            color: #ff6b6b;
+            color: #ffa500;
             text-decoration: none;
         }
 
-        /* Toast Notifications */
-        .toast {
-            position: fixed;
-            bottom: 20px;
-            right: 20px;
-            background: #12121a;
-            border: 1px solid #333;
-            border-radius: 12px;
-            padding: 15px 25px;
-            display: none;
-            z-index: 1000;
-            animation: slideIn 0.3s ease;
+        /* Loading State */
+        .loading {
+            opacity: 0.6;
+            pointer-events: none;
         }
 
-        .toast.success {
-            border-color: #4ade80;
-        }
-
-        .toast.error {
-            border-color: #ff6b6b;
-        }
-
-        @keyframes slideIn {
-            from {
-                transform: translateX(100%);
-                opacity: 0;
-            }
-            to {
-                transform: translateX(0);
-                opacity: 1;
-            }
-        }
-
-        /* Loading Spinner */
         .spinner {
             display: inline-block;
             width: 20px;
@@ -538,51 +470,40 @@
             border-top-color: #ffa500;
             border-radius: 50%;
             animation: spin 1s linear infinite;
-            margin-right: 10px;
+            margin-right: 8px;
         }
 
         @keyframes spin {
             to { transform: rotate(360deg); }
         }
 
-        /* Nav */
-        .nav {
-            display: flex;
-            justify-content: center;
-            gap: 20px;
-            margin-bottom: 20px;
-        }
-
-        .nav a {
-            color: #888;
-            text-decoration: none;
-            padding: 8px 16px;
-            border-radius: 8px;
-            transition: all 0.3s;
-        }
-
-        .nav a:hover {
-            color: #fff;
-            background: #1a1a2e;
-        }
-
+        /* Responsive */
         @media (max-width: 600px) {
-            h1 { font-size: 1.8rem; }
-            .stats-grid { grid-template-columns: 1fr 1fr; }
-            .tabs { flex-direction: column; }
-            .position-grid { grid-template-columns: 1fr 1fr; }
+            h1 {
+                font-size: 1.8rem;
+            }
+            
+            .stats-grid {
+                grid-template-columns: 1fr 1fr;
+            }
+            
+            .info-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .tabs {
+                flex-direction: column;
+            }
+
+            .contract-links {
+                flex-direction: column;
+            }
         }
     </style>
 </head>
 <body>
     <div class="container">
         <header>
-            <nav class="nav">
-                <a href="index.html">🏛️ Cases</a>
-                <a href="registry.html">📋 Registry</a>
-                <a href="blacklist.html">🚫 Blacklist</a>
-                <a href="staking.html" style="color: #ffa500;">💎 Staking</a>
-            </nav>
             <div class="logo">💎</div>
             <h1>Diamond Hands Staking</h1>
             <p class="tagline">Bureau of Agent Investigations</p>
@@ -599,472 +520,560 @@
             </div>
         </div>
 
-        <!-- Global Stats -->
+        <!-- Stats -->
         <div class="stats-grid">
             <div class="stat-card">
                 <div class="stat-label">Total Staked</div>
                 <div class="stat-value" id="totalStaked">--</div>
             </div>
             <div class="stat-card">
-                <div class="stat-label">Lock Period</div>
-                <div class="stat-value">7 Days</div>
+                <div class="stat-label">Your Stake</div>
+                <div class="stat-value orange" id="yourStake">--</div>
             </div>
             <div class="stat-card highlight">
-                <div class="stat-label">Early Exit Penalty</div>
-                <div class="stat-value red">20%</div>
+                <div class="stat-label">Your Rewards</div>
+                <div class="stat-value green" id="yourRewards">--</div>
             </div>
             <div class="stat-card">
-                <div class="stat-label">Your Rewards</div>
-                <div class="stat-value green" id="pendingRewards">--</div>
+                <div class="stat-label">Lock Status</div>
+                <div class="stat-value" id="lockStatus">--</div>
             </div>
         </div>
 
-        <!-- Your Position -->
-        <div class="position-card" id="positionCard" style="display: none;">
-            <div class="position-header">
-                <h3 class="position-title">💎 Your Position</h3>
-                <span id="lockStatus" style="color: #4ade80;">🔓 Unlocked</span>
-            </div>
-            <div class="position-grid">
-                <div class="position-item">
-                    <div class="position-label">Staked Amount</div>
-                    <div class="position-value" id="yourStaked">0 SIMPLE</div>
-                </div>
-                <div class="position-item">
-                    <div class="position-label">Pending Rewards</div>
-                    <div class="position-value" style="color: #4ade80;" id="yourRewards">0 SIMPLE</div>
-                </div>
-                <div class="position-item">
-                    <div class="position-label">Unlock Time</div>
-                    <div class="position-value" id="unlockTime">--</div>
-                </div>
-                <div class="position-item">
-                    <div class="position-label">Early Exit Cost</div>
-                    <div class="position-value" style="color: #ff6b6b;" id="exitPenalty">0 SIMPLE</div>
-                </div>
-            </div>
-        </div>
-
-        <!-- Staking Panel -->
+        <!-- Main Panel -->
         <div class="staking-panel">
             <div class="panel-header">
-                <h2 class="panel-title">Stake SIMPLE</h2>
-                <span class="panel-badge">💎 DIAMOND HANDS</span>
+                <h2 class="panel-title">Stake BAItest</h2>
+                <span class="panel-badge">20% Early Exit Penalty</span>
             </div>
 
+            <!-- Tabs -->
             <div class="tabs">
-                <button class="tab active" onclick="switchTab('stake')" id="stakeTab">Stake</button>
-                <button class="tab" onclick="switchTab('unstake')" id="unstakeTab">Unstake</button>
-                <button class="tab" onclick="switchTab('claim')" id="claimTab">Claim Rewards</button>
+                <button class="tab-btn active" onclick="showTab('stake')">Stake</button>
+                <button class="tab-btn" onclick="showTab('unstake')">Unstake</button>
+                <button class="tab-btn" onclick="showTab('rewards')">Rewards</button>
             </div>
 
             <!-- Stake Tab -->
-            <div id="stakePanel">
-                <div class="input-section">
+            <div class="tab-content active" id="stakeTab">
+                <div class="input-group">
                     <div class="input-label">
                         <span>Amount to Stake</span>
-                        <span class="balance-link" onclick="setMaxStake()">Balance: <span id="simpleBalance">--</span></span>
+                        <span class="balance-link" onclick="setMaxStake()">Balance: <span id="walletBalance">--</span> BAItest</span>
                     </div>
                     <div class="input-wrapper">
                         <input type="number" class="amount-input" id="stakeAmount" placeholder="0.0" step="any">
-                        <div class="token-badge">
-                            <button class="max-btn" onclick="setMaxStake()">MAX</button>
-                            SIMPLE
-                        </div>
+                        <button class="max-btn" onclick="setMaxStake()">MAX</button>
                     </div>
                 </div>
 
-                <button class="action-btn primary" id="stakeBtn" onclick="stake()" disabled>
-                    Stake SIMPLE
-                </button>
-
-                <div class="info-box">
-                    <h4>💎 Staking Info</h4>
-                    <p>Your tokens will be locked for 7 days. If you withdraw early, you'll pay a 20% penalty — but that penalty goes to fellow diamond hands!</p>
+                <div class="info-grid">
+                    <div class="info-card">
+                        <div class="info-label">Lock Period</div>
+                        <div class="info-value">7 Days</div>
+                    </div>
+                    <div class="info-card">
+                        <div class="info-label">Early Penalty</div>
+                        <div class="info-value">20%</div>
+                    </div>
                 </div>
+
+                <button class="action-btn secondary" id="approveBtn" onclick="approveTokens()" style="display: none;">
+                    Approve BAItest
+                </button>
+                <button class="action-btn primary" id="stakeBtn" onclick="stakeTokens()" disabled>
+                    Connect Wallet to Stake
+                </button>
             </div>
 
             <!-- Unstake Tab -->
-            <div id="unstakePanel" style="display: none;">
-                <div class="input-section">
+            <div class="tab-content" id="unstakeTab">
+                <div id="unstakeWarning" class="warning-box locked" style="display: none;">
+                    <div class="warning-title">⏳ Tokens Locked</div>
+                    <div class="warning-text">Your tokens unlock in <span id="unlockCountdown">--</span>. Early unstaking incurs a 20% penalty.</div>
+                </div>
+
+                <div id="earlyWarning" class="warning-box" style="display: none;">
+                    <div class="warning-title">⚠️ Early Unstake Warning</div>
+                    <div class="warning-text">You will lose <span id="penaltyAmount">--</span> BAItest (20%) which goes to remaining stakers.</div>
+                </div>
+
+                <div class="input-group">
                     <div class="input-label">
                         <span>Amount to Unstake</span>
-                        <span class="balance-link" onclick="setMaxUnstake()">Staked: <span id="stakedBalance">--</span></span>
+                        <span class="balance-link" onclick="setMaxUnstake()">Staked: <span id="stakedBalance">--</span> BAItest</span>
                     </div>
                     <div class="input-wrapper">
-                        <input type="number" class="amount-input" id="unstakeAmount" placeholder="0.0" step="any">
-                        <div class="token-badge">
-                            <button class="max-btn" onclick="setMaxUnstake()">MAX</button>
-                            SIMPLE
-                        </div>
+                        <input type="number" class="amount-input" id="unstakeAmount" placeholder="0.0" step="any" oninput="updatePenaltyPreview()">
+                        <button class="max-btn" onclick="setMaxUnstake()">MAX</button>
                     </div>
                 </div>
 
-                <button class="action-btn primary" id="unstakeBtn" onclick="unstake()" disabled>
-                    Unstake SIMPLE
+                <div class="info-grid">
+                    <div class="info-card">
+                        <div class="info-label">You'll Receive</div>
+                        <div class="info-value" id="receiveAmount">-- BAItest</div>
+                    </div>
+                    <div class="info-card">
+                        <div class="info-label">Penalty</div>
+                        <div class="info-value" id="penaltyPreview">-- BAItest</div>
+                    </div>
+                </div>
+
+                <button class="action-btn primary" id="unstakeBtn" onclick="unstakeTokens()" disabled>
+                    Connect Wallet to Unstake
                 </button>
-
-                <div class="info-box warning" id="penaltyWarning" style="display: none;">
-                    <h4>⚠️ Early Withdrawal Warning</h4>
-                    <p>Your tokens are still locked! Withdrawing now will cost you <strong id="penaltyAmount">20%</strong> of your stake. This penalty gets distributed to remaining stakers.</p>
-                </div>
-
-                <div class="info-box success" id="nopenaltyInfo" style="display: none;">
-                    <h4>✅ No Penalty</h4>
-                    <p>Your lock period has ended! You can withdraw with zero penalty. Diamond hands rewarded! 💎</p>
-                </div>
             </div>
 
-            <!-- Claim Tab -->
-            <div id="claimPanel" style="display: none;">
-                <div style="text-align: center; padding: 30px 0;">
-                    <div style="font-size: 3rem; margin-bottom: 15px;">🎉</div>
-                    <div style="font-size: 1.5rem; color: #4ade80; margin-bottom: 5px;" id="claimableAmount">0.00 SIMPLE</div>
-                    <div style="color: #888;">Available to Claim</div>
+            <!-- Rewards Tab -->
+            <div class="tab-content" id="rewardsTab">
+                <div class="rewards-display">
+                    <div class="rewards-amount" id="claimableRewards">0.00</div>
+                    <div class="rewards-label">BAItest Available to Claim</div>
                 </div>
+
+                <p style="text-align: center; color: #888; margin-bottom: 20px;">
+                    Rewards come from penalties paid by paper hands who unstake early.
+                    The longer you stay, the more you earn! 💎🙌
+                </p>
 
                 <button class="action-btn primary" id="claimBtn" onclick="claimRewards()" disabled>
-                    Claim Rewards
+                    Connect Wallet to Claim
                 </button>
 
-                <div class="info-box success">
-                    <h4>🏆 Rewards from Paper Hands</h4>
-                    <p>These rewards come from early withdrawers who paid the penalty. Thank you for being a diamond hand!</p>
-                </div>
-            </div>
-        </div>
-
-        <!-- How It Works -->
-        <div class="how-it-works">
-            <h2>🤝 How It Works</h2>
-            <div class="steps">
-                <div class="step">
-                    <div class="step-icon">💰</div>
-                    <div class="step-content">
-                        <h3>Stake Your SIMPLE</h3>
-                        <p>Deposit SIMPLE tokens into the staking contract. Your tokens are locked for 7 days.</p>
-                    </div>
-                </div>
-                <div class="step">
-                    <div class="step-icon">⏰</div>
-                    <div class="step-content">
-                        <h3>Hold Like a Diamond</h3>
-                        <p>Keep your tokens staked through the lock period. The longer you hold, the more rewards you accumulate.</p>
-                    </div>
-                </div>
-                <div class="step">
-                    <div class="step-icon">📈</div>
-                    <div class="step-content">
-                        <h3>Earn from Paper Hands</h3>
-                        <p>When impatient stakers withdraw early, they pay a 20% penalty. That penalty is distributed proportionally to all remaining stakers — you!</p>
-                    </div>
-                </div>
-                <div class="step">
-                    <div class="step-icon">🎉</div>
-                    <div class="step-content">
-                        <h3>Claim & Withdraw</h3>
-                        <p>After 7 days, withdraw with zero penalty. Claim your accumulated rewards anytime. Diamond hands win!</p>
-                    </div>
-                </div>
+                <button class="action-btn secondary" onclick="exitAll()" style="margin-top: 10px;" id="exitBtn" disabled>
+                    🚪 Exit All (Unstake + Claim)
+                </button>
             </div>
         </div>
 
         <!-- Contract Info -->
         <div class="contract-info">
-            <p style="margin-bottom: 10px;"><strong>Contract:</strong> <a href="https://basescan.org/address/0x4b5b62Bde4Be0fBab30A74d79c7Cb25FD242c3Cc#code" target="_blank">0x4b5b62Bde4Be0fBab30A74d79c7Cb25FD242c3Cc</a></p>
-            <p style="color: #666;">Verified on BaseScan ✅ | Immutable • No Admin Keys • Trustless</p>
+            <div class="contract-title">Verified Contracts</div>
+            <div class="contract-links">
+                <a href="https://basescan.org/address/0x4b5b62Bde4Be0fBab30A74d79c7Cb25FD242c3Cc#code" target="_blank" class="contract-link">
+                    📜 Staking: 0x4b5b...c3Cc
+                </a>
+                <a href="https://basescan.org/address/0x2ca8b2b97bc0f0ccdd875dcfeff16b868a1b5ba3" target="_blank" class="contract-link">
+                    🪙 BAItest: 0x2ca8...5ba3
+                </a>
+            </div>
         </div>
 
         <footer>
-            <p>Bureau of Agent Investigations — Diamond Hands Staking 💎</p>
-            <p style="margin-top: 10px;">
-                <a href="index.html">Back to Cases</a> | <a href="https://moltbook.com/u/SimplySimon">SimplySimon</a>
-            </p>
+            <p>Part of the <a href="index.html">Bureau of Agent Investigations</a> ecosystem</p>
+            <p style="margin-top: 10px; font-size: 0.85rem;">Smart contract is immutable and fully verified. DYOR.</p>
         </footer>
     </div>
-
-    <!-- Toast -->
-    <div class="toast" id="toast"></div>
 
     <script>
         // Contract addresses
         const STAKING_ADDRESS = '0x4b5b62Bde4Be0fBab30A74d79c7Cb25FD242c3Cc';
-        const SIMPLE_TOKEN = '0x2ca8b2b97bc0f0ccdd875dcfeff16b868a1b5ba3';
-        const BASE_CHAIN_ID = '0x2105'; // 8453
+        const TOKEN_ADDRESS = '0x2ca8b2b97bc0f0ccdd875dcfeff16b868a1b5ba3';
 
-        // ABIs
+        // ABIs (minimal)
         const STAKING_ABI = [
             'function stake(uint256 amount) external',
             'function unstake(uint256 amount) external',
             'function claimRewards() external',
             'function exit() external',
+            'function totalStaked() view returns (uint256)',
+            'function stakes(address) view returns (uint256 amount, uint256 stakedAt, uint256 rewardPerTokenPaid, uint256 pendingRewards)',
             'function earned(address account) view returns (uint256)',
             'function isUnlocked(address account) view returns (bool)',
             'function unlockTime(address account) view returns (uint256)',
             'function calculatePenalty(uint256 amount) view returns (uint256)',
-            'function stakes(address) view returns (uint256 amount, uint256 stakedAt, uint256 rewardPerTokenPaid, uint256 pendingRewards)',
-            'function totalStaked() view returns (uint256)',
             'function lockPeriod() view returns (uint256)',
             'function penaltyBps() view returns (uint256)'
         ];
 
         const ERC20_ABI = [
-            'function balanceOf(address owner) view returns (uint256)',
+            'function balanceOf(address) view returns (uint256)',
             'function allowance(address owner, address spender) view returns (uint256)',
             'function approve(address spender, uint256 amount) returns (bool)',
-            'function decimals() view returns (uint8)'
+            'function decimals() view returns (uint8)',
+            'function symbol() view returns (string)'
         ];
 
         let provider, signer, userAddress;
         let stakingContract, tokenContract;
+        let tokenDecimals = 18;
+        let userStakeAmount = 0;
+        let userUnlocked = true;
+        let userUnlockTime = 0;
 
-        // Initialize ethers from CDN
-        const ethersScript = document.createElement('script');
-        ethersScript.src = 'https://cdn.jsdelivr.net/npm/ethers@6.9.0/dist/ethers.umd.min.js';
-        ethersScript.onload = () => console.log('Ethers loaded');
-        document.head.appendChild(ethersScript);
+        // Tab switching
+        function showTab(tabName) {
+            document.querySelectorAll('.tab-content').forEach(t => t.classList.remove('active'));
+            document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+            document.getElementById(tabName + 'Tab').classList.add('active');
+            event.target.classList.add('active');
+        }
 
+        // Connect wallet
         async function connectWallet() {
             if (typeof window.ethereum === 'undefined') {
-                showToast('Please install MetaMask!', 'error');
+                alert('Please install MetaMask to use this dApp');
                 return;
             }
 
             try {
-                // Request accounts
-                const accounts = await window.ethereum.request({ method: 'eth_requestAccounts' });
-                userAddress = accounts[0];
+                const btn = document.getElementById('connectBtn');
+                btn.innerHTML = '<span class="spinner"></span>Connecting...';
+                btn.disabled = true;
 
-                // Switch to Base if needed
-                try {
-                    await window.ethereum.request({
-                        method: 'wallet_switchEthereumChain',
-                        params: [{ chainId: BASE_CHAIN_ID }]
-                    });
-                } catch (switchError) {
-                    if (switchError.code === 4902) {
+                // Request accounts
+                await window.ethereum.request({ method: 'eth_requestAccounts' });
+                
+                // Check network (Base = 8453)
+                const chainId = await window.ethereum.request({ method: 'eth_chainId' });
+                if (chainId !== '0x2105') {
+                    try {
                         await window.ethereum.request({
-                            method: 'wallet_addEthereumChain',
-                            params: [{
-                                chainId: BASE_CHAIN_ID,
-                                chainName: 'Base',
-                                nativeCurrency: { name: 'ETH', symbol: 'ETH', decimals: 18 },
-                                rpcUrls: ['https://mainnet.base.org'],
-                                blockExplorerUrls: ['https://basescan.org']
-                            }]
+                            method: 'wallet_switchEthereumChain',
+                            params: [{ chainId: '0x2105' }]
                         });
+                    } catch (switchError) {
+                        if (switchError.code === 4902) {
+                            await window.ethereum.request({
+                                method: 'wallet_addEthereumChain',
+                                params: [{
+                                    chainId: '0x2105',
+                                    chainName: 'Base',
+                                    nativeCurrency: { name: 'ETH', symbol: 'ETH', decimals: 18 },
+                                    rpcUrls: ['https://mainnet.base.org'],
+                                    blockExplorerUrls: ['https://basescan.org']
+                                }]
+                            });
+                        } else {
+                            throw switchError;
+                        }
                     }
                 }
 
                 // Setup ethers
                 provider = new ethers.BrowserProvider(window.ethereum);
                 signer = await provider.getSigner();
+                userAddress = await signer.getAddress();
 
-                // Initialize contracts
+                // Setup contracts
                 stakingContract = new ethers.Contract(STAKING_ADDRESS, STAKING_ABI, signer);
-                tokenContract = new ethers.Contract(SIMPLE_TOKEN, ERC20_ABI, signer);
+                tokenContract = new ethers.Contract(TOKEN_ADDRESS, ERC20_ABI, signer);
 
                 // Update UI
-                document.getElementById('connectBtn').style.display = 'none';
                 document.getElementById('walletInfo').style.display = 'inline-block';
                 document.getElementById('walletAddress').textContent = 
                     userAddress.slice(0, 6) + '...' + userAddress.slice(-4);
+                btn.style.display = 'none';
 
                 // Enable buttons
                 document.getElementById('stakeBtn').disabled = false;
+                document.getElementById('stakeBtn').textContent = '💎 Stake BAItest';
                 document.getElementById('unstakeBtn').disabled = false;
+                document.getElementById('unstakeBtn').textContent = '📤 Unstake';
                 document.getElementById('claimBtn').disabled = false;
+                document.getElementById('claimBtn').textContent = '🎁 Claim Rewards';
+                document.getElementById('exitBtn').disabled = false;
 
                 // Load data
                 await refreshData();
 
-                showToast('Wallet connected!', 'success');
-
                 // Listen for account changes
-                window.ethereum.on('accountsChanged', (accounts) => {
-                    window.location.reload();
-                });
+                window.ethereum.on('accountsChanged', () => window.location.reload());
+                window.ethereum.on('chainChanged', () => window.location.reload());
 
             } catch (error) {
-                console.error(error);
-                showToast('Failed to connect: ' + error.message, 'error');
+                console.error('Connection error:', error);
+                alert('Failed to connect: ' + error.message);
+                const btn = document.getElementById('connectBtn');
+                btn.innerHTML = '🔗 Connect Wallet';
+                btn.disabled = false;
             }
         }
 
+        // Refresh all data
         async function refreshData() {
-            if (!userAddress) return;
-
             try {
-                // Get user data
-                const [stakeInfo, earned, isUnlocked, unlockTimeVal, balance, totalStakedVal] = await Promise.all([
-                    stakingContract.stakes(userAddress),
-                    stakingContract.earned(userAddress),
-                    stakingContract.isUnlocked(userAddress),
-                    stakingContract.unlockTime(userAddress),
-                    tokenContract.balanceOf(userAddress),
-                    stakingContract.totalStaked()
-                ]);
+                // Get token decimals
+                tokenDecimals = await tokenContract.decimals();
 
-                const stakedAmount = stakeInfo[0];
-                const pendingRewards = earned;
+                // Total staked
+                const total = await stakingContract.totalStaked();
+                document.getElementById('totalStaked').textContent = 
+                    formatAmount(total) + ' BAItest';
 
-                // Format values
-                const formatToken = (val) => {
-                    const num = parseFloat(ethers.formatEther(val));
-                    if (num === 0) return '0';
-                    if (num < 0.01) return num.toFixed(6);
-                    return num.toLocaleString(undefined, { maximumFractionDigits: 2 });
-                };
+                // User balance
+                const balance = await tokenContract.balanceOf(userAddress);
+                document.getElementById('walletBalance').textContent = formatAmount(balance);
 
-                // Update global stats
-                document.getElementById('totalStaked').textContent = formatToken(totalStakedVal) + ' SIMPLE';
-                document.getElementById('pendingRewards').textContent = formatToken(pendingRewards) + ' SIMPLE';
+                // User stake
+                const stakeInfo = await stakingContract.stakes(userAddress);
+                userStakeAmount = stakeInfo[0];
+                document.getElementById('yourStake').textContent = 
+                    formatAmount(userStakeAmount) + ' BAItest';
+                document.getElementById('stakedBalance').textContent = formatAmount(userStakeAmount);
 
-                // Update balances
-                document.getElementById('simpleBalance').textContent = formatToken(balance) + ' SIMPLE';
-                document.getElementById('stakedBalance').textContent = formatToken(stakedAmount) + ' SIMPLE';
+                // User rewards
+                const rewards = await stakingContract.earned(userAddress);
+                document.getElementById('yourRewards').textContent = 
+                    formatAmount(rewards) + ' BAItest';
+                document.getElementById('claimableRewards').textContent = formatAmount(rewards);
 
-                // Show position card if user has stake
-                if (stakedAmount > 0n) {
-                    document.getElementById('positionCard').style.display = 'block';
-                    document.getElementById('yourStaked').textContent = formatToken(stakedAmount) + ' SIMPLE';
-                    document.getElementById('yourRewards').textContent = formatToken(pendingRewards) + ' SIMPLE';
-                    document.getElementById('claimableAmount').textContent = formatToken(pendingRewards) + ' SIMPLE';
-
-                    // Lock status
-                    if (isUnlocked) {
-                        document.getElementById('lockStatus').innerHTML = '🔓 Unlocked';
-                        document.getElementById('lockStatus').style.color = '#4ade80';
-                        document.getElementById('unlockTime').textContent = 'Now!';
-                        document.getElementById('penaltyWarning').style.display = 'none';
-                        document.getElementById('nopenaltyInfo').style.display = 'block';
-                        document.getElementById('exitPenalty').textContent = '0 SIMPLE';
-                    } else {
-                        document.getElementById('lockStatus').innerHTML = '🔒 Locked';
-                        document.getElementById('lockStatus').style.color = '#ff6b6b';
-                        const unlockDate = new Date(Number(unlockTimeVal) * 1000);
-                        document.getElementById('unlockTime').textContent = unlockDate.toLocaleDateString() + ' ' + unlockDate.toLocaleTimeString();
-                        document.getElementById('penaltyWarning').style.display = 'block';
-                        document.getElementById('nopenaltyInfo').style.display = 'none';
-                        
-                        const penalty = await stakingContract.calculatePenalty(stakedAmount);
-                        document.getElementById('exitPenalty').textContent = formatToken(penalty) + ' SIMPLE';
-                    }
+                // Lock status
+                userUnlocked = await stakingContract.isUnlocked(userAddress);
+                userUnlockTime = Number(await stakingContract.unlockTime(userAddress));
+                
+                if (userStakeAmount == 0n) {
+                    document.getElementById('lockStatus').textContent = 'No Stake';
+                    document.getElementById('lockStatus').className = 'stat-value';
+                    document.getElementById('unstakeWarning').style.display = 'none';
+                    document.getElementById('earlyWarning').style.display = 'none';
+                } else if (userUnlocked) {
+                    document.getElementById('lockStatus').textContent = '✅ Unlocked';
+                    document.getElementById('lockStatus').className = 'stat-value green';
+                    document.getElementById('unstakeWarning').style.display = 'none';
+                    document.getElementById('earlyWarning').style.display = 'none';
                 } else {
-                    document.getElementById('positionCard').style.display = 'none';
+                    document.getElementById('lockStatus').textContent = '🔒 Locked';
+                    document.getElementById('lockStatus').className = 'stat-value orange';
+                    document.getElementById('unstakeWarning').style.display = 'block';
+                    document.getElementById('earlyWarning').style.display = 'block';
+                    updateCountdown();
                 }
+
+                // Check allowance
+                await checkAllowance();
 
             } catch (error) {
                 console.error('Error refreshing data:', error);
             }
         }
 
-        async function stake() {
-            const amount = document.getElementById('stakeAmount').value;
-            if (!amount || parseFloat(amount) <= 0) {
-                showToast('Enter an amount to stake', 'error');
+        // Check token allowance
+        async function checkAllowance() {
+            const allowance = await tokenContract.allowance(userAddress, STAKING_ADDRESS);
+            const balance = await tokenContract.balanceOf(userAddress);
+            
+            if (allowance < balance) {
+                document.getElementById('approveBtn').style.display = 'block';
+            } else {
+                document.getElementById('approveBtn').style.display = 'none';
+            }
+        }
+
+        // Format amount
+        function formatAmount(amount) {
+            const formatted = ethers.formatUnits(amount, tokenDecimals);
+            const num = parseFloat(formatted);
+            if (num === 0) return '0';
+            if (num < 0.01) return '<0.01';
+            return num.toLocaleString(undefined, { maximumFractionDigits: 2 });
+        }
+
+        // Update countdown
+        function updateCountdown() {
+            const now = Math.floor(Date.now() / 1000);
+            const remaining = userUnlockTime - now;
+            
+            if (remaining <= 0) {
+                document.getElementById('unlockCountdown').textContent = 'now';
                 return;
             }
 
-            try {
-                const amountWei = ethers.parseEther(amount);
+            const days = Math.floor(remaining / 86400);
+            const hours = Math.floor((remaining % 86400) / 3600);
+            const mins = Math.floor((remaining % 3600) / 60);
 
-                // Check allowance
-                const allowance = await tokenContract.allowance(userAddress, STAKING_ADDRESS);
-                if (allowance < amountWei) {
-                    showToast('Approving SIMPLE...', 'success');
-                    const approveTx = await tokenContract.approve(STAKING_ADDRESS, ethers.MaxUint256);
-                    await approveTx.wait();
+            let text = '';
+            if (days > 0) text += days + 'd ';
+            if (hours > 0) text += hours + 'h ';
+            text += mins + 'm';
+
+            document.getElementById('unlockCountdown').textContent = text;
+        }
+
+        // Update penalty preview
+        function updatePenaltyPreview() {
+            const amount = document.getElementById('unstakeAmount').value;
+            if (!amount || isNaN(amount) || parseFloat(amount) <= 0) {
+                document.getElementById('penaltyPreview').textContent = '-- BAItest';
+                document.getElementById('receiveAmount').textContent = '-- BAItest';
+                return;
+            }
+
+            const amountNum = parseFloat(amount);
+            if (userUnlocked) {
+                document.getElementById('penaltyPreview').textContent = '0 BAItest';
+                document.getElementById('receiveAmount').textContent = amountNum.toFixed(2) + ' BAItest';
+                document.getElementById('penaltyAmount').textContent = '0';
+            } else {
+                const penalty = amountNum * 0.20;
+                const receive = amountNum - penalty;
+                document.getElementById('penaltyPreview').textContent = penalty.toFixed(2) + ' BAItest';
+                document.getElementById('receiveAmount').textContent = receive.toFixed(2) + ' BAItest';
+                document.getElementById('penaltyAmount').textContent = penalty.toFixed(2);
+            }
+        }
+
+        // Set max stake
+        async function setMaxStake() {
+            if (!tokenContract) return;
+            const balance = await tokenContract.balanceOf(userAddress);
+            document.getElementById('stakeAmount').value = ethers.formatUnits(balance, tokenDecimals);
+        }
+
+        // Set max unstake
+        function setMaxUnstake() {
+            document.getElementById('unstakeAmount').value = ethers.formatUnits(userStakeAmount, tokenDecimals);
+            updatePenaltyPreview();
+        }
+
+        // Approve tokens
+        async function approveTokens() {
+            try {
+                const btn = document.getElementById('approveBtn');
+                btn.innerHTML = '<span class="spinner"></span>Approving...';
+                btn.disabled = true;
+
+                const tx = await tokenContract.approve(STAKING_ADDRESS, ethers.MaxUint256);
+                await tx.wait();
+
+                btn.style.display = 'none';
+                alert('✅ Approval successful!');
+                await refreshData();
+
+            } catch (error) {
+                console.error('Approve error:', error);
+                alert('Approval failed: ' + (error.reason || error.message));
+                const btn = document.getElementById('approveBtn');
+                btn.innerHTML = 'Approve BAItest';
+                btn.disabled = false;
+            }
+        }
+
+        // Stake tokens
+        async function stakeTokens() {
+            try {
+                const amount = document.getElementById('stakeAmount').value;
+                if (!amount || parseFloat(amount) <= 0) {
+                    alert('Please enter an amount');
+                    return;
                 }
 
-                showToast('Staking...', 'success');
+                const btn = document.getElementById('stakeBtn');
+                btn.innerHTML = '<span class="spinner"></span>Staking...';
+                btn.disabled = true;
+
+                const amountWei = ethers.parseUnits(amount, tokenDecimals);
                 const tx = await stakingContract.stake(amountWei);
                 await tx.wait();
 
-                showToast('Successfully staked! 💎', 'success');
+                alert('✅ Staked ' + amount + ' BAItest! Your tokens are now locked for 7 days.');
                 document.getElementById('stakeAmount').value = '';
                 await refreshData();
 
             } catch (error) {
-                console.error(error);
-                showToast('Stake failed: ' + (error.reason || error.message), 'error');
+                console.error('Stake error:', error);
+                alert('Staking failed: ' + (error.reason || error.message));
+            } finally {
+                document.getElementById('stakeBtn').innerHTML = '💎 Stake BAItest';
+                document.getElementById('stakeBtn').disabled = false;
             }
         }
 
-        async function unstake() {
-            const amount = document.getElementById('unstakeAmount').value;
-            if (!amount || parseFloat(amount) <= 0) {
-                showToast('Enter an amount to unstake', 'error');
-                return;
-            }
-
+        // Unstake tokens
+        async function unstakeTokens() {
             try {
-                const amountWei = ethers.parseEther(amount);
+                const amount = document.getElementById('unstakeAmount').value;
+                if (!amount || parseFloat(amount) <= 0) {
+                    alert('Please enter an amount');
+                    return;
+                }
 
-                showToast('Unstaking...', 'success');
+                if (!userUnlocked) {
+                    const penalty = (parseFloat(amount) * 0.20).toFixed(2);
+                    if (!confirm(`⚠️ Early unstake warning!\n\nYou will lose ${penalty} BAItest (20% penalty) which will be distributed to remaining stakers.\n\nProceed anyway?`)) {
+                        return;
+                    }
+                }
+
+                const btn = document.getElementById('unstakeBtn');
+                btn.innerHTML = '<span class="spinner"></span>Unstaking...';
+                btn.disabled = true;
+
+                const amountWei = ethers.parseUnits(amount, tokenDecimals);
                 const tx = await stakingContract.unstake(amountWei);
                 await tx.wait();
 
-                showToast('Successfully unstaked!', 'success');
+                alert('✅ Unstaked successfully!');
                 document.getElementById('unstakeAmount').value = '';
                 await refreshData();
 
             } catch (error) {
-                console.error(error);
-                showToast('Unstake failed: ' + (error.reason || error.message), 'error');
+                console.error('Unstake error:', error);
+                alert('Unstaking failed: ' + (error.reason || error.message));
+            } finally {
+                document.getElementById('unstakeBtn').innerHTML = '📤 Unstake';
+                document.getElementById('unstakeBtn').disabled = false;
             }
         }
 
+        // Claim rewards
         async function claimRewards() {
             try {
-                showToast('Claiming rewards...', 'success');
+                const btn = document.getElementById('claimBtn');
+                btn.innerHTML = '<span class="spinner"></span>Claiming...';
+                btn.disabled = true;
+
                 const tx = await stakingContract.claimRewards();
                 await tx.wait();
 
-                showToast('Rewards claimed! 🎉', 'success');
+                alert('✅ Rewards claimed!');
                 await refreshData();
 
             } catch (error) {
-                console.error(error);
-                showToast('Claim failed: ' + (error.reason || error.message), 'error');
+                console.error('Claim error:', error);
+                alert('Claim failed: ' + (error.reason || error.message));
+            } finally {
+                document.getElementById('claimBtn').innerHTML = '🎁 Claim Rewards';
+                document.getElementById('claimBtn').disabled = false;
             }
         }
 
-        function setMaxStake() {
-            const balance = document.getElementById('simpleBalance').textContent.replace(' SIMPLE', '').replace(/,/g, '');
-            document.getElementById('stakeAmount').value = balance;
+        // Exit all
+        async function exitAll() {
+            try {
+                if (!userUnlocked && userStakeAmount > 0n) {
+                    const penalty = formatAmount(userStakeAmount * 20n / 100n);
+                    if (!confirm(`⚠️ Early exit warning!\n\nYou will lose approximately ${penalty} BAItest (20% penalty).\n\nProceed anyway?`)) {
+                        return;
+                    }
+                }
+
+                const btn = document.getElementById('exitBtn');
+                btn.innerHTML = '<span class="spinner"></span>Exiting...';
+                btn.disabled = true;
+
+                const tx = await stakingContract.exit();
+                await tx.wait();
+
+                alert('✅ Exited! All tokens and rewards withdrawn.');
+                await refreshData();
+
+            } catch (error) {
+                console.error('Exit error:', error);
+                alert('Exit failed: ' + (error.reason || error.message));
+            } finally {
+                document.getElementById('exitBtn').innerHTML = '🚪 Exit All (Unstake + Claim)';
+                document.getElementById('exitBtn').disabled = false;
+            }
         }
 
-        function setMaxUnstake() {
-            const staked = document.getElementById('stakedBalance').textContent.replace(' SIMPLE', '').replace(/,/g, '');
-            document.getElementById('unstakeAmount').value = staked;
-        }
-
-        function switchTab(tab) {
-            // Update tabs
-            document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
-            document.getElementById(tab + 'Tab').classList.add('active');
-
-            // Update panels
-            document.getElementById('stakePanel').style.display = tab === 'stake' ? 'block' : 'none';
-            document.getElementById('unstakePanel').style.display = tab === 'unstake' ? 'block' : 'none';
-            document.getElementById('claimPanel').style.display = tab === 'claim' ? 'block' : 'none';
-        }
-
-        function showToast(message, type) {
-            const toast = document.getElementById('toast');
-            toast.textContent = message;
-            toast.className = 'toast ' + type;
-            toast.style.display = 'block';
-            setTimeout(() => {
-                toast.style.display = 'none';
-            }, 3000);
-        }
-
-        // Auto-refresh every 30 seconds
-        setInterval(() => {
-            if (userAddress) refreshData();
-        }, 30000);
+        // Update countdown every minute
+        setInterval(updateCountdown, 60000);
     </script>
+
+    <!-- Ethers.js -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/ethers/6.9.0/ethers.umd.min.js"></script>
 </body>
 </html>
