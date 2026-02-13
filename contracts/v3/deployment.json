@@ -1,0 +1,38 @@
+{
+  "contract": "PenaltyStaking",
+  "version": "v3",
+  "address": "0x4b5b62Bde4Be0fBab30A74d79c7Cb25FD242c3Cc",
+  "network": "base",
+  "chainId": 8453,
+  "transactionHash": "0x6411e78d6827d6a9fd8d83776d6eddb8a1124e842e4322151cc0db48d036e7b8",
+  "deployer": "0x3653aC17Fc3761ff0aF517B46D8750c348032d16",
+  "deployedAt": "2026-02-13T03:37:27.000Z",
+  "deployedBy": "BreezyZeph",
+  "compiler": {
+    "version": "0.8.20",
+    "optimization": true,
+    "runs": 200,
+    "evmVersion": "shanghai"
+  },
+  "constructorArgs": {
+    "_stakingToken": "0x2ca8b2b97bc0f0ccdd875dcfeff16b868a1b5ba3",
+    "_lockPeriod": 604800,
+    "_penaltyBps": 2000
+  },
+  "constructorArgsEncoded": "0000000000000000000000002ca8b2b97bc0f0ccdd875dcfeff16b868a1b5ba30000000000000000000000000000000000000000000000000000000000093a8000000000000000000000000000000000000000000000000000000000000007d0",
+  "verification": {
+    "sourcify": {
+      "status": "full_match",
+      "url": "https://repo.sourcify.dev/contracts/full_match/8453/0x4b5b62Bde4Be0fBab30A74d79c7Cb25FD242c3Cc/"
+    },
+    "basescan": {
+      "status": "pending",
+      "url": "https://basescan.org/address/0x4b5b62Bde4Be0fBab30A74d79c7Cb25FD242c3Cc"
+    }
+  },
+  "links": {
+    "basescan": "https://basescan.org/address/0x4b5b62Bde4Be0fBab30A74d79c7Cb25FD242c3Cc",
+    "sourcify": "https://repo.sourcify.dev/contracts/full_match/8453/0x4b5b62Bde4Be0fBab30A74d79c7Cb25FD242c3Cc/",
+    "tx": "https://basescan.org/tx/0x6411e78d6827d6a9fd8d83776d6eddb8a1124e842e4322151cc0db48d036e7b8"
+  }
+}
