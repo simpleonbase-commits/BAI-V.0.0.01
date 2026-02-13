@@ -1349,6 +1349,7 @@
         const BASE_CHAIN_ID_DECIMAL = 8453;
         const BASE_RPC_URL = 'https://mainnet.base.org';
         const WC_PROJECT_ID = '286e939deb1fd152d44312f068de95da';
+        const LOCK_PERIOD_SECONDS = 604800; // 7 days in seconds
 
         // Contract ABIs (minimal)
         const STAKING_ABI = [
@@ -1673,71 +1674,155 @@
                 }
             }
 
-            // Fetch user-specific data
+            // Fetch user-specific data with better error handling
+            let stakeInfo = null;
+            let stakedAmount = '0';
+            let stakedAtTimestamp = 0;
+            let totalStakedValue = 0;
+
+            // Step 1: Fetch basic balance and stake info
             try {
                 console.log('[UI] Fetching user data for:', currentAccount);
 
-                // Use read-only provider for reads (more reliable)
+                // Token balance
                 const tokenBalance = await readOnlyTokenContract.balanceOf(currentAccount);
                 const formattedBalance = ethers.formatUnits(tokenBalance, tokenDecimals);
                 document.getElementById('walletBalance').textContent = parseFloat(formattedBalance).toFixed(2);
 
-                const stakeInfo = await readOnlyStakingContract.stakes(currentAccount);
-                const stakedAmount = ethers.formatUnits(stakeInfo.amount, tokenDecimals);
+                // Stake info - this returns (amount, stakedAt, rewardPerTokenPaid, pendingRewards)
+                stakeInfo = await readOnlyStakingContract.stakes(currentAccount);
+                console.log('[UI] Stake info raw:', stakeInfo);
+                
+                stakedAmount = ethers.formatUnits(stakeInfo[0], tokenDecimals); // stakeInfo.amount or stakeInfo[0]
+                stakedAtTimestamp = Number(stakeInfo[1]); // stakeInfo.stakedAt or stakeInfo[1]
+                
                 document.getElementById('stakedBalance').textContent = parseFloat(stakedAmount).toFixed(2);
                 document.getElementById('yourStake').textContent = parseFloat(stakedAmount).toFixed(2) + ' BAItest';
 
+                console.log('[UI] Staked amount:', stakedAmount, 'Staked at:', stakedAtTimestamp);
+
+            } catch (error) {
+                console.error('[UI] Error fetching basic user data:', error);
+            }
+
+            // Step 2: Fetch rewards (separate try/catch)
+            try {
                 const earned = await readOnlyStakingContract.earned(currentAccount);
                 const earnedFormatted = ethers.formatUnits(earned, tokenDecimals);
                 document.getElementById('rewards').textContent = parseFloat(earnedFormatted).toFixed(4) + ' BAItest';
                 document.getElementById('pendingRewards').textContent = parseFloat(earnedFormatted).toFixed(4) + ' BAItest';
                 document.getElementById('claimableRewards').textContent = parseFloat(earnedFormatted).toFixed(4) + ' BAItest';
+            } catch (error) {
+                console.error('[UI] Error fetching rewards:', error);
+            }
 
-                // Pool share calculation
+            // Step 3: Calculate pool share (separate try/catch)
+            try {
                 const totalStaked = await readOnlyStakingContract.totalStaked();
-                const tvlFormatted = ethers.formatUnits(totalStaked, tokenDecimals);
+                totalStakedValue = parseFloat(ethers.formatUnits(totalStaked, tokenDecimals));
 
-                if (parseFloat(tvlFormatted) > 0) {
-                    const share = (parseFloat(stakedAmount) / parseFloat(tvlFormatted) * 100).toFixed(2);
+                if (totalStakedValue > 0 && parseFloat(stakedAmount) > 0) {
+                    const share = (parseFloat(stakedAmount) / totalStakedValue * 100).toFixed(2);
                     document.getElementById('poolShare').textContent = share + '%';
                 } else {
                     document.getElementById('poolShare').textContent = '0%';
                 }
+            } catch (error) {
+                console.error('[UI] Error calculating pool share:', error);
+            }
 
-                // Lock status
-                const isUnlocked = await readOnlyStakingContract.isUnlocked(currentAccount);
-                const unlockTimestamp = await readOnlyStakingContract.unlockTime(currentAccount);
-
-                if (parseFloat(stakedAmount) === 0) {
+            // Step 4: Lock status and unlock time (CRITICAL FIX - use stakedAt directly)
+            try {
+                const stakedAmountNum = parseFloat(stakedAmount);
+                
+                if (stakedAmountNum === 0 || stakedAtTimestamp === 0) {
+                    // No stake
                     document.getElementById('lockStatus').textContent = 'No Stake';
                     document.getElementById('lockStatus').className = 'position-status';
                     document.getElementById('unlockTime').textContent = '--';
                     document.getElementById('timeRemaining').textContent = '--';
                     document.getElementById('penaltyWarning').classList.add('hidden');
-                } else if (isUnlocked) {
-                    document.getElementById('lockStatus').textContent = '🔓 Unlocked';
-                    document.getElementById('lockStatus').className = 'position-status unlocked';
-                    document.getElementById('unlockTime').textContent = 'Now';
-                    document.getElementById('timeRemaining').textContent = 'Ready!';
-                    document.getElementById('penaltyWarning').classList.add('hidden');
+                    console.log('[UI] No stake detected');
                 } else {
-                    document.getElementById('lockStatus').textContent = '🔒 Locked';
-                    document.getElementById('lockStatus').className = 'position-status locked';
-                    const unlockDate = new Date(Number(unlockTimestamp) * 1000);
-                    document.getElementById('unlockTime').textContent = unlockDate.toLocaleDateString();
+                    // Calculate unlock time from stakedAt + lockPeriod
+                    const unlockTimestamp = stakedAtTimestamp + LOCK_PERIOD_SECONDS;
+                    const currentTimestamp = Math.floor(Date.now() / 1000);
+                    const isUnlocked = currentTimestamp >= unlockTimestamp;
 
-                    const remaining = Number(unlockTimestamp) - Math.floor(Date.now() / 1000);
-                    const days = Math.floor(remaining / 86400);
-                    const hours = Math.floor((remaining % 86400) / 3600);
-                    document.getElementById('timeRemaining').textContent = days + 'd ' + hours + 'h';
-                    document.getElementById('penaltyWarning').classList.remove('hidden');
+                    console.log('[UI] Lock calculation:', {
+                        stakedAt: stakedAtTimestamp,
+                        unlockAt: unlockTimestamp,
+                        current: currentTimestamp,
+                        isUnlocked: isUnlocked
+                    });
+
+                    if (isUnlocked) {
+                        document.getElementById('lockStatus').textContent = '🔓 Unlocked';
+                        document.getElementById('lockStatus').className = 'position-status unlocked';
+                        document.getElementById('unlockTime').textContent = 'Now';
+                        document.getElementById('timeRemaining').textContent = 'Ready!';
+                        document.getElementById('penaltyWarning').classList.add('hidden');
+                    } else {
+                        document.getElementById('lockStatus').textContent = '🔒 Locked';
+                        document.getElementById('lockStatus').className = 'position-status locked';
+                        
+                        // Format unlock date
+                        const unlockDate = new Date(unlockTimestamp * 1000);
+                        document.getElementById('unlockTime').textContent = unlockDate.toLocaleDateString();
+
+                        // Calculate time remaining
+                        const remaining = unlockTimestamp - currentTimestamp;
+                        const days = Math.floor(remaining / 86400);
+                        const hours = Math.floor((remaining % 86400) / 3600);
+                        const minutes = Math.floor((remaining % 3600) / 60);
+                        
+                        if (days > 0) {
+                            document.getElementById('timeRemaining').textContent = days + 'd ' + hours + 'h';
+                        } else if (hours > 0) {
+                            document.getElementById('timeRemaining').textContent = hours + 'h ' + minutes + 'm';
+                        } else {
+                            document.getElementById('timeRemaining').textContent = minutes + ' min';
+                        }
+                        
+                        document.getElementById('penaltyWarning').classList.remove('hidden');
+                    }
                 }
 
                 console.log('[UI] User data loaded successfully');
 
             } catch (error) {
-                console.error('[UI] Error fetching user data:', error);
-                // Don't show error to user for read operations - just log it
+                console.error('[UI] Error calculating lock status:', error);
+                // Fallback: try to use contract's isUnlocked and unlockTime functions
+                try {
+                    const isUnlocked = await readOnlyStakingContract.isUnlocked(currentAccount);
+                    const unlockTimestamp = await readOnlyStakingContract.unlockTime(currentAccount);
+                    
+                    if (parseFloat(stakedAmount) === 0) {
+                        document.getElementById('lockStatus').textContent = 'No Stake';
+                        document.getElementById('lockStatus').className = 'position-status';
+                        document.getElementById('unlockTime').textContent = '--';
+                        document.getElementById('timeRemaining').textContent = '--';
+                        document.getElementById('penaltyWarning').classList.add('hidden');
+                    } else if (isUnlocked) {
+                        document.getElementById('lockStatus').textContent = '🔓 Unlocked';
+                        document.getElementById('lockStatus').className = 'position-status unlocked';
+                        document.getElementById('unlockTime').textContent = 'Now';
+                        document.getElementById('timeRemaining').textContent = 'Ready!';
+                        document.getElementById('penaltyWarning').classList.add('hidden');
+                    } else {
+                        document.getElementById('lockStatus').textContent = '🔒 Locked';
+                        document.getElementById('lockStatus').className = 'position-status locked';
+                        const unlockDate = new Date(Number(unlockTimestamp) * 1000);
+                        document.getElementById('unlockTime').textContent = unlockDate.toLocaleDateString();
+                        const remaining = Number(unlockTimestamp) - Math.floor(Date.now() / 1000);
+                        const days = Math.floor(remaining / 86400);
+                        const hours = Math.floor((remaining % 86400) / 3600);
+                        document.getElementById('timeRemaining').textContent = days + 'd ' + hours + 'h';
+                        document.getElementById('penaltyWarning').classList.remove('hidden');
+                    }
+                } catch (fallbackError) {
+                    console.error('[UI] Fallback lock status also failed:', fallbackError);
+                }
             }
         }
 
