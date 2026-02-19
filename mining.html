@@ -148,7 +148,7 @@ canvas {
   color: #00ffc8; font-family: monospace; font-size: 10px;
   font-weight: bold; letter-spacing: 2px; padding: 6px 12px;
   border-radius: 6px; cursor: pointer; pointer-events: auto;
-  transition: background 0.2s;
+  transition: background 0.2s; z-index: 60;
 }
 #missionsBtn:hover { background: rgba(0,255,200,0.15); }
 
@@ -1288,7 +1288,8 @@ function onKeyDown(e){
   if(e.key==='Escape'){
     document.getElementById('upgradeOverlay').style.display='none';
     document.getElementById('redeemModal').style.display='none';
-    document.getElementById('missionsOverlay').classList.remove('open');
+    const mo=document.getElementById('missionsOverlay');
+    if(mo.classList.contains('open')) toggleMissions();
     e.preventDefault(); return;
   }
   keysDown[e.key.toLowerCase()]=true;
@@ -1962,16 +1963,18 @@ function updateHUD(){
   mList.innerHTML=mHtml;
 }
 
-function toggleMissions(){
-  const overlay = document.getElementById('missionsOverlay');
-  overlay.classList.toggle('open');
-}
-
 // === BOOTSTRAP ===
 window.addEventListener('DOMContentLoaded',init);
 document.addEventListener('touchstart',function(e){
   if(gameState==='start'){e.preventDefault();startGame();}
 },{passive:false,once:true});
+
+function toggleMissions(){
+  const overlay = document.getElementById('missionsOverlay');
+  const opening = !overlay.classList.contains('open');
+  overlay.classList.toggle('open');
+  if(opening) updateHUD(); // populate mission list on open
+}
 </script>
 </body>
 </html>
