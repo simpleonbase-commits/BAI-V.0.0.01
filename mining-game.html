@@ -3,1084 +3,828 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
-<title>BAI Mining Terminal</title>
+<title>💎 GEM MINE — BAI Mining Terminal</title>
 <style>
-* { margin: 0; padding: 0; box-sizing: border-box; }
-html, body {
-  width: 100%; height: 100%;
-  background: #0a0a0f;
-  overflow: hidden;
-  font-family: 'Courier New', monospace;
-  color: #00ffc8;
-  user-select: none;
-  -webkit-user-select: none;
-}
-#gameContainer {
-  width: 100%; height: 100%;
-  display: flex; align-items: center; justify-content: center;
-  position: relative;
-}
-canvas {
-  display: block;
-  width: 100%; height: 100%;
-  image-rendering: pixelated;
-}
-#hud {
-  position: absolute; top: 0; left: 0; right: 0; bottom: 0;
-  pointer-events: none;
-  z-index: 10;
-}
-#title {
-  position: absolute; top: 8px; left: 50%; transform: translateX(-50%);
-  font-size: 14px; font-weight: bold; color: #00ffc8;
-  text-shadow: 0 0 10px #00ffc8, 0 0 20px #00ffc888;
-  letter-spacing: 3px; white-space: nowrap;
-}
-#depth {
-  position: absolute; top: 10px; left: 12px;
-  font-size: 14px; color: #aaffcc;
-  text-shadow: 0 0 5px #00ffc866;
-}
-#score {
-  position: absolute; top: 10px; right: 12px;
-  font-size: 16px; font-weight: bold; color: #ffd700;
-  text-shadow: 0 0 8px #ffd70088;
-}
-#inventory {
-  position: absolute; top: 50px; left: 8px;
-  font-size: 11px; line-height: 1.6; color: #ccc;
-  background: rgba(0,0,0,0.55); padding: 6px 10px;
-  border: 1px solid #00ffc833; border-radius: 4px;
-  max-height: 60vh; overflow-y: auto;
-}
-.inv-row { display: flex; align-items: center; gap: 5px; }
-.inv-icon { width: 10px; height: 10px; display: inline-block; border-radius: 2px; flex-shrink: 0; }
-#healthBarOuter {
-  position: absolute; bottom: 12px; left: 50%; transform: translateX(-50%);
-  width: min(300px, 60vw); height: 16px;
-  background: #1a1a1a; border: 1px solid #00ffc855; border-radius: 8px;
-  overflow: hidden;
-}
-#healthBarInner {
-  height: 100%; width: 100%;
-  background: linear-gradient(90deg, #ff3333, #ffaa00, #33ff66);
-  border-radius: 8px; transition: width 0.2s;
-}
-#healthText {
-  position: absolute; bottom: 14px; left: 50%; transform: translateX(-50%);
-  font-size: 10px; color: #fff; text-shadow: 0 0 3px #000;
-  width: min(300px, 60vw); text-align: center; line-height: 16px;
-}
-#startScreen {
-  position: absolute; top: 0; left: 0; right: 0; bottom: 0;
-  background: #0a0a0f;
-  display: flex; flex-direction: column; align-items: center; justify-content: center;
-  z-index: 100;
-}
-#startScreen h1 {
-  font-size: clamp(24px, 5vw, 48px); color: #00ffc8;
-  text-shadow: 0 0 20px #00ffc8, 0 0 40px #00ffc866, 0 0 80px #00ffc833;
-  letter-spacing: 6px; margin-bottom: 20px; text-align: center;
-}
-#startScreen .subtitle {
-  font-size: clamp(11px, 2vw, 16px); color: #88ccaa; margin-bottom: 8px; text-align: center; padding: 0 20px;
-}
-#startScreen .prompt {
-  font-size: clamp(14px, 2.5vw, 20px); color: #ffd700;
-  margin-top: 30px; animation: blink 1.2s infinite;
-}
-@keyframes blink { 0%,100%{opacity:1} 50%{opacity:0.3} }
-#startCanvas {
-  position: absolute; top: 0; left: 0; width: 100%; height: 100%; z-index: -1;
-}
-#deathOverlay {
-  position: absolute; top: 0; left: 0; right: 0; bottom: 0;
-  background: rgba(255,0,0,0.3);
-  display: none; align-items: center; justify-content: center;
-  flex-direction: column; z-index: 50;
-}
-#deathOverlay h2 { font-size: 36px; color: #ff4444; text-shadow: 0 0 20px #ff0000; margin-bottom: 10px; }
-#deathOverlay p { color: #ffaa88; font-size: 16px; }
-#mobileControls {
-  display: none;
-  position: absolute; bottom: 50px; right: 10px;
-  z-index: 20; pointer-events: auto;
-}
-.mBtn {
-  width: 48px; height: 48px; background: rgba(0,255,200,0.15);
-  border: 1px solid #00ffc855; border-radius: 8px;
-  color: #00ffc8; font-size: 20px; display: flex;
-  align-items: center; justify-content: center;
-  pointer-events: auto; touch-action: none;
-}
-.mBtn:active { background: rgba(0,255,200,0.4); }
-#mobileGrid {
-  display: grid;
-  grid-template-columns: 48px 48px 48px;
-  grid-template-rows: 48px 48px 48px;
-  gap: 4px;
-}
-@media (pointer: coarse) {
-  #mobileControls { display: block; }
-}
-#rareFlash {
-  position: absolute; top: 0; left: 0; right: 0; bottom: 0;
-  pointer-events: none; z-index: 15;
-  background: radial-gradient(circle, rgba(255,215,0,0.3) 0%, transparent 70%);
-  opacity: 0; transition: opacity 0.1s;
-}
+*{margin:0;padding:0;box-sizing:border-box}
+html,body{width:100%;height:100%;overflow:hidden;background:#0a0a0f;font-family:'Courier New',monospace}
+canvas{display:block;width:100%;height:100%;image-rendering:pixelated}
+#upgradePanel{display:none;position:fixed;top:50%;left:50%;transform:translate(-50%,-50%);
+background:rgba(10,10,20,0.95);border:2px solid #00ffc8;border-radius:12px;padding:24px;
+color:#eee;z-index:100;min-width:340px;max-height:80vh;overflow-y:auto;box-shadow:0 0 40px rgba(0,255,200,0.3)}
+#upgradePanel h2{color:#00ffc8;text-align:center;margin-bottom:16px;text-shadow:0 0 10px #00ffc8}
+.upg-btn{display:block;width:100%;padding:10px 14px;margin:6px 0;background:rgba(0,255,200,0.08);
+border:1px solid rgba(0,255,200,0.3);border-radius:6px;color:#eee;cursor:pointer;text-align:left;
+font-family:'Courier New',monospace;font-size:13px;transition:all .2s}
+.upg-btn:hover{background:rgba(0,255,200,0.2);border-color:#00ffc8}
+.upg-btn:disabled{opacity:0.4;cursor:default}
+.upg-btn .cost{color:#ffd700;float:right}
+.upg-btn .owned{color:#00ffc8;float:right}
+#upgradePanel .close-btn{display:block;margin:12px auto 0;padding:8px 24px;background:transparent;
+border:1px solid #ff4466;color:#ff4466;border-radius:6px;cursor:pointer;font-family:'Courier New',monospace}
 </style>
 </head>
 <body>
-<div id="gameContainer">
-  <canvas id="startCanvas"></canvas>
-  <div id="startScreen">
-    <h1>BAI MINING<br>TERMINAL</h1>
-    <div class="subtitle">WASD / Arrow Keys to move &amp; mine</div>
-    <div class="subtitle">Go deeper for rarer ores • Avoid lava</div>
-    <div class="prompt">[ PRESS ENTER OR TAP TO BEGIN ]</div>
-  </div>
-  <canvas id="gameCanvas"></canvas>
-  <div id="hud" style="display:none;">
-    <div id="title">BAI MINING TERMINAL</div>
-    <div id="depth">Depth: 0m</div>
-    <div id="score">⛏ 0 ORE</div>
-    <div id="inventory"></div>
-    <div id="healthBarOuter"><div id="healthBarInner"></div></div>
-    <div id="healthText">100 / 100</div>
-    <div id="rareFlash"></div>
-  </div>
-  <div id="deathOverlay">
-    <h2>SYSTEM FAILURE</h2>
-    <p>Agent down — respawning at surface...</p>
-    <p style="margin-top:10px;color:#ffd700;font-size:13px;">-10% ORE penalty</p>
-  </div>
-  <div id="mobileControls">
-    <div id="mobileGrid">
-      <div></div>
-      <div class="mBtn" data-dir="up">▲</div>
-      <div></div>
-      <div class="mBtn" data-dir="left">◄</div>
-      <div class="mBtn" data-dir="down">▼</div>
-      <div class="mBtn" data-dir="right">►</div>
-    </div>
-  </div>
+<canvas id="c"></canvas>
+<div id="upgradePanel">
+<h2>⚒️ UPGRADE SHOP</h2>
+<div id="upgList"></div>
+<button class="close-btn" onclick="toggleShop()">CLOSE [E]</button>
 </div>
-
 <script>
 "use strict";
+// ========== PERLIN NOISE ==========
+const Perlin=(()=>{const p=new Uint8Array(512);const perm=new Uint8Array(256);
+for(let i=0;i<256;i++)perm[i]=i;
+for(let i=255;i>0;i--){const j=Math.floor(Math.random()*(i+1));[perm[i],perm[j]]=[perm[j],perm[i]]}
+for(let i=0;i<512;i++)p[i]=perm[i&255];
+const fade=t=>t*t*t*(t*(t*6-15)+10);
+const lerp=(t,a,b)=>a+t*(b-a);
+const grad=(hash,x,y)=>{const h=hash&3;return((h&1)?-x:x)+((h&2)?-y:y)};
+return{noise2d:(x,y)=>{const X=Math.floor(x)&255,Y=Math.floor(y)&255;
+x-=Math.floor(x);y-=Math.floor(y);
+const u=fade(x),v=fade(y);
+const a=p[X]+Y,b=p[X+1]+Y;
+return lerp(v,lerp(u,grad(p[a],x,y),grad(p[b],x-1,y)),
+lerp(u,grad(p[a+1],x,y-1),grad(p[b+1],x-1,y-1)))}};
+})();
+function fbm(x,y,oct=4){let v=0,a=1,f=1,m=0;
+for(let i=0;i<oct;i++){v+=a*Perlin.noise2d(x*f,y*f);m+=a;a*=0.5;f*=2}return v/m}
 
-// ======================== CONSTANTS ========================
-const TILE_SIZE = 32;
-const WORLD_W = 200;
-const WORLD_H = 200;
-const SURFACE_Y = 10; // rows of sky
-const GRAVITY_INTERVAL = 120; // ms between gravity ticks
-const LAVA_TICK = 500;
-const MOVE_COOLDOWN = 100;
+// ========== CONSTANTS ==========
+const TILE=32,CHUNK=16;
+const canvas=document.getElementById('c');
+const ctx=canvas.getContext('2d');
+let W,H;
+function resize(){W=canvas.width=window.innerWidth;H=canvas.height=window.innerHeight}
+resize();window.addEventListener('resize',resize);
 
-// Block IDs
-const AIR=0, GRASS=1, DIRT=2, STONE=3, COAL=4, COPPER=5, IRON=6,
-      SILVER=7, GOLD=8, DIAMOND=9, EMERALD=10, BAICRYSTAL=11,
-      VOIDORE=12, BEDROCK=13, LAVA=14, CAVE=15;
-
-const BLOCK_DEF = {
-  [AIR]:        {name:'Air',        color:'transparent', hardness:0, value:0,    depth:[0,0]},
-  [GRASS]:      {name:'Grass',      color:'#4a7c3f',     hardness:1, value:0,    depth:[0,1]},
-  [DIRT]:       {name:'Dirt',       color:'#8B6914',     hardness:1, value:1,    depth:[0,15]},
-  [STONE]:      {name:'Stone',      color:'#808080',     hardness:2, value:2,    depth:[5,200]},
-  [COAL]:       {name:'Coal',       color:'#333333',     hardness:2, value:5,    depth:[10,50]},
-  [COPPER]:     {name:'Copper',     color:'#b87333',     hardness:3, value:10,   depth:[15,60]},
-  [IRON]:       {name:'Iron',       color:'#a0a0b0',     hardness:3, value:20,   depth:[25,80]},
-  [SILVER]:     {name:'Silver',     color:'#c0c0c0',     hardness:4, value:40,   depth:[35,100]},
-  [GOLD]:       {name:'Gold',       color:'#ffd700',     hardness:4, value:80,   depth:[50,120]},
-  [DIAMOND]:    {name:'Diamond',    color:'#00ffff',     hardness:5, value:200,  depth:[70,150]},
-  [EMERALD]:    {name:'Emerald',    color:'#50c878',     hardness:5, value:300,  depth:[80,160]},
-  [BAICRYSTAL]: {name:'BAI Crystal',color:'#ff00ff',     hardness:6, value:500,  depth:[100,180]},
-  [VOIDORE]:    {name:'Void Ore',   color:'#6a00aa',     hardness:8, value:1000, depth:[150,200]},
-  [BEDROCK]:    {name:'Bedrock',    color:'#1a1a1a',     hardness:Infinity, value:0, depth:[195,200]},
-  [LAVA]:       {name:'Lava',       color:'#ff4400',     hardness:Infinity, value:0, depth:[120,190]},
-  [CAVE]:       {name:'Cave',       color:'transparent', hardness:0, value:0,    depth:[0,200]},
+// ========== ORE DEFINITIONS ==========
+const ORES={
+coal:{name:'Coal',color:'#333333',value:1,hits:1,rarity:'common',glow:false},
+copper:{name:'Copper',color:'#b87333',value:3,hits:1,rarity:'common',glow:false},
+iron:{name:'Iron',color:'#a19d94',value:5,hits:2,rarity:'uncommon',glow:false},
+silver:{name:'Silver',color:'#c0c0c0',value:10,hits:2,rarity:'uncommon',glow:true},
+gold:{name:'Gold',color:'#ffd700',value:25,hits:3,rarity:'rare',glow:true},
+sapphire:{name:'Sapphire',color:'#0f52ba',value:50,hits:3,rarity:'rare',glow:true},
+ruby:{name:'Ruby',color:'#e0115f',value:100,hits:4,rarity:'epic',glow:true},
+diamond:{name:'Diamond',color:'#b9f2ff',value:250,hits:5,rarity:'epic',glow:true},
+gem:{name:'GEM 💎',color:'#00ffc8',value:1000,hits:6,rarity:'legendary',glow:true}
 };
 
-// ======================== SEEDED RNG ========================
-function mulberry32(a){return function(){a|=0;a=a+0x6D2B79F5|0;let t=Math.imul(a^a>>>15,1|a);t^=t+Math.imul(t^t>>>7,61|t);return((t^t>>>14)>>>0)/4294967296;}}
-let rng;
+// ========== TILE TYPES ==========
+const T={AIR:0,DIRT:1,STONE:2,GRASS:3,ORE:4,LAVA:5,GAS:6,BEDROCK:7};
 
-// ======================== NOISE (simple value noise) ========================
-const noiseP = new Uint8Array(512);
-function initNoise(seed){
-  const r = mulberry32(seed);
-  for(let i=0;i<256;i++) noiseP[i]=i;
-  for(let i=255;i>0;i--){const j=(r()*i)|0;[noiseP[i],noiseP[j]]=[noiseP[j],noiseP[i]];}
-  for(let i=0;i<256;i++) noiseP[i+256]=noiseP[i];
-}
-function fade(t){return t*t*t*(t*(t*6-15)+10);}
-function lerp(a,b,t){return a+t*(b-a);}
-function grad(h,x,y){const v=h&3;return((v&1)?-x:x)+((v&2)?-y:y);}
-function noise2D(x,y){
-  const X=Math.floor(x)&255, Y=Math.floor(y)&255;
-  const xf=x-Math.floor(x), yf=y-Math.floor(y);
-  const u=fade(xf), v=fade(yf);
-  const aa=noiseP[noiseP[X]+Y], ab=noiseP[noiseP[X]+Y+1];
-  const ba=noiseP[noiseP[X+1]+Y], bb=noiseP[noiseP[X+1]+Y+1];
-  return lerp(lerp(grad(aa,xf,yf),grad(ba,xf-1,yf),u),lerp(grad(ab,xf,yf-1),grad(bb,xf-1,yf-1),u),v);
-}
-function octaveNoise(x,y,oct,pers){
-  let total=0,freq=1,amp=1,maxV=0;
-  for(let i=0;i<oct;i++){total+=noise2D(x*freq,y*freq)*amp;maxV+=amp;amp*=pers;freq*=2;}
-  return total/maxV;
-}
+// ========== BIOME HELPERS ==========
+function getBiome(depth){
+if(depth<0)return'sky';if(depth<=10)return'surface';if(depth<=50)return'dirt';
+if(depth<=150)return'stone';if(depth<=300)return'crystal';if(depth<=500)return'magma';return'void'}
+function biomeColor(biome){
+switch(biome){case'sky':return'#87ceeb';case'surface':return'#4a7c3f';case'dirt':return'#8b6914';
+case'stone':return'#6b6b6b';case'crystal':return'#2a1a4e';case'magma':return'#4a1a0a';case'void':return'#0a0010';default:return'#333'}}
+function biomeBg(depth){
+if(depth<0)return['#87ceeb','#6bb5d9'];if(depth<=10)return['#3a6630','#2d5025'];
+if(depth<=50)return['#5c4a1e','#4a3a14'];if(depth<=150)return['#3a3a3a','#2a2a2a'];
+if(depth<=300)return['#1a0a3e','#2a1a5e'];if(depth<=500)return['#3a0a0a','#5a1a0a'];
+return['#050008','#0a0010']}
 
-// ======================== WORLD GEN ========================
-let world, worldHP;
+// ========== WORLD ==========
+const world=new Map();
+const chunks=new Set();
+const explored=new Set();
 
-function generateWorld(seed) {
-  rng = mulberry32(seed);
-  initNoise(seed);
-  world = new Uint8Array(WORLD_W * WORLD_H);
-  worldHP = new Float32Array(WORLD_W * WORLD_H);
+function tileKey(x,y){return x+','+y}
+function chunkKey(cx,cy){return cx+','+cy}
 
-  // Step 1: fill with air
-  world.fill(AIR);
+function getOreForDepth(depth,rng){
+const biome=getBiome(depth);
+let ores=[];
+if(biome==='dirt'){ores=[{type:'coal',w:0.08},{type:'copper',w:0.05}]}
+else if(biome==='stone'){ores=[{type:'coal',w:0.04},{type:'copper',w:0.03},{type:'iron',w:0.05},{type:'silver',w:0.025}]}
+else if(biome==='crystal'){ores=[{type:'iron',w:0.02},{type:'silver',w:0.03},{type:'gold',w:0.04},{type:'sapphire',w:0.02}]}
+else if(biome==='magma'){ores=[{type:'gold',w:0.02},{type:'sapphire',w:0.015},{type:'ruby',w:0.03},{type:'diamond',w:0.01}]}
+else if(biome==='void'){ores=[{type:'ruby',w:0.015},{type:'diamond',w:0.02},{type:'gem',w:0.008}]}
+for(const o of ores){if(rng<o.w){return o.type}rng-=o.w}
+return null}
 
-  // Step 2: generate terrain height variation
-  const surfaceHeight = new Float32Array(WORLD_W);
-  for (let x = 0; x < WORLD_W; x++) {
-    surfaceHeight[x] = SURFACE_Y + Math.round(octaveNoise(x * 0.05, 0, 3, 0.5) * 3);
-  }
+function generateChunk(cx,cy){
+const key=chunkKey(cx,cy);
+if(chunks.has(key))return;
+chunks.add(key);
+const bx=cx*CHUNK,by=cy*CHUNK;
+for(let y=0;y<CHUNK;y++){
+for(let x=0;x<CHUNK;x++){
+const wx=bx+x,wy=by+y;
+const tk=tileKey(wx,wy);
+if(world.has(tk))continue;
+const depth=wy;
+if(depth<-2){world.set(tk,{type:T.AIR});continue}
+if(depth<0){
+const n=fbm(wx*0.1,wy*0.1,3);
+world.set(tk,{type:n>0.1?T.AIR:T.DIRT});continue}
+if(depth===0){world.set(tk,{type:T.GRASS});continue}
+const n=fbm(wx*0.08,wy*0.06,4);
+const cave=fbm(wx*0.05+100,wy*0.05+100,3);
+if(cave>0.3&&depth>5){world.set(tk,{type:T.AIR});continue}
+const biome=getBiome(depth);
+// Lava
+if(biome==='magma'||biome==='void'){
+const lavaN=fbm(wx*0.12+200,wy*0.12+200,2);
+if(lavaN>0.35&&n>-0.1){world.set(tk,{type:T.LAVA,dmgTimer:0});continue}}
+// Gas pockets
+if((biome==='stone'||biome==='crystal')&&fbm(wx*0.15+300,wy*0.15+300,2)>0.45&&Math.random()<0.15){
+world.set(tk,{type:T.GAS});continue}
+// Ore check
+const oreRng=Math.abs(fbm(wx*0.2+50,wy*0.2+50,2))*0.5+Math.random()*0.5;
+const oreType=getOreForDepth(depth,oreRng*0.15);
+if(oreType){
+const od=ORES[oreType];
+world.set(tk,{type:T.ORE,ore:oreType,hitsLeft:od.hits,maxHits:od.hits});continue}
+// Base block
+if(depth<=10)world.set(tk,{type:T.DIRT});
+else if(depth<=50)world.set(tk,{type:n>0?T.DIRT:T.STONE});
+else world.set(tk,{type:T.STONE});
+}}}
 
-  // Step 3: fill ground
-  for (let x = 0; x < WORLD_W; x++) {
-    const sh = surfaceHeight[x];
-    for (let y = 0; y < WORLD_H; y++) {
-      if (y < sh - 1) { setTile(x, y, AIR); continue; }
-      if (y === sh - 1 || y === sh) { setTile(x, y, GRASS); continue; }
+function ensureChunks(px,py){
+const cx=Math.floor(px/CHUNK),cy=Math.floor(py/CHUNK);
+for(let dy=-2;dy<=2;dy++)for(let dx=-2;dx<=2;dx++)generateChunk(cx+dx,cy+dy)}
 
-      const depth = y - sh;
-      if (depth <= 15) { setTile(x, y, DIRT); }
-      else { setTile(x, y, STONE); }
-    }
-  }
+function getTile(x,y){return world.get(tileKey(x,y))||null}
+function setTile(x,y,tile){world.set(tileKey(x,y),tile)}
 
-  // Step 4: caves using cellular automata approach via noise
-  for (let x = 0; x < WORLD_W; x++) {
-    const sh = surfaceHeight[x];
-    for (let y = sh + 5; y < WORLD_H - 5; y++) {
-      const caveN = octaveNoise(x * 0.08, y * 0.06, 3, 0.5);
-      const caveN2 = octaveNoise(x * 0.12 + 500, y * 0.1 + 500, 2, 0.5);
-      if (caveN > 0.35 && caveN2 > 0.1) {
-        setTile(x, y, CAVE);
-      }
-      // Larger caverns
-      const bigCave = octaveNoise(x * 0.03 + 1000, y * 0.03 + 1000, 2, 0.5);
-      if (bigCave > 0.42) {
-        setTile(x, y, CAVE);
-      }
-    }
-  }
-
-  // Step 5: ores
-  const oreTypes = [COAL, COPPER, IRON, SILVER, GOLD, DIAMOND, EMERALD, BAICRYSTAL, VOIDORE];
-  const oreChance = {
-    [COAL]:0.06, [COPPER]:0.04, [IRON]:0.03, [SILVER]:0.02,
-    [GOLD]:0.015, [DIAMOND]:0.008, [EMERALD]:0.006, [BAICRYSTAL]:0.004, [VOIDORE]:0.002,
-  };
-
-  for (const ore of oreTypes) {
-    const def = BLOCK_DEF[ore];
-    const [dMin, dMax] = def.depth;
-    const chance = oreChance[ore];
-    for (let x = 1; x < WORLD_W - 1; x++) {
-      const sh = surfaceHeight[x];
-      for (let y = sh + dMin; y < Math.min(sh + dMax, WORLD_H - 1); y++) {
-        if (getTile(x, y) !== STONE && getTile(x, y) !== DIRT) continue;
-        const n = octaveNoise(x * 0.15 + ore * 100, y * 0.15 + ore * 100, 2, 0.5);
-        if (n > 0.3 && rng() < chance) {
-          // Place vein
-          const veinSize = 2 + Math.floor(rng() * 4);
-          placeVein(x, y, ore, veinSize, surfaceHeight);
-        }
-      }
-    }
-  }
-
-  // Step 6: bedrock
-  for (let x = 0; x < WORLD_W; x++) {
-    for (let y = WORLD_H - 6; y < WORLD_H; y++) {
-      const chance = (y - (WORLD_H - 6)) / 5;
-      if (rng() < chance || y >= WORLD_H - 2) {
-        setTile(x, y, BEDROCK);
-      }
-    }
-  }
-
-  // Step 7: lava pools
-  for (let x = 0; x < WORLD_W; x++) {
-    const sh = surfaceHeight[x];
-    for (let y = sh + 120; y < WORLD_H - 8; y++) {
-      if (getTile(x, y) === CAVE) {
-        const lavaN = octaveNoise(x * 0.1 + 2000, y * 0.1 + 2000, 2, 0.5);
-        if (lavaN > 0.3 && rng() < 0.15) {
-          setTile(x, y, LAVA);
-        }
-      }
-    }
-  }
-
-  // Init HP
-  for (let i = 0; i < WORLD_W * WORLD_H; i++) {
-    worldHP[i] = BLOCK_DEF[world[i]].hardness;
-  }
-}
-
-function placeVein(cx, cy, ore, size, surfaceHeight) {
-  const dirs = [[0,0],[1,0],[-1,0],[0,1],[0,-1],[1,1],[-1,1],[1,-1],[-1,-1]];
-  let placed = 0;
-  for (let i = 0; i < dirs.length && placed < size; i++) {
-    const nx = cx + dirs[i][0], ny = cy + dirs[i][1];
-    if (nx < 0 || nx >= WORLD_W || ny < 0 || ny >= WORLD_H) continue;
-    const t = getTile(nx, ny);
-    if (t === STONE || t === DIRT) {
-      setTile(nx, ny, ore);
-      placed++;
-    }
-  }
-}
-
-function getTile(x, y) { return (x >= 0 && x < WORLD_W && y >= 0 && y < WORLD_H) ? world[y * WORLD_W + x] : BEDROCK; }
-function setTile(x, y, t) { if (x >= 0 && x < WORLD_W && y >= 0 && y < WORLD_H) world[y * WORLD_W + x] = t; }
-function getHP(x, y) { return (x >= 0 && x < WORLD_W && y >= 0 && y < WORLD_H) ? worldHP[y * WORLD_W + x] : Infinity; }
-function setHP(x, y, v) { if (x >= 0 && x < WORLD_W && y >= 0 && y < WORLD_H) worldHP[y * WORLD_W + x] = v; }
-
-// ======================== PLAYER ========================
-let player = {
-  x: 100, y: 5,
-  hp: 100, maxHp: 100,
-  score: 0,
-  inventory: {},
-  dead: false,
-  respawnTimer: 0,
+// ========== PLAYER ==========
+const player={
+x:20,y:-1,vx:0,vy:0,
+hp:100,maxHp:100,
+gems:0,
+inventory:{coal:0,copper:0,iron:0,silver:0,gold:0,sapphire:0,ruby:0,diamond:0,gem:0},
+pickLevel:0,// 0=basic,1=iron,2=steel,3=diamond
+lightRadius:5,
+hasArmor:false,
+hasJetpack:false,
+bombs:0,
+miningTarget:null,
+miningProgress:0,
+onGround:false,
+facing:1,
+idleTime:0,
+dead:false,
+maxDepth:0,
+totalOres:0,
+moveAnim:0,
+dmgCooldown:0,
+jumpCount:0
 };
 
-// ======================== PARTICLES ========================
-let particles = [];
-function spawnParticles(wx, wy, color, count) {
-  for (let i = 0; i < count; i++) {
-    particles.push({
-      x: wx * TILE_SIZE + TILE_SIZE / 2,
-      y: wy * TILE_SIZE + TILE_SIZE / 2,
-      vx: (Math.random() - 0.5) * 4,
-      vy: (Math.random() - 0.5) * 4 - 2,
-      life: 30 + Math.random() * 20,
-      maxLife: 50,
-      color: color,
-      size: 2 + Math.random() * 3,
-    });
-  }
-}
-let rareFlashTimer = 0;
+// ========== UPGRADES ==========
+const upgrades=[
+{id:'iron_pick',name:'Iron Pickaxe',cost:50,desc:'Mine 2x faster',
+check:()=>player.pickLevel<1,apply:()=>{player.pickLevel=1}},
+{id:'steel_pick',name:'Steel Pickaxe',cost:200,desc:'Mine 3x faster',
+check:()=>player.pickLevel<2,apply:()=>{player.pickLevel=2}},
+{id:'diamond_pick',name:'Diamond Pickaxe',cost:1000,desc:'Mine 5x faster',
+check:()=>player.pickLevel<3,apply:()=>{player.pickLevel=3}},
+{id:'lantern',name:'Lantern',cost:100,desc:'Bigger light radius',
+check:()=>player.lightRadius<9,apply:()=>{player.lightRadius=9}},
+{id:'armor',name:'Armor',cost:150,desc:'Reduce damage 50%',
+check:()=>!player.hasArmor,apply:()=>{player.hasArmor=true}},
+{id:'jetpack',name:'Jetpack',cost:500,desc:'Press W/UP to fly',
+check:()=>!player.hasJetpack,apply:()=>{player.hasJetpack=true}},
+{id:'bombs',name:'Bombs x3',cost:75,desc:'Press B to blast 3x3',
+check:()=>true,apply:()=>{player.bombs+=3}}
+];
 
-// ======================== GAME STATE ========================
-let gameState = 'start'; // start, playing, dead
-let canvas, ctx;
-let camX = 0, camY = 0;
-let targetCamX = 0, targetCamY = 0;
-let lastGravity = 0;
-let lastLavaTick = 0;
-let lastMoveTime = 0;
-let keysDown = {};
-let moveQueue = [];
-let animTime = 0;
-let screenW, screenH;
+// ========== PARTICLES ==========
+let particles=[];
+function spawnParticles(x,y,color,count=8){
+for(let i=0;i<count;i++){
+particles.push({x:x*TILE+TILE/2,y:y*TILE+TILE/2,
+vx:(Math.random()-0.5)*4,vy:(Math.random()-0.5)*4-2,
+life:30+Math.random()*20,maxLife:50,color,size:2+Math.random()*3})}}
+function updateParticles(){
+particles=particles.filter(p=>{p.x+=p.vx;p.y+=p.vy;p.vy+=0.1;p.life--;return p.life>0})}
 
-// ======================== INIT ========================
-function init() {
-  canvas = document.getElementById('gameCanvas');
-  ctx = canvas.getContext('2d');
-  resizeCanvas();
-  window.addEventListener('resize', resizeCanvas);
-  window.addEventListener('keydown', onKeyDown);
-  window.addEventListener('keyup', onKeyUp);
+// ========== SCREEN SHAKE ==========
+let shakeX=0,shakeY=0,shakeAmount=0;
+function shake(amount){shakeAmount=Math.max(shakeAmount,amount)}
+function updateShake(){
+if(shakeAmount>0){shakeX=(Math.random()-0.5)*shakeAmount;shakeY=(Math.random()-0.5)*shakeAmount;shakeAmount*=0.85;
+if(shakeAmount<0.5)shakeAmount=0}else{shakeX=0;shakeY=0}}
 
-  // Mobile controls
-  document.querySelectorAll('.mBtn').forEach(btn => {
-    const handler = (e) => {
-      e.preventDefault();
-      const dir = btn.dataset.dir;
-      if (dir === 'up') tryMove(0, -1);
-      else if (dir === 'down') tryMove(0, 1);
-      else if (dir === 'left') tryMove(-1, 0);
-      else if (dir === 'right') tryMove(1, 0);
-    };
-    btn.addEventListener('touchstart', handler, {passive: false});
-    btn.addEventListener('mousedown', handler);
-  });
+// ========== FLOATING TEXT ==========
+let floatingTexts=[];
+function floatText(x,y,text,color='#ffd700'){
+floatingTexts.push({x:x*TILE+TILE/2,y:y*TILE,text,color,life:60,vy:-1.5})}
+function updateFloats(){
+floatingTexts=floatingTexts.filter(f=>{f.y+=f.vy;f.life--;return f.life>0})}
 
-  // Touch mining on canvas
-  canvas.addEventListener('touchstart', onTouch, {passive: false});
-  canvas.addEventListener('click', onClick);
+// ========== AUDIO ==========
+let audioCtx=null;
+function initAudio(){if(!audioCtx)audioCtx=new(window.AudioContext||window.webkitAudioContext)()}
+function playTone(freq,dur=0.08,vol=0.12,type='square'){
+if(!audioCtx)return;try{
+const o=audioCtx.createOscillator(),g=audioCtx.createGain();
+o.type=type;o.frequency.value=freq;
+g.gain.setValueAtTime(vol,audioCtx.currentTime);
+g.gain.exponentialRampToValueAtTime(0.001,audioCtx.currentTime+dur);
+o.connect(g);g.connect(audioCtx.destination);o.start();o.stop(audioCtx.currentTime+dur)}catch(e){}}
+function sndMine(){playTone(400+Math.random()*200,0.05,0.08)}
+function sndOre(val){const f=300+Math.min(val,500)*2;playTone(f,0.15,0.1,'sine');
+setTimeout(()=>playTone(f*1.25,0.15,0.08,'sine'),80);
+setTimeout(()=>playTone(f*1.5,0.2,0.06,'sine'),160)}
+function sndDamage(){playTone(100,0.2,0.15,'sawtooth')}
+function sndExplode(){playTone(60,0.3,0.2,'sawtooth');setTimeout(()=>playTone(40,0.3,0.15,'sawtooth'),50)}
 
-  startScreenAnim();
-}
+// ========== AMBIENT SOUND ==========
+let ambientOsc=null,ambientGain=null;
+function startAmbient(){
+if(!audioCtx||ambientOsc)return;
+try{ambientOsc=audioCtx.createOscillator();ambientGain=audioCtx.createGain();
+ambientOsc.type='sine';ambientOsc.frequency.value=40;
+ambientGain.gain.value=0;
+ambientOsc.connect(ambientGain);ambientGain.connect(audioCtx.destination);
+ambientOsc.start()}catch(e){}}
+function updateAmbient(){
+if(!ambientGain)return;
+const d=Math.max(0,player.y);
+const intensity=Math.min(d/500,1);
+ambientGain.gain.value=0.02+intensity*0.04;
+ambientOsc.frequency.value=35+intensity*25}
 
-function resizeCanvas() {
-  const dpr = window.devicePixelRatio || 1;
-  screenW = window.innerWidth;
-  screenH = window.innerHeight;
-  canvas.width = screenW * dpr;
-  canvas.height = screenH * dpr;
-  canvas.style.width = screenW + 'px';
-  canvas.style.height = screenH + 'px';
-  ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
-}
+// ========== INPUT ==========
+const keys={};
+window.addEventListener('keydown',e=>{keys[e.key.toLowerCase()]=true;
+if(['arrowup','arrowdown','arrowleft','arrowright',' '].includes(e.key.toLowerCase()))e.preventDefault()});
+window.addEventListener('keyup',e=>{keys[e.key.toLowerCase()]=false});
 
-// ======================== START SCREEN ========================
-let startParticles = [];
-function startScreenAnim() {
-  const sc = document.getElementById('startCanvas');
-  const sctx = sc.getContext('2d');
-  const dpr = window.devicePixelRatio || 1;
+// Touch
+let touchDir={x:0,y:0};let touching=false;
+canvas.addEventListener('touchstart',e=>{e.preventDefault();touching=true;initAudio();
+handleTouch(e.touches[0])},{passive:false});
+canvas.addEventListener('touchmove',e=>{e.preventDefault();if(touching)handleTouch(e.touches[0])},{passive:false});
+canvas.addEventListener('touchend',e=>{e.preventDefault();touching=false;touchDir={x:0,y:0}},{passive:false});
+function handleTouch(t){
+const cx=W/2,cy=H/2;
+const dx=t.clientX-cx,dy=t.clientY-cy;
+const dist=Math.sqrt(dx*dx+dy*dy);
+if(dist<20){touchDir={x:0,y:0};return}
+touchDir={x:dx/dist,y:dy/dist}}
 
-  function resizeSC() {
-    sc.width = window.innerWidth * dpr;
-    sc.height = window.innerHeight * dpr;
-    sctx.setTransform(dpr, 0, 0, dpr, 0, 0);
-  }
-  resizeSC();
-  window.addEventListener('resize', resizeSC);
+// ========== GAME STATE ==========
+let gameState='menu'; // menu, playing, dead, shop
+let camX=0,camY=0;
+let time=0;
+let moveTimer=0;
+const MOVE_DELAY=6; // frames between moves
 
-  for (let i = 0; i < 80; i++) {
-    startParticles.push({
-      x: Math.random() * window.innerWidth,
-      y: Math.random() * window.innerHeight,
-      vx: (Math.random() - 0.5) * 0.5,
-      vy: -Math.random() * 0.8 - 0.2,
-      size: Math.random() * 3 + 1,
-      alpha: Math.random() * 0.5 + 0.2,
-      color: ['#00ffc8', '#00ff88', '#88ffdd', '#ffd700'][Math.floor(Math.random() * 4)],
-    });
-  }
+// ========== SHOP ==========
+const panel=document.getElementById('upgradePanel');
+const upgList=document.getElementById('upgList');
+let shopOpen=false;
+function toggleShop(){
+if(gameState!=='playing')return;
+shopOpen=!shopOpen;
+panel.style.display=shopOpen?'block':'none';
+if(shopOpen)renderShop()}
+function renderShop(){
+upgList.innerHTML='';
+upgrades.forEach(u=>{
+const btn=document.createElement('button');btn.className='upg-btn';
+const canBuy=u.check()&&player.gems>=u.cost;
+btn.disabled=!canBuy;
+if(!u.check()){btn.innerHTML=`${u.name} — ${u.desc} <span class="owned">OWNED</span>`}
+else{btn.innerHTML=`${u.name} — ${u.desc} <span class="cost">💎 ${u.cost}</span>`}
+btn.onclick=()=>{if(canBuy){player.gems-=u.cost;u.apply();playTone(600,0.1,0.1,'sine');
+setTimeout(()=>playTone(900,0.15,0.1,'sine'),100);renderShop()}};
+upgList.appendChild(btn)})}
 
-  function animStart() {
-    if (gameState !== 'start') return;
-    sctx.clearRect(0, 0, window.innerWidth, window.innerHeight);
-    for (const p of startParticles) {
-      sctx.globalAlpha = p.alpha;
-      sctx.fillStyle = p.color;
-      sctx.beginPath();
-      sctx.arc(p.x, p.y, p.size, 0, Math.PI * 2);
-      sctx.fill();
-      p.x += p.vx; p.y += p.vy;
-      if (p.y < -10) { p.y = window.innerHeight + 10; p.x = Math.random() * window.innerWidth; }
-      if (p.x < -10) p.x = window.innerWidth + 10;
-      if (p.x > window.innerWidth + 10) p.x = -10;
-    }
-    sctx.globalAlpha = 1;
-    requestAnimationFrame(animStart);
-  }
-  animStart();
-}
+// ========== FALLING ROCKS (cave-ins) ==========
+let fallingRocks=[];
+function spawnCaveIn(px,py){
+const count=2+Math.floor(Math.random()*3);
+for(let i=0;i<count;i++){
+fallingRocks.push({x:(px-2+Math.random()*5)*TILE,y:(py-8-Math.random()*4)*TILE,
+vy:1+Math.random()*2,life:120,size:TILE*0.6})}}
+function updateRocks(){
+fallingRocks=fallingRocks.filter(r=>{
+r.y+=r.vy;r.vy+=0.15;r.life--;
+const tx=Math.floor(r.x/TILE),ty=Math.floor(r.y/TILE);
+const t=getTile(tx,ty);
+if(t&&t.type!==T.AIR&&t.type!==T.LAVA){r.life=0;spawnParticles(tx,ty,'#888',4)}
+if(Math.abs(r.x-player.x*TILE)<TILE&&Math.abs(r.y-player.y*TILE)<TILE){
+damagePlayer(5);r.life=0}
+return r.life>0})}
 
-// ======================== START GAME ========================
-function startGame() {
-  if (gameState === 'playing') return;
-  const seed = Date.now();
-  generateWorld(seed);
-  // Find spawn: center of world, on surface
-  player.x = 100;
-  for (let y = 0; y < WORLD_H; y++) {
-    const t = getTile(player.x, y);
-    if (t !== AIR) { player.y = y - 1; break; }
-  }
-  player.hp = 100; player.score = 0; player.inventory = {}; player.dead = false;
-  camX = player.x * TILE_SIZE - screenW / 2;
-  camY = player.y * TILE_SIZE - screenH / 2;
-  targetCamX = camX; targetCamY = camY;
+// ========== GAME LOGIC ==========
+function damagePlayer(amount){
+if(player.dmgCooldown>0)return;
+if(player.hasArmor)amount=Math.ceil(amount/2);
+player.hp-=amount;player.dmgCooldown=30;
+sndDamage();shake(8);
+if(player.hp<=0){player.hp=0;player.dead=true;gameState='dead'}}
 
-  document.getElementById('startScreen').style.display = 'none';
-  document.getElementById('hud').style.display = 'block';
-  gameState = 'playing';
-  requestAnimationFrame(gameLoop);
-}
+function mineBlock(tx,ty){
+const tile=getTile(tx,ty);
+if(!tile)return false;
+if(tile.type===T.AIR)return true;
+if(tile.type===T.LAVA){damagePlayer(10);return false}
+if(tile.type===T.BEDROCK)return false;
+if(tile.type===T.GAS){
+// Explosion
+sndExplode();shake(15);
+for(let dy=-1;dy<=1;dy++)for(let dx=-1;dx<=1;dx++){
+const nx=tx+dx,ny=ty+dy;const nt=getTile(nx,ny);
+if(nt&&nt.type!==T.AIR){setTile(nx,ny,{type:T.AIR});spawnParticles(nx,ny,'#44ff44',5)}}
+damagePlayer(15);
+floatText(tx,ty,'GAS EXPLOSION!','#44ff44');
+return true}
+const speed=[1,2,3,5][player.pickLevel]||1;
+if(tile.type===T.ORE){
+tile.hitsLeft-=speed;
+sndMine();
+spawnParticles(tx,ty,ORES[tile.ore].color,3);
+if(tile.hitsLeft<=0){
+const ore=ORES[tile.ore];
+player.gems+=ore.value;
+player.inventory[tile.ore]=(player.inventory[tile.ore]||0)+1;
+player.totalOres++;
+sndOre(ore.value);
+floatText(tx,ty,`+${ore.value} 💎`,ore.color);
+setTile(tx,ty,{type:T.AIR});
+// Cave-in chance
+if(player.y>100&&Math.random()<0.04)spawnCaveIn(player.x,player.y);
+return true}
+return false}
+// Regular block
+tile.type===T.GRASS||tile.type===T.DIRT?spawnParticles(tx,ty,'#8b6914',4):spawnParticles(tx,ty,'#777',4);
+sndMine();
+if(speed>=3||tile.type===T.DIRT||tile.type===T.GRASS){setTile(tx,ty,{type:T.AIR});return true}
+// Multi-hit for stone with basic pick
+if(!tile._hp){tile._hp=2}
+tile._hp-=speed;
+if(tile._hp<=0){setTile(tx,ty,{type:T.AIR});return true}
+return false}
 
-// ======================== INPUT ========================
-function onKeyDown(e) {
-  if (gameState === 'start') {
-    if (e.key === 'Enter' || e.key === ' ') { startGame(); e.preventDefault(); }
-    return;
-  }
-  keysDown[e.key.toLowerCase()] = true;
-  const now = performance.now();
-  if (now - lastMoveTime < MOVE_COOLDOWN) return;
-  let dx = 0, dy = 0;
-  if (e.key === 'ArrowUp' || e.key.toLowerCase() === 'w') dy = -1;
-  else if (e.key === 'ArrowDown' || e.key.toLowerCase() === 's') dy = 1;
-  else if (e.key === 'ArrowLeft' || e.key.toLowerCase() === 'a') dx = -1;
-  else if (e.key === 'ArrowRight' || e.key.toLowerCase() === 'd') dx = 1;
-  if (dx || dy) { tryMove(dx, dy); e.preventDefault(); }
-}
-function onKeyUp(e) {
-  keysDown[e.key.toLowerCase()] = false;
-}
+function useBomb(){
+if(player.bombs<=0)return;
+player.bombs--;
+sndExplode();shake(20);
+for(let dy=-1;dy<=1;dy++)for(let dx=-1;dx<=1;dx++){
+const nx=player.x+dx,ny=player.y+dy;
+const t=getTile(nx,ny);
+if(t&&t.type!==T.AIR&&t.type!==T.BEDROCK){
+if(t.type===T.ORE){
+const ore=ORES[t.ore];player.gems+=ore.value;
+player.inventory[t.ore]=(player.inventory[t.ore]||0)+1;player.totalOres++}
+setTile(nx,ny,{type:T.AIR});spawnParticles(nx,ny,'#ff8844',6)}}}
 
-function onTouch(e) {
-  e.preventDefault();
-  if (gameState === 'start') { startGame(); return; }
-  const touch = e.touches[0];
-  handleClickAt(touch.clientX, touch.clientY);
-}
-function onClick(e) {
-  if (gameState === 'start') { startGame(); return; }
-  handleClickAt(e.clientX, e.clientY);
-}
-function handleClickAt(cx, cy) {
-  if (gameState !== 'playing' || player.dead) return;
-  const worldX = Math.floor((cx + camX) / TILE_SIZE);
-  const worldY = Math.floor((cy + camY) / TILE_SIZE);
-  const dx = worldX - player.x;
-  const dy = worldY - player.y;
-  // Only allow adjacent
-  if (Math.abs(dx) + Math.abs(dy) === 1) {
-    tryMove(dx, dy);
-  } else if (Math.abs(dx) <= 1 && Math.abs(dy) <= 1 && (dx || dy)) {
-    // Prefer cardinal
-    if (Math.abs(dx) >= Math.abs(dy)) tryMove(dx > 0 ? 1 : -1, 0);
-    else tryMove(0, dy > 0 ? 1 : -1);
-  }
-}
+function tryMove(dx,dy){
+const nx=player.x+dx,ny=player.y+dy;
+const tile=getTile(nx,ny);
+if(!tile)return;
+if(tile.type===T.AIR||tile.type===T.LAVA){
+if(tile.type===T.LAVA)damagePlayer(10);
+player.x=nx;player.y=ny;player.facing=dx!==0?dx:player.facing;
+player.moveAnim=10;
+explored.add(tileKey(nx,ny));
+}else{
+// Mine it
+mineBlock(nx,ny);
+player.facing=dx!==0?dx:player.facing}
+player.maxDepth=Math.max(player.maxDepth,player.y)}
 
-// ======================== MOVEMENT & MINING ========================
-function tryMove(dx, dy) {
-  if (player.dead || gameState !== 'playing') return;
-  const now = performance.now();
-  if (now - lastMoveTime < MOVE_COOLDOWN) return;
-  lastMoveTime = now;
+function updatePlayer(){
+if(player.dead)return;
+player.dmgCooldown=Math.max(0,player.dmgCooldown-1);
+if(player.moveAnim>0)player.moveAnim--;
+// Gravity
+const below=getTile(player.x,player.y+1);
+player.onGround=below&&below.type!==T.AIR&&below.type!==T.LAVA;
+if(!player.onGround){
+// Fall
+const fallTile=getTile(player.x,player.y+1);
+if(fallTile&&(fallTile.type===T.AIR||fallTile.type===T.LAVA)){
+if(fallTile.type===T.LAVA)damagePlayer(10);
+player.y++;player.maxDepth=Math.max(player.maxDepth,player.y)}}
+// Regen
+if(player.onGround&&!keys.a&&!keys.d&&!keys.arrowleft&&!keys.arrowright&&!touching){
+player.idleTime++;
+if(player.idleTime%120===0&&player.hp<player.maxHp)player.hp=Math.min(player.maxHp,player.hp+1)
+}else{player.idleTime=0}
+// Movement
+moveTimer++;
+if(moveTimer>=MOVE_DELAY){
+let mx=0,my=0;
+if(keys.a||keys.arrowleft)mx=-1;
+else if(keys.d||keys.arrowright)mx=1;
+if(keys.w||keys.arrowup){
+if(player.hasJetpack){my=-1}
+else if(player.onGround){my=-1}}
+else if(keys.s||keys.arrowdown)my=1;
+// Touch
+if(touching&&mx===0&&my===0){
+if(Math.abs(touchDir.x)>Math.abs(touchDir.y)){mx=touchDir.x>0?1:-1}
+else{my=touchDir.y>0?1:-1}}
+if(mx!==0||my!==0){
+if(my!==0&&mx!==0){tryMove(mx,0);moveTimer=MOVE_DELAY-2}
+else if(mx!==0){tryMove(mx,0);moveTimer=0}
+else{tryMove(0,my);moveTimer=0}
+}else{moveTimer=MOVE_DELAY-1}}
+// Lava contact check
+const ct=getTile(player.x,player.y);
+if(ct&&ct.type===T.LAVA){damagePlayer(10)}
+ensureChunks(player.x,player.y)}
 
-  const nx = player.x + dx;
-  const ny = player.y + dy;
-  if (nx < 0 || nx >= WORLD_W || ny < 0 || ny >= WORLD_H) return;
+// ========== RENDERING ==========
+function drawTile(x,y,tile,sx,sy){
+if(!tile||tile.type===T.AIR)return;
+const depth=y;const biome=getBiome(depth);
+let c;
+switch(tile.type){
+case T.GRASS:c='#4a7c3f';break;
+case T.DIRT:c=depth<30?'#8b6914':'#6b4e12';break;
+case T.STONE:
+if(biome==='crystal')c=`hsl(${260+Math.sin(x*0.3+y*0.2)*20},30%,${25+Math.sin(x*0.5)*5}%)`;
+else c=`hsl(0,0%,${35+Math.sin(x*0.4+y*0.3)*8}%)`;break;
+case T.LAVA:{
+const flicker=Math.sin(time*0.1+x*0.5+y*0.7)*20;
+c=`hsl(${15+flicker},90%,${45+Math.sin(time*0.15+x)*10}%)`;break}
+case T.GAS:c=`rgba(80,${200+Math.sin(time*0.1)*30},80,0.7)`;break;
+case T.ORE:{
+const ore=ORES[tile.ore];
+c=ore.color;
+// Glow effect for rare ores
+if(ore.glow){
+const pulse=Math.sin(time*0.08+x+y)*0.3+0.7;
+ctx.globalAlpha=0.3*pulse;
+ctx.fillStyle=ore.color;
+ctx.fillRect(sx-3,sy-3,TILE+6,TILE+6);
+ctx.globalAlpha=1}
+// GEM shimmer
+if(tile.ore==='gem'){
+const hue=(time*3+x*20+y*20)%360;
+c=`hsl(${hue},90%,65%)`;
+ctx.globalAlpha=0.4;
+ctx.fillStyle=`hsl(${hue},100%,80%)`;
+ctx.fillRect(sx-4,sy-4,TILE+8,TILE+8);
+ctx.globalAlpha=1}
+break}
+default:c='#444'}
+ctx.fillStyle=c;ctx.fillRect(sx,sy,TILE,TILE);
+// Tile detail
+if(tile.type===T.ORE){
+// Draw ore specks
+ctx.fillStyle=tile.ore==='gem'?'#fff':'rgba(255,255,255,0.3)';
+const seed=x*73+y*137;
+for(let i=0;i<3;i++){
+const ox=(((seed+i*41)%13)/13)*TILE*0.6+TILE*0.15;
+const oy=(((seed+i*67)%11)/11)*TILE*0.6+TILE*0.15;
+const s=tile.ore==='gem'?4:3;
+ctx.fillRect(sx+ox,sy+oy,s,s)}
+// Mining progress
+if(tile.hitsLeft<tile.maxHits){
+const pct=tile.hitsLeft/tile.maxHits;
+ctx.strokeStyle='rgba(255,255,255,0.5)';ctx.lineWidth=1;
+const cracks=Math.floor((1-pct)*4);
+for(let i=0;i<cracks;i++){
+ctx.beginPath();
+ctx.moveTo(sx+TILE*Math.random(),sy+TILE*Math.random());
+ctx.lineTo(sx+TILE*Math.random(),sy+TILE*Math.random());
+ctx.stroke()}}}
+if(tile.type===T.GRASS){ctx.fillStyle='#5a9c4f';ctx.fillRect(sx,sy,TILE,3)}
+if(tile.type===T.DIRT||tile.type===T.STONE){
+ctx.fillStyle='rgba(0,0,0,0.1)';
+ctx.fillRect(sx,sy+TILE-2,TILE,2)}}
 
-  const tile = getTile(nx, ny);
-  if (tile === AIR || tile === CAVE) {
-    player.x = nx; player.y = ny;
-  } else if (tile === LAVA) {
-    player.x = nx; player.y = ny;
-    player.hp -= 25;
-    spawnParticles(nx, ny, '#ff6600', 15);
-    if (player.hp <= 0) killPlayer();
-  } else if (tile === BEDROCK) {
-    // Can't mine
-    spawnParticles(nx, ny, '#444444', 3);
-  } else {
-    // Mine
-    let hp = getHP(nx, ny);
-    hp -= 1;
-    setHP(nx, ny, hp);
-    const def = BLOCK_DEF[tile];
-    spawnParticles(nx, ny, def.color, 5);
-    if (hp <= 0) {
-      // Mined!
-      const value = def.value;
-      player.score += value;
-      if (value > 0) {
-        player.inventory[tile] = (player.inventory[tile] || 0) + 1;
-      }
-      setTile(nx, ny, CAVE);
-      setHP(nx, ny, 0);
-      player.x = nx; player.y = ny;
-      // Rare ore flash
-      if (value >= 40) {
-        rareFlashTimer = 15;
-        const flash = document.getElementById('rareFlash');
-        flash.style.background = `radial-gradient(circle, ${def.color}44 0%, transparent 70%)`;
-      }
-    }
-  }
-}
+function drawPlayer(sx,sy){
+const p=player;const f=p.facing;
+const bob=p.moveAnim>0?Math.sin(time*0.5)*2:0;
+const py=sy+bob;
+// Body
+ctx.fillStyle=p.dmgCooldown>0&&time%6<3?'#ff4444':'#00e5b0';
+ctx.fillRect(sx+8,py+6,16,18);
+// Head
+ctx.fillStyle=p.dmgCooldown>0&&time%6<3?'#ff6666':'#00ffc8';
+ctx.fillRect(sx+9,py+0,14,10);
+// Eyes
+ctx.fillStyle='#fff';
+const ex=f>0?18:8;
+ctx.fillRect(sx+ex,py+3,4,4);
+ctx.fillStyle='#111';
+ctx.fillRect(sx+ex+(f>0?1:1),py+4,2,2);
+// Hard hat
+ctx.fillStyle='#ffd700';
+ctx.fillRect(sx+7,py-2,18,4);
+ctx.fillRect(sx+10,py-4,12,3);
+// Pickaxe
+if(p.moveAnim>0){
+ctx.fillStyle=['#888','#aaa','#ccc','#b9f2ff'][p.pickLevel];
+const px2=f>0?sx+26:sx-4;
+const swing=Math.sin(time*0.8)*6;
+ctx.fillRect(px2,py+8+swing,4,14);
+ctx.fillRect(px2-2,py+6+swing,8,3)}
+// Armor
+if(p.hasArmor){
+ctx.fillStyle='rgba(100,150,255,0.3)';
+ctx.fillRect(sx+6,py+5,20,20)}
+// Jetpack flames
+if(p.hasJetpack&&(keys.w||keys.arrowup)){
+ctx.fillStyle=`hsl(${20+Math.random()*20},100%,60%)`;
+ctx.fillRect(sx+10,py+24,4,4+Math.random()*6);
+ctx.fillRect(sx+18,py+24,4,4+Math.random()*6)}
+// Light effect in dark areas
+const depth=p.y;
+if(depth>300){
+const grad=ctx.createRadialGradient(sx+16,py+12,0,sx+16,py+12,p.lightRadius*TILE);
+grad.addColorStop(0,'rgba(255,240,200,0.15)');
+grad.addColorStop(1,'rgba(255,240,200,0)');
+ctx.fillStyle=grad;
+ctx.fillRect(sx+16-p.lightRadius*TILE,py+12-p.lightRadius*TILE,p.lightRadius*TILE*2,p.lightRadius*TILE*2)}}
 
-function killPlayer() {
-  player.dead = true;
-  player.hp = 0;
-  player.respawnTimer = 120; // 2 seconds
-  player.score = Math.floor(player.score * 0.9);
-  document.getElementById('deathOverlay').style.display = 'flex';
-}
+function drawDarkness(){
+const depth=player.y;
+if(depth<=250)return;
+const factor=Math.min((depth-250)/100,1);
+if(factor<=0)return;
+const px=(player.x*TILE-camX)+W/2+TILE/2;
+const py=(player.y*TILE-camY)+H/2+TILE/2;
+const radius=player.lightRadius*TILE*(1.5-factor*0.5);
+const grad=ctx.createRadialGradient(px,py,radius*0.2,px,py,radius);
+grad.addColorStop(0,`rgba(0,0,0,0)`);
+grad.addColorStop(0.7,`rgba(0,0,0,${factor*0.3})`);
+grad.addColorStop(1,`rgba(0,0,0,${factor*0.85})`);
+ctx.fillStyle=grad;ctx.fillRect(0,0,W,H);
+// Additional darkness overlay for far areas
+if(factor>0.5){
+ctx.fillStyle=`rgba(0,0,0,${(factor-0.5)*0.5})`;
+ctx.fillRect(0,0,W,H)}}
 
-function respawnPlayer() {
-  player.dead = false;
-  player.hp = player.maxHp;
-  player.x = 100;
-  for (let y = 0; y < WORLD_H; y++) {
-    const t = getTile(player.x, y);
-    if (t !== AIR) { player.y = y - 1; break; }
-  }
-  document.getElementById('deathOverlay').style.display = 'none';
-}
+// ========== VOID PARTICLES ==========
+let voidParts=[];
+for(let i=0;i<50;i++){voidParts.push({x:Math.random()*2000-1000,y:Math.random()*2000-1000,
+s:1+Math.random()*2,sp:0.2+Math.random()*0.5})}
 
-// ======================== GAME LOOP ========================
-let lastTime = 0;
-function gameLoop(timestamp) {
-  if (gameState !== 'playing') return;
-  const dt = timestamp - lastTime;
-  lastTime = timestamp;
-  animTime = timestamp;
+function drawVoidParticles(){
+if(player.y<450)return;
+const alpha=Math.min((player.y-450)/100,0.6);
+ctx.fillStyle=`rgba(180,100,255,${alpha})`;
+voidParts.forEach(p=>{
+p.y-=p.sp;if(p.y<-1000)p.y=1000;
+const sx=p.x-camX+W/2,sy=p.y-camY+H/2;
+if(sx>-20&&sx<W+20&&sy>-20&&sy<H+20){
+ctx.beginPath();ctx.arc(sx,sy,p.s,0,Math.PI*2);ctx.fill()}})}
 
-  // Key repeat movement
-  const now = performance.now();
-  if (now - lastMoveTime >= MOVE_COOLDOWN && !player.dead) {
-    if (keysDown['w'] || keysDown['arrowup']) tryMove(0, -1);
-    else if (keysDown['s'] || keysDown['arrowdown']) tryMove(0, 1);
-    else if (keysDown['a'] || keysDown['arrowleft']) tryMove(-1, 0);
-    else if (keysDown['d'] || keysDown['arrowright']) tryMove(1, 0);
-  }
+// ========== HUD ==========
+function drawHUD(){
+const depth=Math.max(0,Math.floor(player.y));
+const biome=getBiome(depth);
+// Title
+ctx.textAlign='center';
+ctx.font='bold 16px "Courier New"';
+ctx.fillStyle='#00ffc8';
+ctx.shadowColor='#00ffc8';ctx.shadowBlur=12;
+ctx.fillText('BAI MINING TERMINAL',W/2,24);
+ctx.shadowBlur=0;
+// Depth
+ctx.textAlign='left';
+ctx.font='bold 14px "Courier New"';
+ctx.fillStyle='#ccc';
+ctx.fillText(`Depth: ${depth}m`,12,24);
+ctx.font='11px "Courier New"';
+const biomeNames={sky:'Sky',surface:'Surface',dirt:'Dirt Layer',stone:'Stone Layer',
+crystal:'Crystal Caves',magma:'Magma Zone',void:'The Void'};
+ctx.fillStyle=biome==='void'?'#bb66ff':biome==='magma'?'#ff6644':biome==='crystal'?'#8866ff':'#888';
+ctx.fillText(biomeNames[biome]||'',12,40);
+// GEM score
+ctx.textAlign='right';ctx.font='bold 16px "Courier New"';
+ctx.fillStyle='#ffd700';
+ctx.shadowColor='#ffd700';ctx.shadowBlur=8;
+ctx.fillText(`💎 ${player.gems} GEM`,W-16,24);
+ctx.shadowBlur=0;
+// Bombs
+if(player.bombs>0){
+ctx.font='12px "Courier New"';ctx.fillStyle='#ff8844';
+ctx.fillText(`💣 ${player.bombs} [B]`,W-16,42)}
+// Health bar
+const barW=200,barH=14,barX=(W-barW)/2,barY=H-30;
+ctx.fillStyle='rgba(0,0,0,0.6)';
+ctx.fillRect(barX-2,barY-2,barW+4,barH+4);
+const hpPct=player.hp/player.maxHp;
+const hpR=Math.floor(255*(1-hpPct)),hpG=Math.floor(255*hpPct);
+ctx.fillStyle=`rgb(${hpR},${hpG},60)`;
+ctx.fillRect(barX,barY,barW*hpPct,barH);
+ctx.strokeStyle='#555';ctx.lineWidth=1;ctx.strokeRect(barX,barY,barW,barH);
+ctx.textAlign='center';ctx.font='bold 11px "Courier New"';ctx.fillStyle='#fff';
+ctx.fillText(`HP ${player.hp}/${player.maxHp}`,W/2,barY+11);
+// Pickaxe indicator
+ctx.textAlign='right';ctx.font='11px "Courier New"';
+const pickNames=['Basic','Iron','Steel','Diamond'];
+const pickColors=['#888','#aaa','#ccc','#b9f2ff'];
+ctx.fillStyle=pickColors[player.pickLevel];
+ctx.fillText(`⛏ ${pickNames[player.pickLevel]} Pickaxe`,W-16,H-20);
+// Inventory
+ctx.textAlign='left';ctx.font='11px "Courier New"';
+let iy=60;
+ctx.fillStyle='rgba(0,0,0,0.5)';ctx.fillRect(0,50,130,Object.keys(ORES).length*18+10);
+for(const[key,ore]of Object.entries(ORES)){
+const count=player.inventory[key]||0;
+if(count>0){
+ctx.fillStyle=ore.color;ctx.fillRect(8,iy-6,8,8);
+ctx.fillStyle='#ddd';ctx.fillText(`${ore.name}: ${count}`,20,iy);
+iy+=16}}
+// Minimap
+drawMinimap();
+// Shop hint
+ctx.textAlign='center';ctx.font='11px "Courier New"';
+ctx.fillStyle='rgba(0,255,200,0.5)';
+ctx.fillText('[E] Shop   [B] Bomb',W/2,H-48)}
 
-  // Gravity
-  if (!player.dead && timestamp - lastGravity > GRAVITY_INTERVAL) {
-    lastGravity = timestamp;
-    const below = getTile(player.x, player.y + 1);
-    if (below === AIR || below === CAVE) {
-      player.y++;
-    } else if (below === LAVA) {
-      player.y++;
-      player.hp -= 25;
-      spawnParticles(player.x, player.y, '#ff6600', 15);
-      if (player.hp <= 0) killPlayer();
-    }
-  }
+function drawMinimap(){
+const mmW=100,mmH=80;
+const mmX=W-mmW-10,mmY=36;
+ctx.fillStyle='rgba(0,0,0,0.7)';ctx.fillRect(mmX,mmY,mmW,mmH);
+ctx.strokeStyle='#00ffc860';ctx.lineWidth=1;ctx.strokeRect(mmX,mmY,mmW,mmH);
+const scale=2;
+const cx=player.x,cy=player.y;
+const halfW=Math.floor(mmW/(scale*2)),halfH=Math.floor(mmH/(scale*2));
+for(let dy=-halfH;dy<=halfH;dy++){
+for(let dx=-halfW;dx<=halfW;dx++){
+const tx=cx+dx,ty=cy+dy;
+const tile=getTile(tx,ty);
+if(!tile)continue;
+const sx=mmX+mmW/2+dx*scale,sy=mmY+mmH/2+dy*scale;
+let c;
+if(tile.type===T.AIR)continue;
+else if(tile.type===T.ORE)c=ORES[tile.ore].color;
+else if(tile.type===T.LAVA)c='#ff4400';
+else if(tile.type===T.GAS)c='#44ff44';
+else{const b=getBiome(ty);c=biomeColor(b)}
+ctx.fillStyle=c;ctx.fillRect(sx,sy,scale,scale)}}
+// Player dot
+ctx.fillStyle='#00ffc8';
+ctx.fillRect(mmX+mmW/2-1,mmY+mmH/2-1,3,3)}
 
-  // Lava damage while standing in it
-  if (!player.dead && timestamp - lastLavaTick > LAVA_TICK) {
-    lastLavaTick = timestamp;
-    if (getTile(player.x, player.y) === LAVA) {
-      player.hp -= 25;
-      if (player.hp <= 0) killPlayer();
-    }
-  }
+// ========== MENU ==========
+let menuParticles=[];
+for(let i=0;i<60;i++){menuParticles.push({x:Math.random()*2000,y:Math.random()*2000,
+vy:1+Math.random()*3,size:3+Math.random()*8,hue:Math.random()*60+160,alpha:0.3+Math.random()*0.5})}
 
-  // Respawn timer
-  if (player.dead) {
-    player.respawnTimer--;
-    if (player.respawnTimer <= 0) respawnPlayer();
-  }
+function drawMenu(){
+ctx.fillStyle='#0a0a0f';ctx.fillRect(0,0,W,H);
+// Animated particles
+menuParticles.forEach(p=>{
+p.y+=p.vy;if(p.y>H+20){p.y=-20;p.x=Math.random()*W}
+ctx.fillStyle=`hsla(${p.hue},80%,60%,${p.alpha*Math.sin(time*0.02+p.x)*0.5+0.5})`;
+ctx.beginPath();
+// Diamond shape
+const s=p.size;
+ctx.moveTo(p.x,p.y-s);ctx.lineTo(p.x+s*0.6,p.y);
+ctx.lineTo(p.x,p.y+s);ctx.lineTo(p.x-s*0.6,p.y);ctx.closePath();ctx.fill()});
+// Title
+ctx.textAlign='center';
+ctx.font='bold 52px "Courier New"';
+const hue=(time*2)%360;
+ctx.fillStyle=`hsl(${hue},80%,70%)`;
+ctx.shadowColor='#00ffc8';ctx.shadowBlur=30;
+ctx.fillText('💎 GEM MINE 💎',W/2,H*0.25);
+ctx.shadowBlur=0;
+ctx.font='bold 18px "Courier New"';
+ctx.fillStyle='#00ffc8';
+ctx.fillText('Bureau of Agent Investigations',W/2,H*0.25+40);
+ctx.font='14px "Courier New"';
+ctx.fillStyle='#ffd700';
+ctx.fillText('$GEM on Base',W/2,H*0.25+65);
+ctx.font='11px "Courier New"';
+ctx.fillStyle='#888';
+ctx.fillText('CA: 0xD3776969966B340d72d75731eF890A3Bc9F21bA3',W/2,H*0.25+90);
+// Instructions
+ctx.font='14px "Courier New"';
+ctx.fillStyle='#aaa';
+ctx.fillText('WASD to move • E for upgrades • Go deep, find 💎 GEM',W/2,H*0.6);
+// Start prompt
+const blink=Math.sin(time*0.08)>0;
+if(blink){
+ctx.font='bold 18px "Courier New"';
+ctx.fillStyle='#00ffc8';
+ctx.shadowColor='#00ffc8';ctx.shadowBlur=15;
+ctx.fillText('[PRESS ENTER OR TAP TO BEGIN]',W/2,H*0.72);
+ctx.shadowBlur=0}
+// Footer
+ctx.font='10px "Courier New"';
+ctx.fillStyle='#555';
+ctx.fillText('Powered by $GEM on Base',W/2,H-20)}
 
-  // Particles
-  for (let i = particles.length - 1; i >= 0; i--) {
-    const p = particles[i];
-    p.x += p.vx; p.y += p.vy; p.vy += 0.15; p.life--;
-    if (p.life <= 0) particles.splice(i, 1);
-  }
+function drawDeath(){
+ctx.fillStyle='rgba(80,0,0,0.8)';ctx.fillRect(0,0,W,H);
+ctx.textAlign='center';
+ctx.font='bold 48px "Courier New"';
+ctx.fillStyle='#ff3333';
+ctx.shadowColor='#ff0000';ctx.shadowBlur=20;
+ctx.fillText('MINE COLLAPSED',W/2,H*0.3);
+ctx.shadowBlur=0;
+ctx.font='18px "Courier New"';ctx.fillStyle='#ffd700';
+ctx.fillText(`Depth reached: ${player.maxDepth}m`,W/2,H*0.45);
+ctx.fillText(`💎 GEM earned: ${player.gems}`,W/2,H*0.52);
+ctx.fillText(`Ores mined: ${player.totalOres}`,W/2,H*0.59);
+ctx.font='bold 16px "Courier New"';
+const blink=Math.sin(time*0.08)>0;
+ctx.fillStyle=blink?'#00ffc8':'transparent';
+ctx.fillText('Press ENTER to restart',W/2,H*0.72)}
 
-  // Rare flash
-  if (rareFlashTimer > 0) {
-    rareFlashTimer--;
-    const flash = document.getElementById('rareFlash');
-    flash.style.opacity = rareFlashTimer / 15;
-  }
+// ========== BACKGROUND ==========
+function drawBackground(){
+const depth=Math.max(0,player.y);
+const [c1,c2]=biomeBg(depth);
+const grad=ctx.createLinearGradient(0,0,0,H);
+grad.addColorStop(0,c1);grad.addColorStop(1,c2);
+ctx.fillStyle=grad;ctx.fillRect(0,0,W,H)}
 
-  // Camera
-  targetCamX = player.x * TILE_SIZE + TILE_SIZE / 2 - screenW / 2;
-  targetCamY = player.y * TILE_SIZE + TILE_SIZE / 2 - screenH / 2;
-  camX += (targetCamX - camX) * 0.12;
-  camY += (targetCamY - camY) * 0.12;
+// ========== MAIN LOOP ==========
+function resetGame(){
+player.x=20;player.y=-1;player.hp=100;player.gems=0;player.dead=false;
+player.pickLevel=0;player.lightRadius=5;player.hasArmor=false;player.hasJetpack=false;
+player.bombs=0;player.maxDepth=0;player.totalOres=0;player.dmgCooldown=0;
+player.inventory={coal:0,copper:0,iron:0,silver:0,gold:0,sapphire:0,ruby:0,diamond:0,gem:0};
+world.clear();chunks.clear();explored.clear();
+particles=[];floatingTexts=[];fallingRocks=[];
+ensureChunks(player.x,player.y);
+shopOpen=false;panel.style.display='none'}
 
-  render();
-  updateHUD();
-  requestAnimationFrame(gameLoop);
-}
+function update(){
+time++;
+if(gameState==='menu'){
+if(keys.enter||keys[' ']||touching){
+initAudio();startAmbient();
+gameState='playing';resetGame();touching=false}return}
+if(gameState==='dead'){
+if(keys.enter){gameState='playing';resetGame()}return}
+if(gameState==='playing'){
+if(keys.e&&!keys._ePrev)toggleShop();
+keys._ePrev=keys.e;
+if(keys.b&&!keys._bPrev)useBomb();
+keys._bPrev=keys.b;
+if(!shopOpen){
+updatePlayer();updateAmbient()}
+updateParticles();updateFloats();updateRocks();updateShake();
+// Camera
+const targetCamX=player.x*TILE;
+const targetCamY=player.y*TILE;
+camX+=(targetCamX-camX)*0.12;
+camY+=(targetCamY-camY)*0.12}}
 
-// ======================== RENDERING ========================
-function render() {
-  ctx.clearRect(0, 0, screenW, screenH);
+function render(){
+ctx.clearRect(0,0,W,H);
+if(gameState==='menu'){drawMenu();return}
+drawBackground();
+ctx.save();
+ctx.translate(W/2-camX+shakeX,H/2-camY+shakeY);
+// Visible tile range
+const startTX=Math.floor((camX-W/2)/TILE)-1;
+const endTX=Math.ceil((camX+W/2)/TILE)+1;
+const startTY=Math.floor((camY-H/2)/TILE)-1;
+const endTY=Math.ceil((camY+H/2)/TILE)+1;
+for(let ty=startTY;ty<=endTY;ty++){
+for(let tx=startTX;tx<=endTX;tx++){
+const tile=getTile(tx,ty);
+if(tile)drawTile(tx,ty,tile,tx*TILE,ty*TILE)}}
+// Particles
+particles.forEach(p=>{
+ctx.globalAlpha=p.life/p.maxLife;
+ctx.fillStyle=p.color;
+ctx.fillRect(p.x-p.size/2,p.y-p.size/2,p.size,p.size)});
+ctx.globalAlpha=1;
+// Floating texts
+floatingTexts.forEach(f=>{
+ctx.globalAlpha=f.life/60;
+ctx.textAlign='center';ctx.font='bold 13px "Courier New"';
+ctx.fillStyle=f.color;ctx.shadowColor=f.color;ctx.shadowBlur=6;
+ctx.fillText(f.text,f.x,f.y);ctx.shadowBlur=0});
+ctx.globalAlpha=1;
+// Falling rocks
+fallingRocks.forEach(r=>{
+ctx.fillStyle='#777';ctx.fillRect(r.x,r.y,r.size,r.size);
+ctx.fillStyle='#555';ctx.fillRect(r.x+2,r.y+2,r.size-4,r.size-4)});
+// Player
+drawPlayer(player.x*TILE,player.y*TILE);
+ctx.restore();
+// Darkness overlay
+drawDarkness();
+drawVoidParticles();
+// HUD
+if(gameState==='playing')drawHUD();
+if(gameState==='dead')drawDeath()}
 
-  const startTileX = Math.floor(camX / TILE_SIZE) - 1;
-  const startTileY = Math.floor(camY / TILE_SIZE) - 1;
-  const endTileX = Math.ceil((camX + screenW) / TILE_SIZE) + 1;
-  const endTileY = Math.ceil((camY + screenH) / TILE_SIZE) + 1;
+function gameLoop(){update();render();requestAnimationFrame(gameLoop)}
+ensureChunks(20,0);
+gameLoop();
 
-  // Sky gradient
-  const skyBottom = SURFACE_Y * TILE_SIZE - camY;
-  if (skyBottom > 0) {
-    const grad = ctx.createLinearGradient(0, Math.max(0, -camY), 0, skyBottom);
-    grad.addColorStop(0, '#0a0a2e');
-    grad.addColorStop(0.5, '#0d1b3e');
-    grad.addColorStop(1, '#1a2a4a');
-    ctx.fillStyle = grad;
-    ctx.fillRect(0, 0, screenW, Math.min(skyBottom, screenH));
-  }
-
-  // Underground background darkness based on depth
-  for (let y = startTileY; y <= endTileY; y++) {
-    if (y < SURFACE_Y) continue;
-    const depth = y - SURFACE_Y;
-    const darkness = Math.min(depth / 200, 1);
-    const r = Math.floor(lerp(15, 3, darkness));
-    const g = Math.floor(lerp(12, 2, darkness));
-    const b = Math.floor(lerp(20, 8, darkness));
-    const sy = y * TILE_SIZE - camY;
-    ctx.fillStyle = `rgb(${r},${g},${b})`;
-    ctx.fillRect(0, sy, screenW, TILE_SIZE + 1);
-  }
-
-  // Draw tiles
-  for (let y = startTileY; y <= endTileY; y++) {
-    for (let x = startTileX; x <= endTileX; x++) {
-      const tile = getTile(x, y);
-      if (tile === AIR || tile === CAVE) continue;
-      const sx = Math.floor(x * TILE_SIZE - camX);
-      const sy = Math.floor(y * TILE_SIZE - camY);
-      drawTile(ctx, tile, x, y, sx, sy);
-    }
-  }
-
-  // Draw player
-  if (!player.dead) {
-    const px = Math.floor(player.x * TILE_SIZE - camX);
-    const py = Math.floor(player.y * TILE_SIZE - camY);
-    drawPlayer(px, py);
-  }
-
-  // Particles
-  for (const p of particles) {
-    const sx = p.x - camX;
-    const sy = p.y - camY;
-    ctx.globalAlpha = Math.max(0, p.life / p.maxLife);
-    ctx.fillStyle = p.color;
-    ctx.fillRect(sx - p.size / 2, sy - p.size / 2, p.size, p.size);
-  }
-  ctx.globalAlpha = 1;
-}
-
-function drawTile(ctx, tile, wx, wy, sx, sy) {
-  const def = BLOCK_DEF[tile];
-  const S = TILE_SIZE;
-  const t = animTime * 0.001;
-
-  ctx.fillStyle = def.color;
-  ctx.fillRect(sx, sy, S, S);
-
-  switch (tile) {
-    case GRASS:
-      // Grass texture
-      ctx.fillStyle = '#5a9c4f';
-      ctx.fillRect(sx, sy, S, 3);
-      ctx.fillStyle = '#3a6c2f';
-      for (let i = 0; i < 5; i++) {
-        const gx = sx + ((wx * 7 + i * 13) % S);
-        ctx.fillRect(gx, sy + 3, 2, 3);
-      }
-      break;
-    case DIRT:
-      ctx.fillStyle = '#7a5a10';
-      for (let i = 0; i < 4; i++) {
-        const dx = ((wx * 5 + wy * 3 + i * 11) % (S - 4)) + sx;
-        const dy = ((wy * 7 + wx * 2 + i * 7) % (S - 4)) + sy;
-        ctx.fillRect(dx, dy, 3, 3);
-      }
-      ctx.fillStyle = '#9b7924';
-      for (let i = 0; i < 3; i++) {
-        const dx = ((wx * 3 + wy * 11 + i * 17) % (S - 2)) + sx;
-        const dy = ((wy * 5 + wx * 8 + i * 13) % (S - 2)) + sy;
-        ctx.fillRect(dx, dy, 2, 2);
-      }
-      break;
-    case STONE:
-      ctx.fillStyle = '#707070';
-      ctx.fillRect(sx + 1, sy + 1, S - 2, (S / 2) - 1);
-      ctx.fillStyle = '#909090';
-      ctx.fillRect(sx + S / 2, sy + S / 2, S / 2 - 1, S / 2 - 1);
-      ctx.strokeStyle = '#60606060';
-      ctx.lineWidth = 0.5;
-      ctx.strokeRect(sx + 2, sy + 2, S - 4, S / 2 - 2);
-      break;
-    case COAL:
-      ctx.fillStyle = '#222222';
-      for (let i = 0; i < 3; i++) {
-        const cx = ((wx * 9 + i * 11) % (S - 8)) + sx + 2;
-        const cy = ((wy * 7 + i * 13) % (S - 8)) + sy + 2;
-        ctx.fillRect(cx, cy, 6, 6);
-      }
-      break;
-    case COPPER:
-      ctx.fillStyle = '#d4884a';
-      for (let i = 0; i < 4; i++) {
-        const cx = ((wx * 7 + i * 9) % (S - 6)) + sx + 2;
-        const cy = ((wy * 11 + i * 7) % (S - 6)) + sy + 2;
-        ctx.beginPath();
-        ctx.arc(cx + 3, cy + 3, 3, 0, Math.PI * 2);
-        ctx.fill();
-      }
-      break;
-    case IRON:
-      ctx.fillStyle = '#b8b8c8';
-      for (let i = 0; i < 3; i++) {
-        const ix = ((wx * 13 + i * 7) % (S - 8)) + sx + 3;
-        const iy = ((wy * 9 + i * 11) % (S - 6)) + sy + 2;
-        ctx.fillRect(ix, iy, 5, 4);
-      }
-      ctx.fillStyle = '#888898';
-      ctx.fillRect(sx + 4, sy + 4, 6, 5);
-      break;
-    case SILVER: {
-      const shimmer = Math.sin(t * 3 + wx + wy) * 0.15 + 0.85;
-      ctx.fillStyle = `rgba(220,220,235,${shimmer})`;
-      ctx.fillRect(sx + 2, sy + 2, S - 4, S - 4);
-      ctx.fillStyle = '#e8e8f0';
-      ctx.fillRect(sx + 6, sy + 4, 8, 6);
-      ctx.fillRect(sx + 14, sy + 14, 10, 8);
-      // Shimmer highlight
-      const hx = sx + (Math.sin(t * 2 + wx) * 0.5 + 0.5) * (S - 6) + 3;
-      ctx.fillStyle = `rgba(255,255,255,${0.3 + Math.sin(t * 4) * 0.2})`;
-      ctx.fillRect(hx, sy + 4, 3, 3);
-      break;
-    }
-    case GOLD: {
-      const glow = Math.sin(t * 2 + wx * 0.5 + wy * 0.3) * 0.15 + 0.85;
-      ctx.fillStyle = `rgba(255,215,0,${glow})`;
-      ctx.fillRect(sx + 2, sy + 2, S - 4, S - 4);
-      ctx.fillStyle = '#ffea55';
-      ctx.fillRect(sx + 6, sy + 6, 8, 8);
-      ctx.fillRect(sx + 16, sy + 4, 6, 6);
-      ctx.fillStyle = '#cc9900';
-      ctx.fillRect(sx + 4, sy + 18, 10, 6);
-      // Glow
-      ctx.shadowColor = '#ffd700';
-      ctx.shadowBlur = 6;
-      ctx.fillStyle = 'rgba(255,215,0,0.3)';
-      ctx.fillRect(sx, sy, S, S);
-      ctx.shadowBlur = 0;
-      break;
-    }
-    case DIAMOND: {
-      const sparkle = Math.sin(t * 5 + wx * 2 + wy) * 0.3 + 0.7;
-      ctx.fillStyle = '#004455';
-      ctx.fillRect(sx, sy, S, S);
-      ctx.fillStyle = `rgba(0,255,255,${sparkle})`;
-      // Diamond shape
-      ctx.beginPath();
-      ctx.moveTo(sx + S / 2, sy + 4);
-      ctx.lineTo(sx + S - 4, sy + S / 2);
-      ctx.lineTo(sx + S / 2, sy + S - 4);
-      ctx.lineTo(sx + 4, sy + S / 2);
-      ctx.closePath();
-      ctx.fill();
-      // Sparkle points
-      ctx.fillStyle = `rgba(200,255,255,${Math.sin(t * 8 + wx) * 0.5 + 0.5})`;
-      ctx.fillRect(sx + 8, sy + 8, 2, 2);
-      ctx.fillRect(sx + 20, sy + 14, 2, 2);
-      ctx.fillRect(sx + 14, sy + 22, 2, 2);
-      ctx.shadowColor = '#00ffff';
-      ctx.shadowBlur = 8;
-      ctx.fillRect(sx + S / 2 - 1, sy + S / 2 - 1, 2, 2);
-      ctx.shadowBlur = 0;
-      break;
-    }
-    case EMERALD: {
-      const glow = Math.sin(t * 3 + wx + wy * 2) * 0.2 + 0.8;
-      ctx.fillStyle = '#1a4a2a';
-      ctx.fillRect(sx, sy, S, S);
-      ctx.fillStyle = `rgba(80,200,120,${glow})`;
-      // Hexagonal-ish shape
-      ctx.beginPath();
-      ctx.moveTo(sx + 8, sy + 4);
-      ctx.lineTo(sx + 24, sy + 4);
-      ctx.lineTo(sx + 28, sy + 16);
-      ctx.lineTo(sx + 24, sy + 28);
-      ctx.lineTo(sx + 8, sy + 28);
-      ctx.lineTo(sx + 4, sy + 16);
-      ctx.closePath();
-      ctx.fill();
-      ctx.shadowColor = '#50c878';
-      ctx.shadowBlur = 8;
-      ctx.fillStyle = 'rgba(80,200,120,0.4)';
-      ctx.fillRect(sx + 10, sy + 10, 12, 12);
-      ctx.shadowBlur = 0;
-      break;
-    }
-    case BAICRYSTAL: {
-      const pulse = Math.sin(t * 4 + wx + wy) * 0.3 + 0.7;
-      ctx.fillStyle = '#2a0040';
-      ctx.fillRect(sx, sy, S, S);
-      ctx.fillStyle = `rgba(255,0,255,${pulse})`;
-      ctx.fillRect(sx + 4, sy + 4, S - 8, S - 8);
-      // Inner crystal
-      ctx.fillStyle = `rgba(255,100,255,${pulse * 0.8})`;
-      ctx.beginPath();
-      ctx.moveTo(sx + S / 2, sy + 2);
-      ctx.lineTo(sx + S - 6, sy + S / 2);
-      ctx.lineTo(sx + S / 2, sy + S - 2);
-      ctx.lineTo(sx + 6, sy + S / 2);
-      ctx.closePath();
-      ctx.fill();
-      // "BAI" text hint
-      ctx.fillStyle = `rgba(255,200,255,${pulse * 0.6})`;
-      ctx.font = '8px monospace';
-      ctx.fillText('B', sx + 11, sy + 19);
-      ctx.shadowColor = '#ff00ff';
-      ctx.shadowBlur = 12;
-      ctx.fillStyle = 'rgba(255,0,255,0.3)';
-      ctx.fillRect(sx, sy, S, S);
-      ctx.shadowBlur = 0;
-      break;
-    }
-    case VOIDORE: {
-      const anim = Math.sin(t * 2 + wx * 0.5 + wy * 0.5);
-      const anim2 = Math.cos(t * 3 + wx + wy);
-      ctx.fillStyle = '#0a0018';
-      ctx.fillRect(sx, sy, S, S);
-      // Swirling void
-      ctx.fillStyle = `rgba(100,0,170,${0.5 + anim * 0.3})`;
-      const cx = sx + S / 2 + anim * 4;
-      const cy = sy + S / 2 + anim2 * 4;
-      ctx.beginPath();
-      ctx.arc(cx, cy, 10, 0, Math.PI * 2);
-      ctx.fill();
-      ctx.fillStyle = `rgba(180,0,255,${0.4 + anim2 * 0.3})`;
-      ctx.beginPath();
-      ctx.arc(sx + S / 2 - anim2 * 3, sy + S / 2 + anim * 3, 6, 0, Math.PI * 2);
-      ctx.fill();
-      // Border glow
-      ctx.shadowColor = '#6a00aa';
-      ctx.shadowBlur = 15;
-      ctx.strokeStyle = `rgba(150,0,255,${0.5 + anim * 0.3})`;
-      ctx.lineWidth = 1.5;
-      ctx.strokeRect(sx + 2, sy + 2, S - 4, S - 4);
-      ctx.shadowBlur = 0;
-      // Bright core
-      ctx.fillStyle = `rgba(220,150,255,${0.6 + anim * 0.3})`;
-      ctx.fillRect(sx + 13, sy + 13, 6, 6);
-      break;
-    }
-    case BEDROCK:
-      ctx.fillStyle = '#252525';
-      ctx.fillRect(sx + 2, sy, S - 4, S / 2);
-      ctx.fillStyle = '#111111';
-      ctx.fillRect(sx, sy + S / 2, S / 2, S / 2);
-      ctx.fillRect(sx + S / 2 + 2, sy + S / 2, S / 2 - 2, S / 2);
-      ctx.strokeStyle = '#0a0a0a';
-      ctx.lineWidth = 0.5;
-      ctx.strokeRect(sx, sy, S, S);
-      break;
-    case LAVA: {
-      const lavaAnim = Math.sin(t * 2 + wx * 0.3 + wy * 0.5);
-      const lavaAnim2 = Math.cos(t * 1.5 + wx * 0.7);
-      ctx.fillStyle = '#cc2200';
-      ctx.fillRect(sx, sy, S, S);
-      ctx.fillStyle = `rgba(255,100,0,${0.6 + lavaAnim * 0.3})`;
-      ctx.fillRect(sx + 2, sy + 2, S - 4, S - 4);
-      ctx.fillStyle = `rgba(255,200,50,${0.4 + lavaAnim2 * 0.3})`;
-      ctx.beginPath();
-      ctx.arc(sx + 10 + lavaAnim * 4, sy + 10 + lavaAnim2 * 3, 6, 0, Math.PI * 2);
-      ctx.fill();
-      ctx.beginPath();
-      ctx.arc(sx + 22 - lavaAnim2 * 3, sy + 20 + lavaAnim * 2, 5, 0, Math.PI * 2);
-      ctx.fill();
-      ctx.fillStyle = `rgba(255,255,100,${0.3 + lavaAnim * 0.2})`;
-      ctx.fillRect(sx + 8, sy + 14, 8, 4);
-      ctx.shadowColor = '#ff4400';
-      ctx.shadowBlur = 10;
-      ctx.fillStyle = 'rgba(255,68,0,0.2)';
-      ctx.fillRect(sx, sy, S, S);
-      ctx.shadowBlur = 0;
-      break;
-    }
-  }
-
-  // Mining crack overlay
-  if (tile !== AIR && tile !== CAVE && tile !== BEDROCK && tile !== LAVA) {
-    const maxHP = BLOCK_DEF[tile].hardness;
-    const curHP = getHP(wx, wy);
-    if (curHP < maxHP && maxHP > 0) {
-      const dmgRatio = 1 - (curHP / maxHP);
-      ctx.strokeStyle = `rgba(0,0,0,${0.3 + dmgRatio * 0.5})`;
-      ctx.lineWidth = 1 + dmgRatio * 2;
-      // Draw X cracks
-      const inset = 4;
-      ctx.beginPath();
-      ctx.moveTo(sx + inset, sy + inset);
-      ctx.lineTo(sx + S - inset, sy + S - inset);
-      ctx.moveTo(sx + S - inset, sy + inset);
-      ctx.lineTo(sx + inset, sy + S - inset);
-      if (dmgRatio > 0.3) {
-        ctx.moveTo(sx + S / 2, sy + inset);
-        ctx.lineTo(sx + S / 2, sy + S - inset);
-      }
-      if (dmgRatio > 0.6) {
-        ctx.moveTo(sx + inset, sy + S / 2);
-        ctx.lineTo(sx + S - inset, sy + S / 2);
-      }
-      ctx.stroke();
-      // White flash
-      ctx.fillStyle = `rgba(255,255,255,${dmgRatio * 0.15})`;
-      ctx.fillRect(sx, sy, S, S);
-    }
-  }
-
-  // Tile border (subtle)
-  ctx.strokeStyle = 'rgba(0,0,0,0.12)';
-  ctx.lineWidth = 0.5;
-  ctx.strokeRect(sx, sy, S, S);
-}
-
-function drawPlayer(px, py) {
-  const S = TILE_SIZE;
-  const t = animTime * 0.003;
-  // Body
-  ctx.fillStyle = '#00ffc8';
-  ctx.fillRect(px + 4, py + 4, S - 8, S - 8);
-  // Outline
-  ctx.strokeStyle = '#00ffaa';
-  ctx.lineWidth = 2;
-  ctx.strokeRect(px + 4, py + 4, S - 8, S - 8);
-  // Eyes
-  ctx.fillStyle = '#0a0a0f';
-  ctx.fillRect(px + 9, py + 10, 4, 4);
-  ctx.fillRect(px + 19, py + 10, 4, 4);
-  // Mouth
-  ctx.fillRect(px + 11, py + 19, 10, 2);
-  // Glow
-  ctx.shadowColor = '#00ffc8';
-  ctx.shadowBlur = 12;
-  ctx.fillStyle = 'rgba(0,255,200,0.15)';
-  ctx.fillRect(px - 4, py - 4, S + 8, S + 8);
-  ctx.shadowBlur = 0;
-  // Helmet antenna
-  ctx.fillStyle = '#00ffc8';
-  ctx.fillRect(px + S / 2 - 1, py, 2, 5);
-  const blink = Math.sin(t * 4) > 0.5;
-  ctx.fillStyle = blink ? '#ff0066' : '#880033';
-  ctx.fillRect(px + S / 2 - 2, py - 1, 4, 3);
-}
-
-// ======================== HUD ========================
-function updateHUD() {
-  const depth = Math.max(0, Math.floor(player.y - SURFACE_Y));
-  document.getElementById('depth').textContent = `Depth: ${depth}m`;
-  document.getElementById('score').textContent = `⛏ ${player.score.toLocaleString()} ORE`;
-
-  // Health bar
-  const hpPct = Math.max(0, player.hp / player.maxHp) * 100;
-  document.getElementById('healthBarInner').style.width = hpPct + '%';
-  document.getElementById('healthText').textContent = `${Math.max(0, player.hp)} / ${player.maxHp}`;
-
-  // Inventory
-  const invEl = document.getElementById('inventory');
-  let html = '<div style="color:#00ffc8;margin-bottom:4px;font-weight:bold;font-size:10px;">INVENTORY</div>';
-  const oreOrder = [DIRT, STONE, COAL, COPPER, IRON, SILVER, GOLD, DIAMOND, EMERALD, BAICRYSTAL, VOIDORE];
-  for (const id of oreOrder) {
-    const count = player.inventory[id] || 0;
-    if (count === 0) continue;
-    const def = BLOCK_DEF[id];
-    html += `<div class="inv-row"><span class="inv-icon" style="background:${def.color};"></span>${def.name}: ${count}</div>`;
-  }
-  invEl.innerHTML = html;
-}
-
-// ======================== BOOT ========================
-window.addEventListener('DOMContentLoaded', init);
-document.addEventListener('touchstart', function(e) {
-  if (gameState === 'start') { e.preventDefault(); startGame(); }
-}, {passive: false, once: true});
+// Handle enter on start
+window.addEventListener('keydown',e=>{
+if(e.key==='Enter'){
+if(gameState==='menu'){initAudio();startAmbient();gameState='playing';resetGame()}
+else if(gameState==='dead'){gameState='playing';resetGame()}}});
+canvas.addEventListener('click',()=>{
+if(gameState==='menu'){initAudio();startAmbient();gameState='playing';resetGame()}});
 </script>
 </body>
 </html>
