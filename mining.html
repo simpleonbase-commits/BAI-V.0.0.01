@@ -141,24 +141,49 @@ canvas {
   opacity: 0; transition: opacity 0.3s;
   pointer-events: none;
 }
-/* Mission panel */
-#missionPanel {
+/* Missions Button */
+#missionsBtn {
   position: absolute; bottom: 80px; right: 8px;
-  background: rgba(0,0,0,0.7); border: 1px solid #00ffc833;
-  border-radius: 6px; padding: 8px 12px; min-width: 180px;
-  font-size: 10px;
+  background: rgba(0,0,0,0.75); border: 1px solid #00ffc8;
+  color: #00ffc8; font-family: monospace; font-size: 10px;
+  font-weight: bold; letter-spacing: 2px; padding: 6px 12px;
+  border-radius: 6px; cursor: pointer; pointer-events: auto;
+  transition: background 0.2s;
+}
+#missionsBtn:hover { background: rgba(0,255,200,0.15); }
+
+/* Missions Overlay */
+#missionsOverlay {
+  display: none; position: absolute; inset: 0;
+  background: rgba(0,0,0,0.75);
+  align-items: center; justify-content: center;
+  z-index: 70; pointer-events: auto;
+}
+#missionsOverlay.open { display: flex; }
+#missionsBox {
+  background: #0a0a1a; border: 1px solid #00ffc8;
+  border-radius: 10px; padding: 24px 32px; min-width: 300px;
+  max-width: 400px; text-align: center;
 }
 #missionTitle {
-  color: #00ffc8; font-weight: bold; font-size: 10px;
-  margin-bottom: 6px; letter-spacing: 2px;
+  color: #00ffc8; font-weight: bold; font-size: 14px;
+  margin-bottom: 16px; letter-spacing: 3px;
 }
 .mission-item {
-  display: flex; align-items: center; gap: 6px;
-  margin-bottom: 4px; color: #aaa;
+  display: flex; align-items: center; gap: 10px;
+  margin-bottom: 10px; color: #aaa; font-size: 11px;
+  text-align: left;
 }
 .mission-item.done { color: #ffd700; }
-.mission-check { width: 12px; height: 12px; border: 1px solid #555; border-radius: 2px; display: flex; align-items: center; justify-content: center; font-size: 9px; flex-shrink: 0; }
+.mission-check { width: 14px; height: 14px; border: 1px solid #555; border-radius: 3px; display: flex; align-items: center; justify-content: center; font-size: 10px; flex-shrink: 0; }
 .mission-item.done .mission-check { border-color: #ffd700; background: #ffd700; color: #000; }
+#closeMissionsBtn {
+  margin-top: 16px; background: transparent; border: 1px solid #00ffc8;
+  color: #00ffc8; font-family: monospace; font-size: 11px;
+  padding: 6px 20px; border-radius: 6px; cursor: pointer;
+  letter-spacing: 2px;
+}
+#closeMissionsBtn:hover { background: rgba(0,255,200,0.1); }
 /* Upgrade overlay */
 #upgradeOverlay {
   position: absolute; inset: 0;
@@ -340,9 +365,13 @@ canvas {
     </div>
     <div id="eventBanner"></div>
     <div id="missionFlash">MISSION COMPLETE!</div>
-    <div id="missionPanel">
-      <div id="missionTitle">&#x2605; DAILY MISSIONS</div>
-      <div id="missionList"></div>
+    <button id="missionsBtn" onclick="toggleMissions()">&#x2605; MISSIONS</button>
+    <div id="missionsOverlay" onclick="if(event.target===this)toggleMissions()">
+      <div id="missionsBox">
+        <div id="missionTitle">&#x2605; DAILY MISSIONS</div>
+        <div id="missionList"></div>
+        <button id="closeMissionsBtn" onclick="toggleMissions()">CLOSE</button>
+      </div>
     </div>
     <div id="oreRushOverlay"></div>
     <div id="rareFlash"></div>
@@ -986,7 +1015,7 @@ function drawMinimap(){
   if(!showMinimap) return;
   const mapSize=80;
   const mx=screenW-mapSize-10;
-  const my=screenH-mapSize-70;
+  const my=90;
   ctx.save();
   ctx.fillStyle='rgba(0,0,0,0.75)';
   ctx.fillRect(mx,my,mapSize,mapSize);
@@ -1259,6 +1288,7 @@ function onKeyDown(e){
   if(e.key==='Escape'){
     document.getElementById('upgradeOverlay').style.display='none';
     document.getElementById('redeemModal').style.display='none';
+    document.getElementById('missionsOverlay').classList.remove('open');
     e.preventDefault(); return;
   }
   keysDown[e.key.toLowerCase()]=true;
@@ -1930,6 +1960,11 @@ function updateHUD(){
     </div>`;
   }
   mList.innerHTML=mHtml;
+}
+
+function toggleMissions(){
+  const overlay = document.getElementById('missionsOverlay');
+  overlay.classList.toggle('open');
 }
 
 // === BOOTSTRAP ===
